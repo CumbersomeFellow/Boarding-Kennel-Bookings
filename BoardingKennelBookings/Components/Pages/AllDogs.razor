@@ -1,0 +1,108 @@
+﻿@using BoardingKennelBookings.Components.Services
+@using BoardingKennelBookings.Components.Models
+@using BoardingKennelBookings.Components.Helpers
+
+@page "/allDogs"
+@rendermode InteractiveServer
+@inject DogService DogService
+@inject OwnerService OwnerService
+
+<h3>Dogs</h3>
+
+@code {
+    private List<Dog> dogs = new();
+    private string searchDogNameText = "";
+    private List<Dog> defaultList = new();
+    private bool noResults = false;
+    private List<Owner> owners = new();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        dogs = await DogService.GetAllDogsAsync();
+        defaultList = dogs;
+        owners = await OwnerService.GetAllOwnersAsync();
+    }
+
+    private async Task HandleSearchInput(ChangeEventArgs e)
+    {
+        searchDogNameText = e.Value?.ToString() ?? "";
+
+        await SearchDogsByName();
+    }
+
+    protected async Task SearchDogsByName()
+    {
+        List<Dog> allResults = new();
+
+        allResults = SearchHelper.Search<Dog>(searchDogNameText, defaultList, Dog => { return Dog.DogName + " " + Dog.Breed + " " + FilterOwnerForDog(Dog.ID, Dog.OwnerID).FirstName + " " + FilterOwnerForDog(Dog.ID, Dog.OwnerID).LastName; });
+
+        if (searchDogNameText.Length == 0)
+        {
+            dogs = defaultList;
+            noResults = false;
+        }
+        else if (allResults.Count == 0)
+        {
+            noResults = true;
+        }
+        else
+        {
+            dogs = allResults.OrderBy(dog => dog.DogName).ToList(); 
+            noResults = false;
+        }
+    }
+
+    protected Owner FilterOwnerForDog(Guid dogID,Guid ownerID)
+    {
+        return owners.First(owner => owner.OwnerID == ownerID);
+        //will need to be a list of owners filtered - since an owner can have multiple dogs
+        //or not - if has a owner ID attached then will find the first one
+        //would need to change IF multiple owners.
+    }
+}
+<table style="margin-bottom:10px;">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Breed</th>
+            <th>Bookings</th>
+            <th>Owner</th>
+        </tr>
+    </thead>
+    <tbody>
+    @if (dogs.Count == 0)
+    {
+        <tr>
+            <p>Loading dogs...</p>
+        </tr>
+       
+    }
+    else if (noResults)
+    {
+        <tr>
+            <p>No Results</p>
+        </tr>
+    }
+    else
+    {
+        @foreach (var dog in dogs)
+        {
+             <tr>
+                <td>@dog.DogName</td>
+                <td>@dog.Breed</td>
+                <td>Need bookings</td>
+                <td>@FilterOwnerForDog(dog.ID, dog.OwnerID).FirstName @FilterOwnerForDog(dog.ID, dog.OwnerID).LastName</td>
+            </tr>
+        }
+    }
+
+    </tbody>
+
+</table>
+  
+<form>
+    <div class="form-row">
+        <Input value="@searchDogNameText" @oninput="HandleSearchInput" />
+    </div>
+</form>

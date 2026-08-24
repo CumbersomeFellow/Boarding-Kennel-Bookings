@@ -1,0 +1,66 @@
+﻿@using BoardingKennelBookings.Components.Services
+@using BoardingKennelBookings.Components.Models
+
+@page "/CreateOwner"
+@rendermode InteractiveServer
+@inject OwnerService OwnerService
+
+<h3>Create Owner</h3>
+
+<EditForm Model="newOwner" OnValidSubmit="HandleSubmit" FormName="CreateOwnerForm">
+    <div class="form-row">
+        <label>
+            First Name:
+        </label>
+
+        <InputText @bind-Value="newOwner.FirstName"/>
+    </div>
+    <div class="form-row">
+        <label>
+            Last Name:
+        </label>
+        <InputText @bind-Value="newOwner.LastName" />
+
+    </div>
+    <div class="form-row">
+        <label>
+            Email:
+        </label>
+        <InputText @bind-Value="newOwner.Email" />
+
+    </div>
+
+    <div class="form-row">
+        <label>
+            Contact Number:
+        </label>
+        <InputText @bind-Value="newOwner.ContactNumber" />
+
+    </div>
+
+    <div class="form-row">
+        <button type="submit">Create Owner</button>
+
+    </div>
+</EditForm>
+
+@code{
+    private Owner newOwner = new();
+    private Owner? createdOwner;
+
+    private async Task HandleSubmit()
+    {
+        createdOwner = await OwnerService.CreateOwnerAsync(newOwner);
+    }
+}
+
+@if (createdOwner != null)
+{
+    <div class="owner-summary">
+        <h3>Owner Created</h3>
+
+        <p><strong>Name:</strong> @createdOwner.FirstName</p>
+        <p><strong>Email:</strong> @createdOwner.Email</p>
+        <p><strong>Phone:</strong> @createdOwner.ContactNumber</p>
+    </div>
+}

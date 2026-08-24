@@ -1,0 +1,69 @@
+﻿@page "/allkennels"
+
+@using BoardingKennelBookings.Components.Services
+@using BoardingKennelBookings.Components.Models
+@using BoardingKennelBookings.Components.Helpers
+
+@rendermode InteractiveServer
+@inject KennelService KennelService
+@inject DogService DogService
+@inject BookingService BookingService
+
+<h3>All Kennels</h3>
+
+@code {
+    private List<Kennel> Kennels = new();
+    private List<Booking> Bookings = new();
+    private DateTime startDate = DateTime.Parse("01/07/2024 00:00:00");
+    private DateTime endDate = DateTime.Now;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Kennels = await KennelService.GetAllKennels();
+        Bookings = await BookingService.FindBookingsWithInDateRange(startDate, endDate);
+    }
+}
+<!--Add Callender to see what dogs are booked in when-->
+
+@if (Kennels.Count == 0)
+{
+
+    <p>Loading kennels...</p>
+}
+else
+{
+    <table style="margin-bottom:10px;">
+            <thead>
+                <tr>
+                    <th>Number</th>
+                    <th>Dog</th>
+                    <th>Date booked</th>
+                 </tr>
+            </thead>
+            <tbody>
+                @foreach(var kennel in Kennels)
+                {
+                    <tr>
+                        <td>@kennel.KennelID</td>
+                        <td>Todo Dog Name</td>
+                        <td>Todo Date booked</td>
+                    </tr>
+                }
+            </tbody>
+    </table>
+}
+<ul>
+    @if(Bookings.Count > 0)
+    {
+        foreach(var singleBooking in Bookings)
+        {
+            <li>
+                <p>
+                    @* @singleBooking.DogIDs *@
+                    @singleBooking.StartDate
+                    @singleBooking.EndDate
+                </p>
+            </li>
+        }
+    }
+</ul>

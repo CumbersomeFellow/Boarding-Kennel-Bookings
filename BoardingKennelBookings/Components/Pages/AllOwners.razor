@@ -1,0 +1,80 @@
+﻿@page "/allowners"
+
+@using BoardingKennelBookings.Components.Services
+@using BoardingKennelBookings.Components.Models
+@using BoardingKennelBookings.Components.Helpers
+
+@rendermode InteractiveServer
+@inject OwnerService OwnerService
+
+<h3>All Owners</h3>
+
+@code {
+    private List<Owner> Owners = new();
+    private bool noResults = false;
+    List<Owner> defaultList = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Owners = await OwnerService.GetAllOwnersAsync();
+        Owners = Owners.OrderBy(owner => owner.FirstName).ToList();
+        defaultList = Owners;
+    }
+
+    private string searchOwnerNameText = "";
+
+    private List<Owner> SearchedOwners = new();
+
+    private async Task HandleSearchInput(ChangeEventArgs e)
+    {
+        searchOwnerNameText = e.Value?.ToString() ?? "test";
+
+        await SearchOwnersByName();
+    }
+
+    protected async Task SearchOwnersByName()
+    {
+        List<Owner> allResults = new();
+
+        allResults = SearchHelper.Search<Owner>(searchOwnerNameText, defaultList, owner => { return owner.FirstName + " " + owner.LastName; });
+
+        if (searchOwnerNameText.Length == 0)
+        {
+            Owners = defaultList;
+            noResults = false;
+        }
+        else if (allResults.Count == 0)
+        {
+            noResults = true;
+        }
+        else
+        {
+            Owners = allResults.OrderBy(owner => owner.FirstName).ToList();
+            noResults = false;
+        }
+    }
+}
+
+@if (Owners.Count == 0)
+{
+    <p>Loading owners...</p>
+}
+else if (noResults)
+{
+    <p>No Results</p>
+}
+else
+{
+    <ul>
+        @foreach (var owner in Owners)
+        {
+            <li>@owner.FirstName @owner.LastName</li>
+        }
+    </ul>
+}
+
+<form>
+    <div class="form-row">
+        <Input value="@searchOwnerNameText" @oninput="HandleSearchInput" />
+    </div>
+</form>

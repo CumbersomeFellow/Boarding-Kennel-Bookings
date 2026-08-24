@@ -1,0 +1,62 @@
+﻿@page "/createKennel"
+
+@using BoardingKennelBookings.Components.Services
+@using BoardingKennelBookings.Components.Models
+
+@rendermode InteractiveServer
+@inject KennelService KennelService
+
+<h3>Create Kennel</h3>
+
+
+<EditForm Model="newKennel" OnValidSubmit="HandleSubmit" FormName="CreateKennelForm">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <div class="form-row">
+        <label>
+            Kennel Number:
+        </label>
+        <InputNumber @bind-Value="newKennel.KennelNumber" />
+
+    </div>
+    <div class="form-row">
+        <button type="submit">Create Kennel</button>
+    </div>
+</EditForm>
+
+
+@code {
+    private Kennel newKennel = new();
+    private Kennel? createdKennel;
+    private string? errorMessage;
+
+    private async Task HandleSubmit()
+    {
+        try
+        {
+            createdKennel = await KennelService.CreateKennelAsync(newKennel);
+        }
+        catch (InvalidOperationException exception)
+        {
+            errorMessage = exception.Message;
+
+        }
+
+    }
+}
+@if (errorMessage != null)
+{
+    <p>
+        @errorMessage
+    </p>
+}
+
+@if (createdKennel != null)
+{
+    <div class="owner-summary">
+        <h3>Kennel Created</h3>
+
+        <p><strong>Kennel Number:</strong> @createdKennel.KennelNumber</p>
+       
+    </div>
+}

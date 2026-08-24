@@ -1,0 +1,88 @@
+﻿@page "/createdog"
+
+@using BoardingKennelBookings.Components.Services
+@using BoardingKennelBookings.Components.Models
+
+@rendermode InteractiveServer
+@inject OwnerService OwnerService
+@inject DogService DogService
+
+<h3>Create Dog</h3>
+
+<EditForm Model="newDog" OnValidSubmit="HandleSubmit" FormName="CreateDogForm">
+    <div class="form-row">
+        <label>
+            Name
+        </label>
+        <InputText @bind-Value="newDog.DogName" />
+    </div>
+    <div class="form-row">
+        <label>
+            Breed
+        </label>
+        <InputText @bind-Value="newDog.Breed" />
+    </div>
+    <div class="form-row">
+        <label>
+            Owner
+        </label>
+        @if (Owners.Count == 0)
+        {
+            <p>Loading Owners...</p>
+        }
+        else
+        {
+            <InputSelect @bind-Value="selectedOwnerId">
+                @foreach (var owner in Owners)
+                {
+                    <option value="@owner.OwnerID">@owner.FirstName @owner.LastName</option>
+                }
+            </InputSelect>
+        }
+    </div>
+    <div class="form-row">
+        <button type="submit">Create Dog</button>
+
+    </div>
+</EditForm>
+
+@code {
+    private List<Owner> Owners = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Owners = await OwnerService.GetAllOwnersAsync();
+    }
+}
+
+
+@code {
+    private Dog newDog = new();
+    private Dog? createdDog;
+    private Guid selectedOwnerId;
+    private Owner selectedOwner = new();
+
+
+    private async Task HandleSubmit()
+    {
+        //filter owners with id to give owner to the dog
+        selectedOwner = await OwnerService.FindOwnerAsync(selectedOwnerId);
+
+        if (selectedOwner != null)
+        {
+            newDog.OwnerID = selectedOwner.OwnerID;   
+            newDog.Owner = selectedOwner;
+        }
+
+        createdDog = await DogService.CreateDogAsync(newDog);
+    }
+}
+@if (createdDog != null)
+{
+    <div class="owner-summary">
+        <h3>Dog Created</h3>
+
+        <p><strong>Name:</strong> @createdDog.DogName</p>
+
+    </div>
+}

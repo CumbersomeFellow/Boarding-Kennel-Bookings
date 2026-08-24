@@ -1,0 +1,110 @@
+﻿@page "/booking"
+
+@using BoardingKennelBookings.Components.Services
+@using BoardingKennelBookings.Components.Models
+
+
+@rendermode InteractiveServer
+@inject OwnerService OwnerService
+@inject DogService DogService
+
+<h3>Booking</h3>
+
+@code {
+    private BookingForm newBooking = new();
+    private void HandleSubmit()
+    {
+
+    }
+
+    private List<Owner> Owners = new();
+    private List<Dog> Dogs = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Owners = await OwnerService.GetAllOwnersAsync();
+
+    }
+
+    private Guid selectedOwnerId;
+    private Guid selectedDogId;
+    private Owner selectedOwner = new();
+    private List<Dog> OwnerDogs = new();
+    private DateTime selectedStartDate;
+    private DateTime selectedEndDate;
+
+    private async Task HandleOwnerChange()
+    {
+        OwnerDogs = await DogService.GetOwnerDogsAsync(selectedOwnerId);
+    }
+
+    private void HandleDogInputChange()
+    {
+
+    }
+
+    private void HandleDateChosen()
+    {
+
+        //with date range - search for bookings that have the same date range - if none display kennels
+        //if found - check if user has selected am drop off. If PM - check if booking has am pickup - then show kennels available
+
+    }
+
+}
+
+<EditForm Model="newBooking" FormName="BookingForm" OnValidSubmit="HandleSubmit">
+    <div class="form-row">
+        <label>
+            Choose the owner:
+        </label>
+        @if (Owners.Count == 0)
+        {
+            <p>Loading Owners...</p>
+        }
+        else
+        {
+            <InputSelect @bind-Value="selectedOwnerId" @bind-Value:after="HandleOwnerChange">
+
+                <option value="">--Choose an owner--</option>
+                @foreach (var owner in Owners)
+                {
+                    <option value="@owner.OwnerID">@owner.FirstName @owner.LastName</option>
+                }
+            </InputSelect>
+        }
+    </div>
+    <div class="form-row">
+        <label>
+            Select dog(s)
+        </label>
+        @if (selectedOwnerId != Guid.Empty){
+            <InputRadioGroup @bind-Value="selectedDogId">
+            
+            @foreach (var dog in OwnerDogs)
+            {
+                <label>
+                    <input name="" type="checkbox" value="@dog.ID" onchange="" />
+                    @dog.DogName
+                </label>
+                   
+             }
+            </InputRadioGroup>
+        }
+
+    </div>
+    <div class="form-row">
+        <label>
+            Start date 
+        </label>
+        <InputDate @bind-Value="selectedStartDate" @bind-Value:after="HandleDateChosen" />
+    </div>
+    <div class="form-row">
+        <label>
+            End date
+        </label>
+        <InputDate @bind-Value="selectedEndDate" @bind-Value:after="HandleDateChosen"/>
+    </div>
+    
+    <!--Choose dates then show available kennels-->
+</EditForm>
