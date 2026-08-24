@@ -172,8 +172,12 @@ html .kennel .info, body .kennel .info {
   font-size: 0.75rem;
 }
 html .kennel .date-output, body .kennel .date-output {
-  float: left;
+  display: flex;
   font-size: 0.75rem;
+  align-items: center;
+}
+html .kennel i, body .kennel i {
+  margin: 0 0.25rem;
 }
 html .nav-scrollable, body .nav-scrollable {
   background-color: #13162a;

@@ -1,9 +1,12 @@
 {
    "name": "BoardingKennelBookings",
-  "scripts": {
-    "scss": "sass --watch BoardingKennelBookings/wwwroot/scss/app.scss:BoardingKennelBookings/wwwroot/css/app.css"
-  },
-  "devDependencies": {
-    "sass": "^1.103.1"
-  }
+   "scripts": {
+      "scss": "sass --watch BoardingKennelBookings/wwwroot/scss/app.scss:BoardingKennelBookings/wwwroot/css/app.css"
+   },
+   "devDependencies": {
+      "sass": "^1.103.1"
+   },
+   "dependencies": {
+      "bootstrap-icons": "^1.13.1"
+   }
 }
