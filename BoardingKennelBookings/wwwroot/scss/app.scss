@@ -23,6 +23,8 @@ html, body {
     $space-7: 3rem; // 48px
     $space-8: 4rem; // 64px
 
+    $bg-darkblue: #181C2A;
+
     a, .btn-link {
         color: #006bb7;
     }
@@ -103,8 +105,16 @@ html, body {
         float: left;
     }
     //width classes
+    [class^="wd-"] {
+        display: flex;
+    }
+
     .wd-100 {
         width: 100%;
+    }
+
+    .wd-50 {
+        width: 50%;
     }
 
     .wd-33 {
@@ -291,4 +301,17 @@ html, body {
     //.gap-3 {
     //    gap: calc(var(--spacing) * 3);
     //}
+    form {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .form-row {
+
+
+        section {
+            width: 100%;
+        }
+    }
 }

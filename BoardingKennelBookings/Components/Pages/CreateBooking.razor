@@ -8,10 +8,11 @@
 @inject OwnerService OwnerService
 @inject DogService DogService
 
-<h3>Booking</h3>
+<h1 class="text-3xl font-bold underline">Booking</h1>
 
 @code {
     private BookingForm newBooking = new();
+
     private void HandleSubmit()
     {
 
@@ -54,56 +55,70 @@
 }
 
 <EditForm Model="newBooking" FormName="BookingForm" OnValidSubmit="HandleSubmit">
-    <div class="form-row">
-        <label>
-            Choose the owner:
-        </label>
-        @if (Owners.Count == 0)
-        {
-            <p>Loading Owners...</p>
-        }
-        else
-        {
-            <InputSelect @bind-Value="selectedOwnerId" @bind-Value:after="HandleOwnerChange">
-
-                <option value="">--Choose an owner--</option>
-                @foreach (var owner in Owners)
-                {
-                    <option value="@owner.OwnerID">@owner.FirstName @owner.LastName</option>
-                }
-            </InputSelect>
-        }
-    </div>
-    <div class="form-row">
-        <label>
-            Select dog(s)
-        </label>
-        @if (selectedOwnerId != Guid.Empty){
-            <InputRadioGroup @bind-Value="selectedDogId">
-            
-            @foreach (var dog in OwnerDogs)
-            {
+    <div class="wd-100">
+        <div class="wd-25"></div>
+        <div class="wd-50 form-row">
+            <section>
                 <label>
-                    <input name="" type="checkbox" value="@dog.ID" onchange="" />
-                    @dog.DogName
+                    Choose the owner:
                 </label>
-                   
-             }
-            </InputRadioGroup>
-        }
+                @if (Owners.Count == 0)
+                {
+                    <p>Loading Owners...</p>
+                }
+                else
+                {
+                    <InputSelect @bind-Value="selectedOwnerId" @bind-Value:after="HandleOwnerChange">
 
+                        <option value="">--Choose an owner--</option>
+                        @foreach (var owner in Owners)
+                        {
+                            <option value="@owner.OwnerID">@owner.FirstName @owner.LastName</option>
+                        }
+                    </InputSelect>
+                }
+            </section>
+            <section>
+                <label>
+                    Select dog(s)
+                </label>
+                @if (selectedOwnerId != Guid.Empty)
+                {
+                    <InputRadioGroup @bind-Value="selectedDogId">
+
+                        @foreach (var dog in OwnerDogs)
+                        {
+                            <label>
+                                <input name="" type="checkbox" value="@dog.ID" onchange="" />
+                                @dog.DogName
+                            </label>
+
+                        }
+                    </InputRadioGroup>
+                }
+            </section>
+        </div>
+        <div class="wd-25"></div>
     </div>
-    <div class="form-row">
-        <label>
-            Start date 
-        </label>
-        <InputDate @bind-Value="selectedStartDate" @bind-Value:after="HandleDateChosen" />
-    </div>
-    <div class="form-row">
-        <label>
-            End date
-        </label>
-        <InputDate @bind-Value="selectedEndDate" @bind-Value:after="HandleDateChosen"/>
+    <div class="wd-100">
+        <div class="wd-25"></div>
+        <section>
+
+        </section>
+        <div class="form-row wd-50">
+            <label>
+                Start date
+            </label>
+            <InputDate @bind-Value="selectedStartDate" @bind-Value:after="HandleDateChosen" />
+            <section>
+                <label>
+                    End date
+                </label>
+                <InputDate @bind-Value="selectedEndDate" @bind-Value:after="HandleDateChosen" />
+            </section>
+        </div>
+      
+        <div class="wd-25"></div>
     </div>
     
     <!--Choose dates then show available kennels-->
