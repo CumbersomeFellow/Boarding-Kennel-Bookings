@@ -61,9 +61,6 @@ html th:first-child, html td:first-child, body th:first-child, body td:first-chi
 html h1, html h2, body h1, body h2 {
   line-height: 1.2;
 }
-html .row, body .row {
-  float: left;
-}
 html [class^=wd-], body [class^=wd-] {
   display: flex;
 }

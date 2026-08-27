@@ -5,7 +5,7 @@
         <NavMenu />
     </div>
 
-    <main>
+    <main class="flex-1 overflow-y-auto">
 
         <div class="top-row px-4">
             <h1>
@@ -14,10 +14,10 @@
             <a class="button" href="https://learn.microsoft.com/aspnet/core/" target="_blank">New Booking</a>
         </div>
 
-        <article class="flex-1 overflow-y-auto">
-            <div class="p-6 flex flex-col gap-5">
+        <article class="p-6 flex flex-col gap-5">
+         
                 @Body
-            </div>
+    
           
         </article>
     </main>
