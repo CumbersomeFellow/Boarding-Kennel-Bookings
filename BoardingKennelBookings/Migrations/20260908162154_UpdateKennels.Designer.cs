@@ -4,6 +4,7 @@ using BoardingKennelBookings.Components.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BoardingKennelBookings.Migrations
 {
     [DbContext(typeof(KennelContext))]
-    partial class KennelContextModelSnapshot : ModelSnapshot
+    [Migration("20260908162154_UpdateKennels")]
+    partial class UpdateKennels
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -54,26 +57,6 @@ namespace BoardingKennelBookings.Migrations
                     b.HasIndex("OwnerID");
 
                     b.ToTable("Bookings");
-                });
-
-            modelBuilder.Entity("BoardingKennelBookings.Components.Models.BookingDogKennel", b =>
-                {
-                    b.Property<Guid>("BookingDogKennelID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("BookingID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("DogID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("KennelID")
-                        .HasColumnType("int");
-
-                    b.HasKey("BookingDogKennelID");
-
-                    b.ToTable("BookingDogKennel");
                 });
 
             modelBuilder.Entity("BoardingKennelBookings.Components.Models.Dog", b =>

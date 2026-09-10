@@ -17,7 +17,7 @@ namespace BoardingKennelBookings.Components.Data
         public DbSet<Owner> Owners { get; set; }
 
         public DbSet<Kennel> Kennels { get; set; }
-
+        public DbSet<BookingDogKennel> BookingDogKennel { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Booking>()

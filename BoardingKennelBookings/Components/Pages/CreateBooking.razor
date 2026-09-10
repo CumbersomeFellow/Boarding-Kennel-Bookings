@@ -41,7 +41,7 @@
 
     private void HandleDogInputChange()
     {
-
+        
     }
 
     private void HandleDateChosen()
@@ -53,9 +53,9 @@
 }
 
 <EditForm Model="newBooking" FormName="BookingForm" OnValidSubmit="HandleSubmit">
-    <div class="wd-100">
-        <div class="wd-25"></div>
-        <div class="wd-50 form-row">
+
+
+        <div class="flex">
             <section>
                 <label>
                     Choose the owner:
@@ -96,14 +96,8 @@
                 }
             </section>
         </div>
-        <div class="wd-25"></div>
-    </div>
-    <div class="wd-100">
-        <div class="wd-25"></div>
-        <section>
-
-        </section>
-        <div class="form-row wd-50">
+   
+        <div class="flex">
             <label>
                 Start date
             </label>
@@ -115,9 +109,8 @@
                 <InputDate @bind-Value="selectedEndDate" @bind-Value:after="HandleDateChosen" />
             </section>
         </div>
-      
-        <div class="wd-25"></div>
-    </div>
+   
+
     
     <!--Choose dates then show available kennels-->
 </EditForm>
