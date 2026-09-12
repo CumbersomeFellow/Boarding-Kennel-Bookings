@@ -7,6 +7,8 @@
 @rendermode InteractiveServer
 @inject OwnerService OwnerService
 @inject DogService DogService
+@inject KennelAvailabilityService KennelAvailabilityService
+@inject BookingService BookingService
 
 <h1 class="text-3xl font-bold underline">Booking</h1>
 
@@ -31,6 +33,7 @@
     private Guid selectedDogId;
     private Owner selectedOwner = new();
     private List<Dog> OwnerDogs = new();
+    private List<Kennel> availableKennels = null;
     private DateTime selectedStartDate;
     private DateTime selectedEndDate;
 
@@ -41,14 +44,19 @@
 
     private void HandleDogInputChange()
     {
-        
+
     }
 
     private void HandleDateChosen()
     {
-
+        Console.WriteLine(selectedStartDate);
         //with date range - search for bookings that have the same date range - if none display kennels
         //if found - check if user has selected am drop off. If PM - check if booking has am pickup - then show kennels available
+    }
+
+    private async Task HandleCheckKennelAvailable()
+    {
+        availableKennels = await KennelAvailabilityService.GetAllKennelsAvailable(selectedStartDate, selectedEndDate);
     }
 }
 
@@ -98,19 +106,41 @@
         </div>
    
         <div class="flex">
+       
+        </div>
+   
+        <div class="flex">
+            <section>
+                <label>
+                    Check kennel availability
+                </label>
+
+            </section>
+        <section>
             <label>
                 Start date
             </label>
             <InputDate @bind-Value="selectedStartDate" @bind-Value:after="HandleDateChosen" />
-            <section>
-                <label>
-                    End date
-                </label>
-                <InputDate @bind-Value="selectedEndDate" @bind-Value:after="HandleDateChosen" />
-            </section>
-        </div>
-   
+        </section>
 
-    
+        <section>
+            <label>
+                End date
+            </label>
+            <InputDate @bind-Value="selectedEndDate" @bind-Value:after="HandleDateChosen" />
+        </section>
+        <section>
+         
+            <button class="btn btn-blue" @onclick="HandleCheckKennelAvailable" >Check</button>
+        </section>
+        </div>
+
+    @if (availableKennels != null)
+    {
+        <section>
+            KENNEL
+        </section>
+    }
+
     <!--Choose dates then show available kennels-->
 </EditForm>

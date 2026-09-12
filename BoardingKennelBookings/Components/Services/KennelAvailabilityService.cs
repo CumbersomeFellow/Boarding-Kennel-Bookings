@@ -1,5 +1,6 @@
 ﻿using BoardingKennelBookings.Components.Data;
 using BoardingKennelBookings.Components.Models;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
 namespace BoardingKennelBookings.Components.Services
@@ -31,6 +32,7 @@ namespace BoardingKennelBookings.Components.Services
 
             //check bookings between date range
             //get booking IDs
+            
             List<Booking> bookings = await bookingService.FindBookingsWithInDateRange(startDate, endDate);
             List<Kennel> kennels = await kennelService.GetAllKennels();
             List<BookingDogKennel> BookingDogKennelResult = null;

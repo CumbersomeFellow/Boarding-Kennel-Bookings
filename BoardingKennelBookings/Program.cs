@@ -10,6 +10,7 @@ builder.Services.AddScoped<DogService>();
 builder.Services.AddScoped<OwnerService>();
 builder.Services.AddScoped<KennelService>();
 builder.Services.AddScoped<BookingService>();
+builder.Services.AddScoped<KennelAvailabilityService>();
 
 builder.Services.AddDbContext<KennelContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));

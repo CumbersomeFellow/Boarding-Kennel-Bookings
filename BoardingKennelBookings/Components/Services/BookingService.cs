@@ -13,7 +13,7 @@ namespace BoardingKennelBookings.Components.Services
             _context = context;
         }
 
-        public async Task<List<Booking>>? FindBookingsWithInDateRange(DateTime startDate, DateTime endDate)
+        public async Task<List<Booking>> FindBookingsWithInDateRange(DateTime startDate, DateTime endDate)
         {
             return await _context.Bookings.Where(booking => startDate <= booking.EndDate && endDate >= booking.StartDate).ToListAsync();
         }
