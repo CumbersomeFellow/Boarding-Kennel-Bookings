@@ -31,5 +31,12 @@ namespace BoardingKennelBookings.Components.Services
         {
             return await _context.Kennels.ToListAsync();
         }
+
+        public async Task<Kennel> GetKennel(int kennelID)
+        {
+            List<Kennel> allKennels = await _context.Kennels.ToListAsync();
+
+            return allKennels.Where(kennel => kennel.KennelID == kennelID).Single();
+        }
     }
 }
