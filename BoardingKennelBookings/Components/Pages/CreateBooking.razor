@@ -2,7 +2,7 @@
 
 @using BoardingKennelBookings.Components.Services
 @using BoardingKennelBookings.Components.Models
-
+@using BoardingKennelBookings.Components.Helpers
 
 @rendermode InteractiveServer
 @inject OwnerService OwnerService
@@ -36,6 +36,7 @@
     private List<Kennel> availableKennels = new List<Kennel>();
     private DateTime selectedStartDate = DateTime.Today;
     private DateTime selectedEndDate = DateTime.Today.AddDays(1);
+    private bool validDate = true;
 
     private async Task HandleOwnerChange()
     {
@@ -56,7 +57,12 @@
 
     private async Task HandleCheckKennelAvailable()
     {
-        availableKennels = await KennelAvailabilityService.GetAllKennelsAvailable(selectedStartDate, selectedEndDate);
+        validDate = DateHelper.IsValidDateRange(selectedStartDate, selectedEndDate);
+
+        if (validDate)
+        {
+            availableKennels = await KennelAvailabilityService.GetAllKennelsAvailable(selectedStartDate, selectedEndDate);
+        }
     }
 }
 
@@ -134,8 +140,13 @@
             <button class="btn btn-blue" @onclick="HandleCheckKennelAvailable" >Check</button>
         </section>
         </div>
-
-    @if (availableKennels.Count > 0)
+    @if (!validDate)
+    {
+        <section>
+            Please provide a valid date.
+        </section>
+    }
+    @if (availableKennels.Count > 0 && validDate)
     {
         <section>
             KENNEL
