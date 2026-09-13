@@ -148,9 +148,13 @@
     }
     @if (availableKennels.Count > 0 && validDate)
     {
-        <section>
-            KENNEL
-        </section>
+        foreach (var kennel in availableKennels)
+        {
+            <section>
+                @kennel.KennelID
+            </section>
+        }
+    
     }
 
     <!--Choose dates then show available kennels-->

@@ -26,24 +26,13 @@ namespace BoardingKennelBookings.Components.Services
             return false;
         }
 
-        //check all kennels
-        //add is clean check later - shouldnt be hard to implement right!?
         public async Task<List<Kennel>> GetAllKennelsAvailable(DateTime startDate, DateTime endDate)
         {
             List<Kennel> result = new List<Kennel>();
-
-            //check bookings between date range
-            //get booking IDs
-            
             List<Booking> bookings = await _bookingService.FindBookingsWithInDateRange(startDate, endDate);
             List<Kennel> kennels = await _kennelService.GetAllKennels();
             List<BookingDogKennel> BookingDogKennelResult = new List<BookingDogKennel>();
 
-
-            //filter bookingDogKennel with BookingDogKennels IDs
-            //we now have all the kennel ids in use
-            //list out all kennels that are not in use
-            //check each kennel - if ID appears - remove from list
             if (bookings.Count > 0)
             {
                 foreach (var booking in bookings)
@@ -54,11 +43,14 @@ namespace BoardingKennelBookings.Components.Services
            
             if(BookingDogKennelResult.Count > 0)
             {
-                foreach (var BookingDogKennelSingle in BookingDogKennelResult)
+                foreach (var kennel in kennels)
                 {
-                    //i'll be able to shorten
-                    if (!kennels.Contains(await _kennelService.GetKennel(BookingDogKennelSingle.KennelID))){
-                        result.Add(await _kennelService.GetKennel(BookingDogKennelSingle.KennelID));
+                    foreach (var BookingDogKennelSingle in BookingDogKennelResult)
+                    {
+                        if (BookingDogKennelSingle.KennelID != kennel.KennelID)
+                        {
+                            result.Add(kennel);
+                        }
                     }
                 }
             }
