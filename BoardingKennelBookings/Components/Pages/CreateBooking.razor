@@ -33,9 +33,9 @@
     private Guid selectedDogId;
     private Owner selectedOwner = new();
     private List<Dog> OwnerDogs = new();
-    private List<Kennel> availableKennels = null;
-    private DateTime selectedStartDate;
-    private DateTime selectedEndDate;
+    private List<Kennel> availableKennels = new List<Kennel>();
+    private DateTime selectedStartDate = DateTime.Today;
+    private DateTime selectedEndDate = DateTime.Today.AddDays(1);
 
     private async Task HandleOwnerChange()
     {
@@ -135,7 +135,7 @@
         </section>
         </div>
 
-    @if (availableKennels != null)
+    @if (availableKennels.Count > 0)
     {
         <section>
             KENNEL

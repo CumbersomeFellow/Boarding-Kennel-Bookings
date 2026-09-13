@@ -62,6 +62,10 @@ namespace BoardingKennelBookings.Components.Services
                     }
                 }
             }
+            else
+            {
+                result = kennels;
+            }
 
             return result; 
         }
