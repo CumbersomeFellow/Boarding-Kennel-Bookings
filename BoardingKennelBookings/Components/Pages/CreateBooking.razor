@@ -37,6 +37,7 @@
     private DateTime selectedStartDate = DateTime.Today;
     private DateTime selectedEndDate = DateTime.Today.AddDays(1);
     private bool validDate = true;
+    private List<int> selectedKennelIds = new();
 
     private async Task HandleOwnerChange()
     {
@@ -62,6 +63,27 @@
         if (validDate)
         {
             availableKennels = await KennelAvailabilityService.GetAllKennelsAvailable(selectedStartDate, selectedEndDate);
+        }
+    }
+
+    private void HandleSubmitKennels()
+    {
+        foreach(var kennelID in selectedKennelIds)
+        {
+            Console.WriteLine(kennelID);
+        }
+    }
+
+    private void HandleAddKennel(ChangeEventArgs eventArgs, int kennelID)
+    {
+        bool isChecked = (bool)eventArgs.Value;
+
+        if (isChecked)
+        {
+            selectedKennelIds.Add(kennelID);
+        }else if (selectedKennelIds.Contains(kennelID))
+        {
+            selectedKennelIds.Remove(kennelID);
         }
     }
 }
@@ -151,11 +173,19 @@
         foreach (var kennel in availableKennels)
         {
             <section>
-                @kennel.KennelID
+                <label>
+                    <input type="checkbox" value="@kennel.KennelID" @onchange="e => HandleAddKennel(e, kennel.KennelID)" />
+                    Kennel @kennel.KennelID
+                </label>
+                
             </section>
         }
-    
+        <section>
+            <button class="btn btn-blue" onclick="HandleSubmitKennels">
+                which kennels?
+            </button>
+        </section>
     }
-
+ 
     <!--Choose dates then show available kennels-->
 </EditForm>
