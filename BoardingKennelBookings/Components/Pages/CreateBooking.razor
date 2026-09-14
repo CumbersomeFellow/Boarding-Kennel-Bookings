@@ -38,6 +38,7 @@
     private DateTime selectedEndDate = DateTime.Today.AddDays(1);
     private bool validDate = true;
     private List<int> selectedKennelIds = new();
+    private bool amDropoff = true;
 
     private async Task HandleOwnerChange()
     {
@@ -182,10 +183,23 @@
         }
         <section>
             <button class="btn btn-blue" onclick="HandleSubmitKennels">
-                which kennels?
+                Which kennels?
             </button>
         </section>
     }
+    <section>
+        <InputRadioGroup @bind-Value="amDropoff">
+            <label>
+                <InputRadio Value="true" />
+                AM
+            </label>
+
+            <label>
+                <InputRadio Value="false" />
+                PM
+            </label>
+        </InputRadioGroup>
+    </section>
  
     <!--Choose dates then show available kennels-->
 </EditForm>
