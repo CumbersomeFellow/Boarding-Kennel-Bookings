@@ -4,6 +4,7 @@
     {
         public Guid BookingDogKennelID { get; set; }
         public Guid BookingID { get; set; }
+        public Booking Booking { get; set; } = new Booking();
 
         public Guid DogID { get; set; }
 

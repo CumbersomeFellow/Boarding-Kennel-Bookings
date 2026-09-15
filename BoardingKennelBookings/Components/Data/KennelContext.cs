@@ -20,21 +20,10 @@ namespace BoardingKennelBookings.Components.Data
         public DbSet<BookingDogKennel> BookingDogKennel { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Booking>()
-                .HasMany(booking => booking.Dogs)
-                .WithMany(d => d.Bookings)
-                .UsingEntity<Dictionary<string, object>>(
-                    "BookingDog",
-                    j => j
-                        .HasOne<Dog>()
-                        .WithMany()
-                        .HasForeignKey("DogsID")
-                        .OnDelete(DeleteBehavior.NoAction),
-                    j => j
-                        .HasOne<Booking>()
-                        .WithMany()
-                        .HasForeignKey("BookingsBookingID")
-                        .OnDelete(DeleteBehavior.Cascade));
+            modelBuilder.Entity<BookingDogKennel>()
+                .HasOne(bdk => bdk.Booking)
+                .WithMany()
+                .HasForeignKey(bdk => bdk.BookingID);
         }
     }
 

@@ -24,6 +24,10 @@ namespace BoardingKennelBookings.Components.Services
             return Dog;
         }
 
+        public async Task<Dog?> GetDog(Guid dogID)
+        {
+            return await _context.Dogs.FirstOrDefaultAsync(d => d.ID == dogID);
+        }
         public async Task<List<Dog>> GetAllDogsAsync()
         {
             return await _context.Dogs// optional, include the customer info
@@ -36,6 +40,8 @@ namespace BoardingKennelBookings.Components.Services
                 .Where(d => d.OwnerID == OwnerID)
                 .ToListAsync();
         }
+
+
         public string GetNameFromDog(Dog dog)
         {
             return dog.DogName;

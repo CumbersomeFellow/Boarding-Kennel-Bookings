@@ -89,10 +89,16 @@
         newBooking.AMDropoff = amDropOff;
         newBooking.AMPickup = amPickUp;
 
-        Console.WriteLine(newBooking.AMPickup);
-        Console.WriteLine(newBooking.DogIDs);
-        Console.WriteLine(newBooking.KennelIDs);
-        Console.WriteLine(newBooking.StartDate);
+        Booking booking = new Booking
+        {
+            BookingID = Guid.NewGuid(),
+            OwnerID = newBooking.OwnerID,
+            StartDate = newBooking.StartDate,
+            EndDate = newBooking.EndDate,
+            AMDropoff = newBooking.AMDropoff,
+            AMPickup = newBooking.AMPickup
+        
+        };
     }
 
 }

@@ -47,7 +47,7 @@ namespace BoardingKennelBookings.Migrations
 
                     b.HasIndex("OwnerID");
 
-                    b.ToTable("Bookings");
+                    b.ToTable("Bookings", (string)null);
                 });
 
             modelBuilder.Entity("BoardingKennelBookings.Components.Models.BookingDogKennel", b =>
@@ -67,7 +67,7 @@ namespace BoardingKennelBookings.Migrations
 
                     b.HasKey("BookingDogKennelID");
 
-                    b.ToTable("BookingDogKennel");
+                    b.ToTable("BookingDogKennel", (string)null);
                 });
 
             modelBuilder.Entity("BoardingKennelBookings.Components.Models.Dog", b =>
@@ -94,7 +94,7 @@ namespace BoardingKennelBookings.Migrations
 
                     b.HasIndex("OwnerID");
 
-                    b.ToTable("Dogs");
+                    b.ToTable("Dogs", (string)null);
                 });
 
             modelBuilder.Entity("BoardingKennelBookings.Components.Models.Kennel", b =>
@@ -110,7 +110,7 @@ namespace BoardingKennelBookings.Migrations
 
                     b.HasKey("KennelID");
 
-                    b.ToTable("Kennels");
+                    b.ToTable("Kennels", (string)null);
                 });
 
             modelBuilder.Entity("BoardingKennelBookings.Components.Models.Owner", b =>
@@ -137,7 +137,7 @@ namespace BoardingKennelBookings.Migrations
 
                     b.HasKey("OwnerID");
 
-                    b.ToTable("Owners");
+                    b.ToTable("Owners", (string)null);
                 });
 
             modelBuilder.Entity("BookingDog", b =>
@@ -152,7 +152,7 @@ namespace BoardingKennelBookings.Migrations
 
                     b.HasIndex("DogsID");
 
-                    b.ToTable("BookingDog");
+                    b.ToTable("BookingDog", (string)null);
                 });
 
             modelBuilder.Entity("BookingKennel", b =>
@@ -167,7 +167,7 @@ namespace BoardingKennelBookings.Migrations
 
                     b.HasIndex("KennelsKennelID");
 
-                    b.ToTable("BookingKennel");
+                    b.ToTable("BookingKennel", (string)null);
                 });
 
             modelBuilder.Entity("BoardingKennelBookings.Components.Models.Booking", b =>
