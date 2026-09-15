@@ -38,7 +38,8 @@
     private DateTime selectedEndDate = DateTime.Today.AddDays(1);
     private bool validDate = true;
     private List<int> selectedKennelIds = new();
-    private bool amDropoff = true;
+    private bool amPickUp = true;
+    private bool amDropOff = true;
 
     private async Task HandleOwnerChange()
     {
@@ -103,7 +104,7 @@
                 }
                 else
                 {
-                    <InputSelect @bind-Value="selectedOwnerId" @bind-Value:after="HandleOwnerChange">
+                    <InputSelect @bind-Value="selectedOwnerId" @bind-Value:after="HandleOwnerChange" style="background:black;">
 
                         <option value="">--Choose an owner--</option>
                         @foreach (var owner in Owners)
@@ -188,7 +189,26 @@
         </section>
     }
     <section>
-        <InputRadioGroup @bind-Value="amDropoff">
+        <label>
+            AM or PM drop off?
+        </label>
+        <InputRadioGroup @bind-Value="amDropOff">
+            <label>
+                <InputRadio Value="true" />
+                AM
+            </label>
+
+            <label>
+                <InputRadio Value="false" />
+                PM
+            </label>
+        </InputRadioGroup>
+    </section>
+    <section>
+        <InputRadioGroup @bind-Value="amPickUp">
+            <label>
+                AM or PM pick up?
+            </label>
             <label>
                 <InputRadio Value="true" />
                 AM
@@ -201,5 +221,5 @@
         </InputRadioGroup>
     </section>
  
-    <!--Choose dates then show available kennels-->
+    
 </EditForm>
