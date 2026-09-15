@@ -15,10 +15,7 @@
 @code {
     private BookingForm newBooking = new();
 
-    private void HandleSubmit()
-    {
 
-    }
 
     private List<Owner> Owners = new();
     private List<Dog> Dogs = new();
@@ -26,7 +23,6 @@
     protected override async Task OnInitializedAsync()
     {
         Owners = await OwnerService.GetAllOwnersAsync();
-
     }
 
     private Guid selectedOwnerId;
@@ -37,25 +33,25 @@
     private DateTime selectedStartDate = DateTime.Today;
     private DateTime selectedEndDate = DateTime.Today.AddDays(1);
     private bool validDate = true;
-    private List<int> selectedKennelIds = new();
     private bool amPickUp = true;
     private bool amDropOff = true;
 
     private async Task HandleOwnerChange()
     {
         OwnerDogs = await DogService.GetOwnerDogsAsync(selectedOwnerId);
+
+        newBooking.OwnerID = selectedOwnerId;
     }
 
-    private void HandleDogInputChange()
+    private void HandleDogInputChange(Guid dogID)
     {
-
+        newBooking.DogIDs.Add(dogID);
     }
 
     private void HandleDateChosen()
     {
-        Console.WriteLine(selectedStartDate);
-        //with date range - search for bookings that have the same date range - if none display kennels
-        //if found - check if user has selected am drop off. If PM - check if booking has am pickup - then show kennels available
+        newBooking.StartDate = selectedStartDate;
+        newBooking.EndDate = selectedEndDate;
     }
 
     private async Task HandleCheckKennelAvailable()
@@ -70,7 +66,7 @@
 
     private void HandleSubmitKennels()
     {
-        foreach(var kennelID in selectedKennelIds)
+        foreach (var kennelID in newBooking.KennelIDs)
         {
             Console.WriteLine(kennelID);
         }
@@ -82,12 +78,23 @@
 
         if (isChecked)
         {
-            selectedKennelIds.Add(kennelID);
-        }else if (selectedKennelIds.Contains(kennelID))
+            newBooking.KennelIDs.Add(kennelID);
+        }else if ( newBooking.KennelIDs.Contains(kennelID))
         {
-            selectedKennelIds.Remove(kennelID);
+            newBooking.KennelIDs.Remove(kennelID);
         }
     }
+    private async Task HandleSubmit()
+    {
+        newBooking.AMDropoff = amDropOff;
+        newBooking.AMPickup = amPickUp;
+
+        Console.WriteLine(newBooking.AMPickup);
+        Console.WriteLine(newBooking.DogIDs);
+        Console.WriteLine(newBooking.KennelIDs);
+        Console.WriteLine(newBooking.StartDate);
+    }
+
 }
 
 <EditForm Model="newBooking" FormName="BookingForm" OnValidSubmit="HandleSubmit">
@@ -125,7 +132,7 @@
                         @foreach (var dog in OwnerDogs)
                         {
                             <label>
-                                <input name="" type="checkbox" value="@dog.ID" onchange="" />
+                            <input name="" type="checkbox" value="@dog.ID" onchange="HandleDogInputChange(dog.ID)" />
                                 @dog.DogName
                             </label>
 
@@ -221,5 +228,9 @@
         </InputRadioGroup>
     </section>
  
-    
+    <section>
+        <button type="submit" class="btn btn-blue">
+            Submit
+        </button>
+    </section>
 </EditForm>
