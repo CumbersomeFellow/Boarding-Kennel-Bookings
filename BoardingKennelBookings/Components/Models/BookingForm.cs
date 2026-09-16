@@ -25,6 +25,7 @@ namespace BoardingKennelBookings.Components.Models
         [MinLength(1, ErrorMessage = "Please select at least one kennel.")]
         public List<int> KennelIDs { get; set; } = new List<int>();
 
+        [Required(ErrorMessage = "Please select a kennel for each dog")]
         public Dictionary<Guid, int> DogKennelAssignments { get; set; } = new();
 
     }

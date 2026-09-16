@@ -14,9 +14,6 @@
 
 @code {
     private BookingForm newBooking = new();
-
-
-
     private List<Owner> Owners = new();
     private List<Dog> Dogs = new();
 
@@ -25,15 +22,12 @@
         Owners = await OwnerService.GetAllOwnersAsync();
     }
 
-
     private Guid selectedOwnerId;
-    private Guid selectedDogId;
     private Owner selectedOwner = new();
     private List<Dog> OwnerDogs = new();
     private List<Kennel> availableKennels = new List<Kennel>();
     private DateTime selectedStartDate = DateTime.Today;
     private DateTime selectedEndDate = DateTime.Today.AddDays(1);
-    private List<Guid> selectedDogIdsForKennel = new List<Guid>();
     private bool validDate = true;
     private bool amPickUp = true;
     private bool amDropOff = true;
@@ -41,13 +35,11 @@
     private async Task HandleOwnerChange()
     {
         OwnerDogs = await DogService.GetOwnerDogsAsync(selectedOwnerId);
-
         newBooking.OwnerID = selectedOwnerId;
     }
 
     private void HandleDogKennelAssignment(Guid dogID, int kennelID)
     {
-        //need to do remove also
         if (newBooking.DogKennelAssignments.ContainsKey(dogID))
         {
             newBooking.DogKennelAssignments.Remove(dogID);
@@ -71,14 +63,6 @@
         if (validDate)
         {
             availableKennels = await KennelAvailabilityService.GetAllKennelsAvailable(selectedStartDate, selectedEndDate);
-        }
-    }
-
-    private void HandleSubmitKennels()
-    {
-        foreach (var kennelID in newBooking.KennelIDs)
-        {
-            Console.WriteLine(kennelID);
         }
     }
 
@@ -114,22 +98,19 @@
 
         //i need to sort the dog with the kennel 
         //when selecting the kennel - select the dog also.
-        foreach (var bookedDogID in newBooking.DogIDs)
+        foreach (var (dogID, kennelID) in newBooking.DogKennelAssignments)
         {
             BookingDogKennel bookingDogKennel = new BookingDogKennel
             {
                 BookingID = _bookingID,
-                DogID = bookedDogID,
-                //KennelID = newBooking.KennelIDs
-
+                DogID = dogID,
+                KennelID = kennelID
             };
         }
     }
 }
 
 <EditForm Model="newBooking" FormName="BookingForm" OnValidSubmit="HandleSubmit">
-
-
         <div class="flex">
             <section>
                 <label>
@@ -151,29 +132,6 @@
                     </InputSelect>
                 }
             </section>
-            <section>
-                <label>
-                    Select dog(s)
-                </label>
-                @* @if (selectedOwnerId != Guid.Empty)
-                {
-                    <InputRadioGroup @bind-Value="selectedDogId">
-
-                        @foreach (var dog in OwnerDogs)
-                        {
-                            <label>
-                            <input name="" type="checkbox" value="@dog.ID" onchange="HandleDogInputChange(dog.ID)" />
-                                @dog.DogName
-                            </label>
-
-                        }
-                    </InputRadioGroup>
-                } *@
-            </section>
-        </div>
-   
-        <div class="flex">
-       
         </div>
    
         <div class="flex">
@@ -213,28 +171,20 @@
         {
             <section>
                 <label>
-                    <input type="checkbox" value="@kennel.KennelID" @onchange="e => HandleAddKennel(e, kennel.KennelID)" />
                     Kennel @kennel.KennelID
                 </label>
                 @if (selectedOwnerId != Guid.Empty)
                 {
-                    <InputRadioGroup @bind-Value="selectedDogIdsForKennel">
-                        @foreach (var dog in OwnerDogs)
-                        {
-                            <label>
-                                <input name="" type="checkbox" value="@dog.ID" @onchange="() => HandleDogKennelAssignment(dog.ID, kennel.KennelID)" />
-                                @dog.DogName
-                            </label>
-                        }
-                    </InputRadioGroup>
+                    @foreach (var dog in OwnerDogs)
+                    {
+                        <label>
+                            <input name="" type="checkbox" value="@dog.ID" @onchange="() => HandleDogKennelAssignment(dog.ID, kennel.KennelID)" />
+                            @dog.DogName
+                        </label>
+                    }
                 }
             </section>
         }
-        <section>
-            <button class="btn btn-blue" onclick="HandleSubmitKennels">
-                Which kennels?
-            </button>
-        </section>
     }
     <section>
         <label>
