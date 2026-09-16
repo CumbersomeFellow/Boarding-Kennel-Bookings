@@ -25,6 +25,7 @@
         Owners = await OwnerService.GetAllOwnersAsync();
     }
 
+
     private Guid selectedOwnerId;
     private Guid selectedDogId;
     private Owner selectedOwner = new();
@@ -32,6 +33,7 @@
     private List<Kennel> availableKennels = new List<Kennel>();
     private DateTime selectedStartDate = DateTime.Today;
     private DateTime selectedEndDate = DateTime.Today.AddDays(1);
+    private List<Guid> selectedDogIdsForKennel = new List<Guid>();
     private bool validDate = true;
     private bool amPickUp = true;
     private bool amDropOff = true;
@@ -45,6 +47,7 @@
 
     private void HandleDogInputChange(Guid dogID)
     {
+        //need to do remove also
         newBooking.DogIDs.Add(dogID);
     }
 
@@ -88,19 +91,32 @@
     {
         newBooking.AMDropoff = amDropOff;
         newBooking.AMPickup = amPickUp;
+        Guid _bookingID = Guid.NewGuid();
+        List<Dog> Dogs = new List<Dog>();
 
         Booking booking = new Booking
         {
-            BookingID = Guid.NewGuid(),
-            OwnerID = newBooking.OwnerID,
+            BookingID = _bookingID,
+            OwnerID = newBooking.OwnerID.Value,
             StartDate = newBooking.StartDate,
             EndDate = newBooking.EndDate,
             AMDropoff = newBooking.AMDropoff,
             AMPickup = newBooking.AMPickup
-        
         };
-    }
 
+        //i need to sort the dog with the kennel 
+        //when selecting the kennel - select the dog also.
+        foreach (var bookedDogID in newBooking.DogIDs)
+        {
+            BookingDogKennel bookingDogKennel = new BookingDogKennel
+            {
+                BookingID = _bookingID,
+                DogID = bookedDogID,
+                //KennelID = newBooking.KennelIDs
+
+            };
+        }
+    }
 }
 
 <EditForm Model="newBooking" FormName="BookingForm" OnValidSubmit="HandleSubmit">
@@ -192,7 +208,20 @@
                     <input type="checkbox" value="@kennel.KennelID" @onchange="e => HandleAddKennel(e, kennel.KennelID)" />
                     Kennel @kennel.KennelID
                 </label>
-                
+                @if (selectedOwnerId != Guid.Empty)
+                {
+                    <InputRadioGroup @bind-Value="selectedDogIdsForKennel">
+
+                        @foreach (var dog in OwnerDogs)
+                        {
+                            <label>
+                                <input name="" type="checkbox" value="@dog.ID" onchange="HandleDogInputChange(dog.ID)" />
+                                @dog.DogName
+                            </label>
+
+                        }
+                    </InputRadioGroup>
+                }
             </section>
         }
         <section>
@@ -233,7 +262,10 @@
             </label>
         </InputRadioGroup>
     </section>
- 
+    <section>
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+    </section>
     <section>
         <button type="submit" class="btn btn-blue">
             Submit
