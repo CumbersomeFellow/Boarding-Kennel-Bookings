@@ -22,6 +22,7 @@
         Owners = await OwnerService.GetAllOwnersAsync();
     }
 
+    private Booking? completedNewBooking;
     private Guid selectedOwnerId;
     private Owner selectedOwner = new();
     private List<Dog> OwnerDogs = new();
@@ -66,19 +67,6 @@
         }
     }
 
-    private void HandleAddKennel(ChangeEventArgs eventArgs, int kennelID)
-    {
-        bool isChecked = (bool)eventArgs.Value;
-
-        if (isChecked)
-        {
-            newBooking.KennelIDs.Add(kennelID);
-        }else if ( newBooking.KennelIDs.Contains(kennelID))
-        {
-            newBooking.KennelIDs.Remove(kennelID);
-        }
-    }
-
     private async Task HandleSubmit()
     {
         newBooking.AMDropoff = amDropOff;
@@ -96,17 +84,25 @@
             AMPickup = newBooking.AMPickup
         };
 
+
+        completedNewBooking = await BookingService.CreateBookingAsync(booking);
+
         //i need to sort the dog with the kennel 
         //when selecting the kennel - select the dog also.
         foreach (var (dogID, kennelID) in newBooking.DogKennelAssignments)
         {
             BookingDogKennel bookingDogKennel = new BookingDogKennel
             {
-                BookingID = _bookingID,
+                BookingDogKennelID = Guid.NewGuid(),
+                BookingID = booking.BookingID,
                 DogID = dogID,
                 KennelID = kennelID
             };
+
+            await BookingService.CreateBookingDogKennel(bookingDogKennel);
         }
+
+
     }
 }
 
@@ -156,7 +152,7 @@
         </section>
         <section>
          
-            <button class="btn btn-blue" @onclick="HandleCheckKennelAvailable" >Check</button>
+            <button type="button" class="btn btn-blue" @onclick="HandleCheckKennelAvailable">Check</button>
         </section>
         </div>
     @if (!validDate)
@@ -228,3 +224,10 @@
         </button>
     </section>
 </EditForm>
+
+@if (completedNewBooking != null)
+{
+    <section>
+        Completed booking for @completedNewBooking.StartDate to @completedNewBooking.EndDate
+    </section>
+}

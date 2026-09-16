@@ -26,5 +26,13 @@ namespace BoardingKennelBookings.Components.Services
 
             return booking;
         }
+        public async Task<BookingDogKennel> CreateBookingDogKennel(BookingDogKennel bookingDogKennel)
+        {
+            _context.BookingDogKennel.Add(bookingDogKennel);
+
+            await _context.SaveChangesAsync();
+
+            return bookingDogKennel;
+        }
     }
 }
