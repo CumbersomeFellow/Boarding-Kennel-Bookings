@@ -45,10 +45,17 @@
         newBooking.OwnerID = selectedOwnerId;
     }
 
-    private void HandleDogInputChange(Guid dogID)
+    private void HandleDogKennelAssignment(Guid dogID, int kennelID)
     {
         //need to do remove also
-        newBooking.DogIDs.Add(dogID);
+        if (newBooking.DogKennelAssignments.ContainsKey(dogID))
+        {
+            newBooking.DogKennelAssignments.Remove(dogID);
+        }
+        else
+        {
+            newBooking.DogKennelAssignments.Add(dogID, kennelID);
+        }
     }
 
     private void HandleDateChosen()
@@ -87,6 +94,7 @@
             newBooking.KennelIDs.Remove(kennelID);
         }
     }
+
     private async Task HandleSubmit()
     {
         newBooking.AMDropoff = amDropOff;
@@ -147,7 +155,7 @@
                 <label>
                     Select dog(s)
                 </label>
-                @if (selectedOwnerId != Guid.Empty)
+                @* @if (selectedOwnerId != Guid.Empty)
                 {
                     <InputRadioGroup @bind-Value="selectedDogId">
 
@@ -160,7 +168,7 @@
 
                         }
                     </InputRadioGroup>
-                }
+                } *@
             </section>
         </div>
    
@@ -211,14 +219,12 @@
                 @if (selectedOwnerId != Guid.Empty)
                 {
                     <InputRadioGroup @bind-Value="selectedDogIdsForKennel">
-
                         @foreach (var dog in OwnerDogs)
                         {
                             <label>
-                                <input name="" type="checkbox" value="@dog.ID" onchange="HandleDogInputChange(dog.ID)" />
+                                <input name="" type="checkbox" value="@dog.ID" @onchange="() => HandleDogKennelAssignment(dog.ID, kennel.KennelID)" />
                                 @dog.DogName
                             </label>
-
                         }
                     </InputRadioGroup>
                 }

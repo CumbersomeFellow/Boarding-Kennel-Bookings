@@ -23,6 +23,9 @@ namespace BoardingKennelBookings.Components.Models
         public bool AMDropoff { get; set; }
 
         [MinLength(1, ErrorMessage = "Please select at least one kennel.")]
-        public List<int> KennelIDs { get; set; } = new List<int>(); 
+        public List<int> KennelIDs { get; set; } = new List<int>();
+
+        public Dictionary<Guid, int> DogKennelAssignments { get; set; } = new();
+
     }
 }
