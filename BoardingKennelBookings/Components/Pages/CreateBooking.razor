@@ -20,6 +20,9 @@
     protected override async Task OnInitializedAsync()
     {
         Owners = await OwnerService.GetAllOwnersAsync();
+        newBooking.StartDate = DateTime.Today;
+        newBooking.EndDate = DateTime.Today.AddDays(1);
+
     }
 
     private Booking? completedNewBooking;
@@ -101,8 +104,6 @@
 
             await BookingService.CreateBookingDogKennel(bookingDogKennel);
         }
-
-
     }
 }
 
