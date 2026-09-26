@@ -15,7 +15,6 @@
 @code {
     private BookingForm newBooking = new();
     private List<Owner> Owners = new();
-    private List<Dog> Dogs = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -34,30 +33,87 @@
     private DateTime selectedEndDate = DateTime.Today.AddDays(1);
     private bool validDate = true;
     private bool amPickUp = true;
-    private bool amDropOff = true;
+    private bool amDropOff = true; 
+    private string? dateError;
+    private string? dogBookingError;
+    private bool dogsAssigned = false;
+
 
     private async Task HandleOwnerChange()
     {
         OwnerDogs = await DogService.GetOwnerDogsAsync(selectedOwnerId);
         newBooking.OwnerID = selectedOwnerId;
     }
-
-    private void HandleDogKennelAssignment(Guid dogID, int kennelID)
+    private bool IsKennelDisabled(Guid dogID, int kennelID)
     {
-        if (newBooking.DogKennelAssignments.ContainsKey(dogID))
+      
+        if (!newBooking.DogKennelAssignments.TryGetValue(dogID, out var assignedKennel))
         {
+            Console.WriteLine($"$false {assignedKennel}");
+            return false;
+        }
+     
+        Console.WriteLine($"{assignedKennel != kennelID}");
+
+        return assignedKennel != kennelID;
+    }
+    private void HandleDogKennelAssignment(Guid dogID, int kennelID, ChangeEventArgs eventArgs)
+    {
+
+        bool value = (bool)eventArgs.Value;
+
+        //remove if unchecked
+
+        Console.WriteLine($"fires this many times");
+
+        if (!value)
+        {
+            //Console.WriteLine($"Dog removed? value = {value}");
+
             newBooking.DogKennelAssignments.Remove(dogID);
+            if (!newBooking.DogKennelAssignments.ContainsKey(dogID))
+            {
+                dogBookingError = "";
+            }
         }
         else
         {
-            newBooking.DogKennelAssignments.Add(dogID, kennelID);
+            if (newBooking.DogKennelAssignments.ContainsKey(dogID))
+            {
+                dogBookingError = $"{OwnerDogs.First(dog => dog.ID == dogID).DogName} is in multiple kennels, please select one kennel for them.";
+            }
+            else
+            {
+                newBooking.DogKennelAssignments[dogID] = kennelID;
+            }
+
         }
+
+        
+        //Console.WriteLine("---------------------------");
+        foreach (var (dogIDs, kennelIDs) in newBooking.DogKennelAssignments)
+        {
+            
+
+            //Console.WriteLine($"bookingDog {OwnerDogs.First(dog => dog.ID == dogIDs).DogName}");
+        }
+        // Console.WriteLine($"DogKennelAssignments {newBooking.DogKennelAssignments.Count}");
+        // Console.WriteLine($"OwnerDogs {OwnerDogs.Count}");
+
+        // if (newBooking.DogKennelAssignments.Count > OwnerDogs.Count)
+        // {
+        //     dogBookingError = $"Please remove {newBooking.DogKennelAssignments.Count - OwnerDogs.Count} dogs from the selected kennels";
+        //     value = false;
+        //     return;
+        // }
     }
 
     private void HandleDateChosen()
     {
         newBooking.StartDate = selectedStartDate;
         newBooking.EndDate = selectedEndDate;
+
+        if (!DateHelper.IsValidDateRange(selectedStartDate, selectedEndDate)) { dateError = "End date is earlier than Start date"; }
     }
 
     private async Task HandleCheckKennelAvailable()
@@ -72,6 +128,7 @@
 
     private async Task HandleSubmit()
     {
+        
         newBooking.AMDropoff = amDropOff;
         newBooking.AMPickup = amPickUp;
         Guid _bookingID = Guid.NewGuid();
@@ -156,12 +213,7 @@
             <button type="button" class="btn btn-blue" @onclick="HandleCheckKennelAvailable">Check</button>
         </section>
         </div>
-    @if (!validDate)
-    {
-        <section>
-            Please provide a valid date.
-        </section>
-    }
+
     @if (availableKennels.Count > 0 && validDate)
     {
         foreach (var kennel in availableKennels)
@@ -175,7 +227,7 @@
                     @foreach (var dog in OwnerDogs)
                     {
                         <label>
-                            <input name="" type="checkbox" value="@dog.ID" @onchange="() => HandleDogKennelAssignment(dog.ID, kennel.KennelID)" />
+                            <input name=""  disabled="@IsKennelDisabled(dog.ID, kennel.KennelID)" type="checkbox" @onchange="e => HandleDogKennelAssignment(dog.ID, kennel.KennelID, e)" />
                             @dog.DogName
                         </label>
                     }
@@ -218,6 +270,19 @@
     <section>
         <DataAnnotationsValidator />
         <ValidationSummary />
+        @if (dogBookingError != null)
+        {
+            <div class="validation-message">
+                @dogBookingError
+            </div>
+        }
+
+        @if (dateError != null)
+        {
+            <div class="validation-message">
+                @dateError
+            </div>
+        }
     </section>
     <section>
         <button type="submit" class="btn btn-blue">
