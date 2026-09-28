@@ -129,6 +129,9 @@
         Guid _bookingID = Guid.NewGuid();
         List<Dog> Dogs = new List<Dog>();
 
+
+
+
         Booking booking = new Booking
         {
             BookingID = _bookingID,
@@ -155,8 +158,6 @@
 
             await BookingService.CreateBookingDogKennel(bookingDogKennel);
         }
-
-
     }
 }
 
@@ -282,16 +283,20 @@
             </div>
         }
     </section>
-    <section>
-        <button type="submit" class="btn btn-blue">
-            Submit
-        </button>
-    </section>
+    @if (newBooking.DogKennelAssignments.Count > 0)
+    {
+        <section>
+            <button type="submit" class="btn btn-blue">
+                Submit
+            </button>
+        </section>
+    }
+
 </EditForm>
 }
 @if (completedNewBooking != null)
 {
     <section>
-        Completed booking for @completedNewBooking.StartDate to @completedNewBooking.EndDate
+        Completed booking for @completedNewBooking.StartDate.ToShortDateString() to @completedNewBooking.EndDate.ToShortDateString()
     </section>
 }

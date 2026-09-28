@@ -41,11 +41,7 @@ namespace BoardingKennelBookings.Components.Services
                     BookingDogKennelResult = _context.BookingDogKennel.Where(bookDogKennel => booking.BookingID == bookDogKennel.BookingID).ToList();
                 }               
             }
-            foreach (var BookingDogKennelSingle in BookingDogKennelResult)
-            {
-                Console.WriteLine($"BookingDogKennelSingle {BookingDogKennelSingle.KennelID}");
 
-            }
             if (BookingDogKennelResult.Count > 0)
             {
                 foreach (var kennel in kennels)
