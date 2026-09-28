@@ -46,14 +46,12 @@
     }
     private bool IsKennelDisabled(Guid dogID, int kennelID)
     {
-      
+
         if (!newBooking.DogKennelAssignments.TryGetValue(dogID, out var assignedKennel))
         {
-            Console.WriteLine($"$false {assignedKennel}");
             return false;
         }
-     
-        Console.WriteLine($"{assignedKennel != kennelID}");
+
 
         return assignedKennel != kennelID;
     }
@@ -63,7 +61,6 @@
         bool value = (bool)eventArgs.Value;
 
         //remove if unchecked
-
         Console.WriteLine($"fires this many times");
 
         if (!value)
@@ -89,11 +86,10 @@
 
         }
 
-        
         //Console.WriteLine("---------------------------");
         foreach (var (dogIDs, kennelIDs) in newBooking.DogKennelAssignments)
         {
-            
+
 
             //Console.WriteLine($"bookingDog {OwnerDogs.First(dog => dog.ID == dogIDs).DogName}");
         }
@@ -128,7 +124,6 @@
 
     private async Task HandleSubmit()
     {
-        
         newBooking.AMDropoff = amDropOff;
         newBooking.AMPickup = amPickUp;
         Guid _bookingID = Guid.NewGuid();
@@ -143,7 +138,6 @@
             AMDropoff = newBooking.AMDropoff,
             AMPickup = newBooking.AMPickup
         };
-
 
         completedNewBooking = await BookingService.CreateBookingAsync(booking);
 
@@ -161,9 +155,13 @@
 
             await BookingService.CreateBookingDogKennel(bookingDogKennel);
         }
+
+
     }
 }
 
+@if (completedNewBooking == null)
+{
 <EditForm Model="newBooking" FormName="BookingForm" OnValidSubmit="HandleSubmit">
         <div class="flex">
             <section>
@@ -290,7 +288,7 @@
         </button>
     </section>
 </EditForm>
-
+}
 @if (completedNewBooking != null)
 {
     <section>
