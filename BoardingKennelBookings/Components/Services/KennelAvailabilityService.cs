@@ -37,8 +37,17 @@ namespace BoardingKennelBookings.Components.Services
             {
                 foreach (var booking in bookings)
                 {
-                    Console.WriteLine($"booking ID {booking.BookingID}");
-                    BookingDogKennelResult = _context.BookingDogKennel.Where(bookDogKennel => booking.BookingID == bookDogKennel.BookingID).ToList();
+                    foreach(var BDK in _context.BookingDogKennel)
+                    {
+                        if(BDK.BookingID == booking.BookingID)
+                        {
+                            BookingDogKennelResult.Add(BDK);
+                        }
+                     
+                    }
+
+                    //Console.WriteLine($"booking ID {booking.BookingID}");
+                    //BookingDogKennelResult = _context.BookingDogKennel.Where(bookDogKennel => booking.BookingID == bookDogKennel.BookingID).ToList();
                 }               
             }
 
