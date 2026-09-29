@@ -9,5 +9,7 @@ namespace BoardingKennelBookings.Components.Models
         [Required(ErrorMessage = "Number is required")]
         public int KennelNumber { get; set; }
 
+        public KennelStatus Status { get; set; }
+
     }
 }

@@ -1,7 +1,44 @@
 ﻿@page "/"
 
-@code {
+@using BoardingKennelBookings.Components.Services
+@using BoardingKennelBookings.Components.Helpers
+@using BoardingKennelBookings.Components.Models
 
+@rendermode InteractiveServer
+@inject DogService DogService
+@inject KennelAvailabilityService KennelAvailabilityService
+@inject KennelService KennelService
+@inject BookingService BookingService
+
+@code {
+    private DateTime startDate = DateTime.Today;
+    private DateTime endDate = DateTime.Today;
+    private List<Kennel> allKennels = new List<Kennel>();
+    private List<BookingDogKennel> bookingDogKennels = new List<BookingDogKennel>();
+    private List<Booking> bookings = new List<Booking>();
+
+    //get all kennels
+    //get - need to get bookings first
+    //then dog booking kennels with bookingsIDs from above
+    //if kennel 
+    //need to add kennel status also
+    //then find all dogs in dog booking kennel to output
+
+    protected override async Task OnInitializedAsync()
+    {
+        startDate = DateTime.Today;
+        endDate = DateTime.Today.AddDays(1);
+        allKennels = await KennelService.GetAllKennels();
+        bookings = await BookingService.FindBookingsWithInDateRange(startDate, endDate);
+        Console.WriteLine($"count {bookings.Count}");
+        foreach(var booking in bookings)
+        {
+            Console.WriteLine($"start {booking.StartDate} end {booking.EndDate}");
+        }
+        
+    }
+
+   
 }
 
 <PageTitle>Home</PageTitle>
@@ -79,6 +116,27 @@
     </div>
     <div class="row wd-100" style="left: 4px;
     width: 100.5%;">
+
+    @foreach(var kennel in allKennels)
+    {
+        <div class="kennel wd-33">
+            <div class="bg pad-2 wd-100">
+                <h4 class="wd-100">
+                    <span class="status-dot">●</span> K01
+                </h4>
+                <p class="wd-100">
+                    Rocky
+                </p>
+                <span class="info wd-100">
+                    Border Collie
+                </span>
+                <span class="date-output wd-100">
+                    19/08/2026 <i class="bi bi-arrow-right"></i> 24/08/2026
+                </span>
+            </div>
+        </div>
+    }
+
         <div class="kennel wd-33">
             <div class="bg pad-2 wd-100">
                 <h4 class="wd-100">

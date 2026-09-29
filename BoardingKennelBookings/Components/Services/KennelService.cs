@@ -38,5 +38,19 @@ namespace BoardingKennelBookings.Components.Services
 
             return allKennels.Where(kennel => kennel.KennelID == kennelID).Single();
         }
+
+        public async Task<Kennel> SetKennelStatus(int id, KennelStatus status)
+        {
+            Kennel kennel = await GetKennel(id);
+
+            kennel.Status = status;
+
+            _context.Kennels.Update(kennel);
+
+            await _context.SaveChangesAsync();
+
+            return kennel;
+        }
+
     }
 }
