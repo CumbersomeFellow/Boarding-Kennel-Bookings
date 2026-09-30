@@ -15,7 +15,7 @@ namespace BoardingKennelBookings.Components.Services
 
         public async Task<List<Booking>> FindBookingsWithInDateRange(DateTime startDate, DateTime endDate)
         {
-            return await _context.Bookings.Where(booking => startDate >= booking.StartDate && startDate < booking.EndDate && endDate > booking.StartDate && endDate <= booking.EndDate).ToListAsync();
+            return await _context.Bookings.Where(booking => startDate >= booking.StartDate && startDate < booking.EndDate).ToListAsync();
         }
 
         public async Task<Booking> CreateBookingAsync(Booking booking)
@@ -33,6 +33,12 @@ namespace BoardingKennelBookings.Components.Services
             await _context.SaveChangesAsync();
 
             return bookingDogKennel;
+        }
+
+
+        public async Task<List<BookingDogKennel>> FindBookingDogKennelsWithBookingID(Guid bookingID)
+        {
+            return await _context.BookingDogKennel.Where(bdk => bookingID == bdk.BookingID).ToListAsync();
         }
     }
 }

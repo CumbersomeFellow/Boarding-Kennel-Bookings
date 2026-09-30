@@ -16,6 +16,8 @@
     private List<Kennel> allKennels = new List<Kennel>();
     private List<BookingDogKennel> bookingDogKennels = new List<BookingDogKennel>();
     private List<Booking> bookings = new List<Booking>();
+    private List<Dog> currentDogs = new List<Dog>();
+    private bool dataLoaded = false;
 
     //get all kennels
     //get - need to get bookings first
@@ -30,12 +32,21 @@
         endDate = DateTime.Today.AddDays(1);
         allKennels = await KennelService.GetAllKennels();
         bookings = await BookingService.FindBookingsWithInDateRange(startDate, endDate);
-        Console.WriteLine($"count {bookings.Count}");
         foreach(var booking in bookings)
         {
-            Console.WriteLine($"start {booking.StartDate} end {booking.EndDate}");
+            List<BookingDogKennel> bookingBdks = await BookingService.FindBookingDogKennelsWithBookingID(booking.BookingID);
+            bookingDogKennels.AddRange(bookingBdks);
         }
-        
+
+        foreach (var bdk in bookingDogKennels)
+        {
+            if (await DogService.GetDog(bdk.DogID) != null)
+            {
+                currentDogs.Add(await DogService.GetDog(bdk.DogID));
+            }
+        }
+
+        dataLoaded = true;
     }
 
    
@@ -111,175 +122,59 @@
  </div>
     <div class="row wd-100">
         <h4 class="page-minor-header ">
-            Kennel Status — 21/08/2026
+        Kennel Status — @startDate.ToShortDateString()
         </h4>
     </div>
     <div class="row wd-100" style="left: 4px;
     width: 100.5%;">
-
-    @foreach(var kennel in allKennels)
+    @if (dataLoaded)
     {
-        <div class="kennel wd-33">
-            <div class="bg pad-2 wd-100">
-                <h4 class="wd-100">
-                    <span class="status-dot">●</span> K01
-                </h4>
-                <p class="wd-100">
-                    Rocky
-                </p>
-                <span class="info wd-100">
-                    Border Collie
-                </span>
-                <span class="date-output wd-100">
-                    19/08/2026 <i class="bi bi-arrow-right"></i> 24/08/2026
-                </span>
-            </div>
-        </div>
-    }
+        @foreach (var kennel in allKennels)
+        {
+            BookingDogKennel curBDK = bookingDogKennels.FirstOrDefault(bdk => bdk.KennelID == kennel.KennelID);
 
-        <div class="kennel wd-33">
-            <div class="bg pad-2 wd-100">
-                <h4 class="wd-100">
-                    <span class="status-dot">●</span> K01
-                </h4>
-                <p class="wd-100">
-                    Rocky
-                </p>
-                <span class="info wd-100">
-                    Border Collie
-                </span>
-                <span class="date-output wd-100">
-                    19/08/2026 <i class="bi bi-arrow-right"></i> 24/08/2026
-                </span>
-            </div>
-        </div>
-        <div class="kennel wd-33">
-            <div class="bg pad-2 wd-100">
-                <h4 class="wd-100">
-                    <span class="status-dot">●</span> K02
-                </h4>
-                <p class="wd-100">
-                    Rocky
-                </p>
-                <span class="info wd-100">
-                    Border Collie
-                </span>
-                <span class="date-output wd-100">
-                    19/08/2026 <i class="bi bi-arrow-right"></i> 24/08/2026
-                </span>
-            </div>
-        </div>
-        <div class="kennel wd-33">
-            <div class="bg pad-2 wd-100">
-                <h4 class="wd-100">
-                    <span class="status-dot">●</span> K03
-                </h4>
-                <p class="info wd-100">
-                    Rocky
-                </p>
-                <span class="wd-100">
-                    Border Collie
-                </span>
-                <span class="date-output wd-100">
-                    19/08/2026 <i class="bi bi-arrow-right"></i> 24/08/2026
-                </span>
-            </div>
-        </div>
-        <div class="kennel available wd-33">
-            <div class="bg pad-2 wd-100">
-                <h4 class="wd-100">
-                    <span class="status-dot">●</span> K04
-                </h4>
-                <p class="wd-100">
-                    -
-                </p>
-                <span class="info wd-100">
-                    -
-                </span>
-                <span class="date-output wd-100">
-                    19/08/2026 <i class="bi bi-arrow-right"></i> 24/08/2026
-                </span>
-            </div>
-        </div>
-        <div class="kennel wd-33">
-            <div class="bg pad-2 wd-100">
-                <h4 class="wd-100">
-                    <span class="status-dot">●</span> K05
-                </h4>
-                <p class="wd-100">
-                    Rocky
-                </p>
-                <span class="info wd-100">
-                    Border Collie
-                </span>
-                <span class="date-output wd-100">
-                    19/08/2026 <i class="bi bi-arrow-right"></i> 24/08/2026
-                </span>
-            </div>
-        </div>
-        <div class="kennel wd-33">
-            <div class="bg pad-2 wd-100">
-                <h4 class="wd-100">
-                    <span class="status-dot">●</span> K06
-                </h4>
-                <p class=" wd-100">
-                    Rocky
-                </p>
-                <span class="info wd-100">
-                    Border Collie
-                </span>
-                <span class="date-output wd-100">
-                    19/08/2026 <i class="bi bi-arrow-right"></i> 24/08/2026
-                </span>
-            </div>
-        </div>
-        <div class="kennel wd-33">
-            <div class="bg pad-2 wd-100">
-                <h4 class="wd-100">
-                    <span class="status-dot">●</span> K07
-                </h4>
-                <p class="wd-100">
-                    Rocky
-                </p>
-                <span class="info wd-100">
-                    Border Collie
-                </span>
-                <span class="date-output wd-100">
-                    19/08/2026 <i class="bi bi-arrow-right"></i> 24/08/2026
-                </span>
-            </div>
-        </div>
-        <div class="kennel wd-33">
-            <div class="bg pad-2 wd-100">
-                <h4 class="wd-100">
-                    <span class="status-dot">●</span> K08
-                </h4>
-                <p class=" wd-100">
-                    Rocky
-                </p>
-                <span class="info wd-100">
-                    Border Collie
-                </span>
-                <span class="date-output wd-100">
-                    19/08/2026 <i class="bi bi-arrow-right"></i> 24/08/2026
-                </span>
-            </div>
-        </div>
-        <div class="kennel available wd-33">
-            <div class="bg pad-2 wd-100">
-                <h4 class="wd-100">
-                    <span class="status-dot">●</span> K09
-                </h4>
-                <p class="wd-100">
-                    -
-                </p>
-                <span class="info wd-100">
-                    -
-                </span>
-                <span class="date-output wd-100">
-                    Available
-                </span>
-            </div>
-        </div>
-    </div>
+            if (curBDK != null)
+            {
+                Booking curBooking = bookings.FirstOrDefault(booking => booking.BookingID == curBDK.BookingID);
+                Dog curDog = currentDogs.FirstOrDefault(dog => dog.ID == curBDK.DogID);
+                <div class="kennel wd-33">
+                    <div class="bg pad-2 wd-100">
+                        <h4 class="wd-100">
+                            <span class="status-dot">●</span> K @kennel.KennelID
+                        </h4>
+                        <p class="wd-100">
+                            @curDog.DogName
+                        </p>
+                        <span class="info wd-100">
+                            @curDog.Breed
+                        </span>
+                        <span class="date-output wd-100">
+                            @curBooking.StartDate.ToShortDateString() <i class="bi bi-arrow-right"></i> @curBooking.EndDate.ToShortDateString()
+                        </span>
+                    </div>
+                </div>
+
+            }
+            else
+            {
+                <div class="kennel available wd-33">
+                    <div class="bg pad-2 wd-100">
+                        <h4 class="wd-100">
+                            <span class="status-dot">●</span> K @kennel.KennelID
+                        </h4>
+                        <p class="wd-100">
+                            -
+                        </p>
+                        <span class="info wd-100">
+                            -
+                        </span>
+                        <span class="date-output wd-100">
+                            @kennel.Status
+                        </span>
+                    </div>
+                </div>
+            }
+        }
+    }    
+</div>
 
