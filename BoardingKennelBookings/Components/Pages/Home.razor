@@ -18,6 +18,9 @@
     private List<Booking> bookings = new List<Booking>();
     private List<Dog> currentDogs = new List<Dog>();
     private bool dataLoaded = false;
+    private int occupiedKennels = 0;
+    private int availableKennels = 0;
+    private int needCleanKennels = 0;
 
     //get all kennels
     //get - need to get bookings first
@@ -44,7 +47,25 @@
             {
                 currentDogs.Add(await DogService.GetDog(bdk.DogID));
             }
+
+            //bdk can have two kennels - so 
         }
+
+        foreach(var kennel in allKennels)
+        {
+            if(bookingDogKennels.Where(bdk => bdk.KennelID == kennel.KennelID).Count() > 0)
+            {
+                occupiedKennels++;
+            }
+            else if(kennel.Status == KennelStatus.Available)
+            {
+                availableKennels++;
+            }else if (kennel.Status == KennelStatus.NeedsCleaning)
+            {
+                needCleanKennels++;
+            }
+        }
+
 
         dataLoaded = true;
     }
@@ -63,7 +84,7 @@
                     Total Kennels
                 </h4>
                 <p>
-                    9
+                    @allKennels.Count
                 </p>
                 <label>
                     kennels in facility
@@ -81,7 +102,7 @@
                     Occupied
                 </h4>
                 <p>
-                    7
+                    @occupiedKennels
                 </p>
                 <label>
                     kennels with active dogs
@@ -96,10 +117,10 @@
                     Available
                 </h4>
                 <p>
-                    2
+                    @availableKennels
                 </p>
                 <label>
-                    kennels free today
+                    kennel@if(availableKennels > 1){s} free today
                 </label>
             </div>
         </div>
@@ -111,7 +132,7 @@
                     Needs Cleaning
                 </h4>
                 <p>
-                    0
+                    @needCleanKennels
                 </p>
                 <label>
                     kennels needing cleaning
@@ -132,7 +153,7 @@
         @foreach (var kennel in allKennels)
         {
             BookingDogKennel curBDK = bookingDogKennels.FirstOrDefault(bdk => bdk.KennelID == kennel.KennelID);
-
+            //more than 1 dog in a kennel?
             if (curBDK != null)
             {
                 Booking curBooking = bookings.FirstOrDefault(booking => booking.BookingID == curBDK.BookingID);
