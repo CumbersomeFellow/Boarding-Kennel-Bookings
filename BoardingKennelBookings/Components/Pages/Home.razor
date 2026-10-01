@@ -3,6 +3,7 @@
 @using BoardingKennelBookings.Components.Services
 @using BoardingKennelBookings.Components.Helpers
 @using BoardingKennelBookings.Components.Models
+@using BoardingKennelBookings.Components.Shared
 
 @rendermode InteractiveServer
 @inject DogService DogService
@@ -147,56 +148,5 @@
         Kennel Status — @startDate.ToShortDateString()
         </h4>
     </div>
-    <div class="row wd-100" style="left: 4px;
-    width: 100.5%;">
-    @if (dataLoaded)
-    {
-        @foreach (var kennel in allKennels)
-        {
-            BookingDogKennel curBDK = bookingDogKennels.FirstOrDefault(bdk => bdk.KennelID == kennel.KennelID);
-            //more than 1 dog in a kennel?
-            if (curBDK != null)
-            {
-                Booking curBooking = bookings.FirstOrDefault(booking => booking.BookingID == curBDK.BookingID);
-                Dog curDog = currentDogs.FirstOrDefault(dog => dog.ID == curBDK.DogID);
-                <div class="kennel wd-33">
-                    <div class="bg pad-2 wd-100">
-                        <h4 class="wd-100">
-                            <span class="status-dot">●</span> K @kennel.KennelID
-                        </h4>
-                        <p class="wd-100">
-                            @curDog.DogName
-                        </p>
-                        <span class="info wd-100">
-                            @curDog.Breed
-                        </span>
-                        <span class="date-output wd-100">
-                            @curBooking.StartDate.ToShortDateString() <i class="bi bi-arrow-right"></i> @curBooking.EndDate.ToShortDateString()
-                        </span>
-                    </div>
-                </div>
 
-            }
-            else
-            {
-                <div class="kennel available wd-33">
-                    <div class="bg pad-2 wd-100">
-                        <h4 class="wd-100">
-                            <span class="status-dot">●</span> K @kennel.KennelID
-                        </h4>
-                        <p class="wd-100">
-                            -
-                        </p>
-                        <span class="info wd-100">
-                            -
-                        </span>
-                        <span class="date-output wd-100">
-                            @kennel.Status
-                        </span>
-                    </div>
-                </div>
-            }
-        }
-    }    
-</div>
-
+<KennelList allKennels="allKennels" bookingDogKennels="bookingDogKennels" bookings="bookings" currentDogs="currentDogs" />
