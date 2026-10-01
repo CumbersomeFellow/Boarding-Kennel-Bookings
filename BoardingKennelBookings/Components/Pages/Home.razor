@@ -105,7 +105,8 @@
                     @occupiedKennels
                 </p>
                 <label>
-                    kennels with active dogs
+
+                    kennel@(occupiedKennels > 1 ? "s" : "")@(occupiedKennels == 0 ? "s" : "") with active dogs
                 </label>
             </div>
         </div>
@@ -120,7 +121,7 @@
                     @availableKennels
                 </p>
                 <label>
-                    kennel@if(availableKennels > 1){s} free today
+                    kennel@(availableKennels > 1 ? "s" : "")@(availableKennels == 0 ? "s" : "") free today
                 </label>
             </div>
         </div>
@@ -135,7 +136,7 @@
                     @needCleanKennels
                 </p>
                 <label>
-                    kennels needing cleaning
+                    kennel@(needCleanKennels > 1 ? "s" : "")@(availableKennels == 0 ? "s" : "") need cleaning
                 </label>
             </div>
         </div>
