@@ -1,0 +1,123 @@
+﻿@page "/AllBookings"
+
+@using BoardingKennelBookings.Components.Services
+@using BoardingKennelBookings.Components.Helpers
+@using BoardingKennelBookings.Components.Models
+
+@rendermode InteractiveServer
+@inject DogService DogService
+@inject KennelAvailabilityService KennelAvailabilityService
+@inject KennelService KennelService
+@inject BookingService BookingService
+@inject OwnerService OwnerService
+
+@code {
+    private DateTime startDate = DateTime.Today.AddDays(-30);
+    private DateTime endDate = DateTime.Today.AddDays(1);
+    private List<Kennel> allKennels = new List<Kennel>();
+    private List<BookingDogKennel> bookingDogKennels = new List<BookingDogKennel>();
+    private List<Booking> bookings = new List<Booking>();
+    private List<Dog> currentDogs = new List<Dog>();
+    private List<Owner> allOwners = new List<Owner>();
+    private bool dataLoaded = false;
+    private string dateError = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        allKennels = await KennelService.GetAllKennels();
+        allOwners = await OwnerService.GetAllOwnersAsync();
+
+        await HandleCheckBookings();
+
+        dataLoaded = true;
+    }
+
+    private void HandleDateChosen()
+    {
+        if (!DateHelper.IsValidDateRange(startDate, endDate)) { dateError = "End date is earlier than Start date"; }
+    }
+
+    private async Task HandleCheckBookings()
+    {
+        bookings = await BookingService.FindBookingsWithInDateRange(startDate, endDate);
+
+
+        foreach (var booking in bookings)
+        {
+            List<BookingDogKennel> bookingBdks = await BookingService.FindBookingDogKennelsWithBookingID(booking.BookingID);
+            bookingDogKennels.AddRange(bookingBdks);
+        }
+
+        foreach (var bdk in bookingDogKennels)
+        {
+            if (await DogService.GetDog(bdk.DogID) != null)
+            {
+                currentDogs.Add(await DogService.GetDog(bdk.DogID));
+            }
+        }
+    }
+}
+
+<h3>All Bookings</h3>
+
+@if (dataLoaded)
+{
+
+    <div class="row wd-100">
+    
+        <section>
+            <label>
+                Start date
+            </label>
+            <InputDate @bind-Value="startDate" @bind-Value:after="HandleDateChosen" />
+        </section>
+
+        <section>
+            <label>
+                End date
+            </label>
+            <InputDate @bind-Value="endDate" @bind-Value:after="HandleDateChosen" />
+        </section>
+        <section>
+
+            <button type="button" class="btn btn-blue" @onclick="HandleCheckBookings">Check</button>
+        </section>
+    </div>
+
+    <div class="row wd-100">
+        <ul>
+            @foreach (var booking in bookings)
+            {
+                Owner curOwner = allOwners.FirstOrDefault(owner => owner.OwnerID == booking.OwnerID);
+                List<BookingDogKennel> bookingBDKs = bookingDogKennels.FindAll(bdk => bdk.BookingID == booking.BookingID);
+                List<Dog> curDogs = new();
+                int dogCount = 0;
+
+                @foreach(var curBDK in bookingBDKs)
+                {
+                    curDogs.Add(currentDogs.FirstOrDefault(dog => dog.ID == curBDK.DogID));
+                }
+
+                <li>
+                    @curOwner.FirstName @curOwner.LastName booked their dog @foreach(var dog in curDogs)
+                    {
+                        @dog.DogName
+                        dogCount++;
+                        if (curDogs.Count > dogCount)
+                        {
+                            <span>, </span>
+                        }
+                        else
+                        {
+                            <span> </span>
+                        }
+                    }
+                    in for 
+                    @booking.StartDate.ToShortDateString() --> @booking.EndDate.ToShortDateString()
+                    
+                    <a class="button">Edit</a>
+                </li>
+            }
+        </ul>
+    </div>
+}
