@@ -25,6 +25,10 @@
     private bool callPopup = false;
     private Booking selectedBooking = new();
 
+    private List<Kennel> bookingKennels = new();
+    private List<Dog> bookingDogs = new();
+    private List<BookingDogKennel> bookingBDKs = new();
+
     protected override async Task OnInitializedAsync()
     {
         allKennels = await KennelService.GetAllKennels();
@@ -43,7 +47,6 @@
     private async Task HandleCheckBookings()
     {
         bookings = await BookingService.FindBookingsWithInDateRange(startDate, endDate);
-
 
         foreach (var booking in bookings)
         {
@@ -64,6 +67,13 @@
     {
         selectedBooking = booking;
         callPopup = true;
+        bookingDogs = currentDogs.Where(dog => dog.OwnerID == selectedBooking.OwnerID).ToList();
+        bookingBDKs = bookingDogKennels.Where(bdk => bdk.BookingID == selectedBooking.BookingID).ToList();
+       
+        foreach (var bdk in bookingBDKs)
+        {
+            bookingKennels.Add(allKennels.FirstOrDefault(curKennel => curKennel.KennelID == bdk.KennelID));
+        }
     }
 }
 
@@ -133,9 +143,15 @@
     @if (callPopup)
     {
         <popup>
-            <p>
-                @selectedBooking.BookingID
-            </p>
+            <section>
+                <label>
+                    Edit Booking
+                </label>
+                <p>
+                    @selectedBooking.BookingID
+                </p>
+            </section>
+         <KennelList allKennels="" bookings="" bookingDogKennels="" currentDogs=""  />
         </popup>
     }
    

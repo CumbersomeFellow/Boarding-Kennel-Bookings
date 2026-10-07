@@ -1,0 +1,300 @@
+﻿<h3>BookingFormComponent</h3>
+
+@using BoardingKennelBookings.Components.Services
+@using BoardingKennelBookings.Components.Models
+@using BoardingKennelBookings.Components.Helpers
+
+@rendermode InteractiveServer
+@inject OwnerService OwnerService
+@inject DogService DogService
+@inject KennelAvailabilityService KennelAvailabilityService
+@inject BookingService BookingService
+
+
+@code {
+    private BookingForm newBooking = new();
+    private List<Owner> Owners = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Owners = await OwnerService.GetAllOwnersAsync();
+        newBooking.StartDate = DateTime.Today;
+        newBooking.EndDate = DateTime.Today.AddDays(1);
+
+    }
+
+    private Booking? completedNewBooking;
+    private Guid selectedOwnerId;
+    private Owner selectedOwner = new();
+    private List<Dog> OwnerDogs = new();
+    private List<Kennel> availableKennels = new List<Kennel>();
+    [Parameter]
+    public DateTime selectedStartDate { get; set; } = DateTime.Today;
+    [Parameter]
+    public DateTime selectedEndDate { get; set; } = DateTime.Today.AddDays(1);
+    private bool validDate = true;
+    private bool amPickUp = true;
+    private bool amDropOff = true;
+    private string? dateError;
+    private string? dogBookingError;
+    private bool dogsAssigned = false;
+
+
+    private async Task HandleOwnerChange()
+    {
+        OwnerDogs = await DogService.GetOwnerDogsAsync(selectedOwnerId);
+        newBooking.OwnerID = selectedOwnerId;
+    }
+    private bool IsKennelDisabled(Guid dogID, int kennelID)
+    {
+
+        if (!newBooking.DogKennelAssignments.TryGetValue(dogID, out var assignedKennel))
+        {
+            return false;
+        }
+
+
+        return assignedKennel != kennelID;
+    }
+    private void HandleDogKennelAssignment(Guid dogID, int kennelID, ChangeEventArgs eventArgs)
+    {
+
+        bool value = (bool)eventArgs.Value;
+
+        //remove if unchecked
+        Console.WriteLine($"fires this many times");
+
+        if (!value)
+        {
+            //Console.WriteLine($"Dog removed? value = {value}");
+
+            newBooking.DogKennelAssignments.Remove(dogID);
+            if (!newBooking.DogKennelAssignments.ContainsKey(dogID))
+            {
+                dogBookingError = "";
+            }
+        }
+        else
+        {
+            if (newBooking.DogKennelAssignments.ContainsKey(dogID))
+            {
+                dogBookingError = $"{OwnerDogs.First(dog => dog.ID == dogID).DogName} is in multiple kennels, please select one kennel for them.";
+            }
+            else
+            {
+                newBooking.DogKennelAssignments[dogID] = kennelID;
+            }
+
+        }
+
+        //Console.WriteLine("---------------------------");
+        foreach (var (dogIDs, kennelIDs) in newBooking.DogKennelAssignments)
+        {
+
+
+            //Console.WriteLine($"bookingDog {OwnerDogs.First(dog => dog.ID == dogIDs).DogName}");
+        }
+        // Console.WriteLine($"DogKennelAssignments {newBooking.DogKennelAssignments.Count}");
+        // Console.WriteLine($"OwnerDogs {OwnerDogs.Count}");
+
+        // if (newBooking.DogKennelAssignments.Count > OwnerDogs.Count)
+        // {
+        //     dogBookingError = $"Please remove {newBooking.DogKennelAssignments.Count - OwnerDogs.Count} dogs from the selected kennels";
+        //     value = false;
+        //     return;
+        // }
+    }
+
+    private void HandleDateChosen()
+    {
+        newBooking.StartDate = selectedStartDate;
+        newBooking.EndDate = selectedEndDate;
+
+        if (!DateHelper.IsValidDateRange(selectedStartDate, selectedEndDate)) { dateError = "End date is earlier than Start date"; }
+    }
+
+    private async Task HandleCheckKennelAvailable()
+    {
+        validDate = DateHelper.IsValidDateRange(selectedStartDate, selectedEndDate);
+
+        if (validDate)
+        {
+            availableKennels = await KennelAvailabilityService.GetAllKennelsAvailable(selectedStartDate, selectedEndDate);
+        }
+    }
+
+    private async Task HandleSubmit()
+    {
+        newBooking.AMDropoff = amDropOff;
+        newBooking.AMPickup = amPickUp;
+        Guid _bookingID = Guid.NewGuid();
+        List<Dog> Dogs = new List<Dog>();
+
+        Booking booking = new Booking
+        {
+            BookingID = _bookingID,
+            OwnerID = newBooking.OwnerID.Value,
+            StartDate = newBooking.StartDate,
+            EndDate = newBooking.EndDate,
+            AMDropoff = newBooking.AMDropoff,
+            AMPickup = newBooking.AMPickup
+        };
+
+        completedNewBooking = await BookingService.CreateBookingAsync(booking);
+
+        //i need to sort the dog with the kennel
+        //when selecting the kennel - select the dog also.
+        foreach (var (dogID, kennelID) in newBooking.DogKennelAssignments)
+        {
+            BookingDogKennel bookingDogKennel = new BookingDogKennel
+            {
+                BookingDogKennelID = Guid.NewGuid(),
+                BookingID = booking.BookingID,
+                DogID = dogID,
+                KennelID = kennelID
+            };
+
+            await BookingService.CreateBookingDogKennel(bookingDogKennel);
+        }
+    }
+}
+
+@if (completedNewBooking == null)
+{
+    <EditForm Model="newBooking" FormName="BookingForm" OnValidSubmit="HandleSubmit">
+        <div class="flex">
+            <section>
+                <label>
+                    Choose the owner:
+                </label>
+                @if (Owners.Count == 0)
+                {
+                    <p>Loading Owners...</p>
+                }
+                else
+                {
+                    <InputSelect @bind-Value="selectedOwnerId" @bind-Value:after="HandleOwnerChange" style="background:black;">
+
+                        <option value="">--Choose an owner--</option>
+                        @foreach (var owner in Owners)
+                        {
+                            <option value="@owner.OwnerID">@owner.FirstName @owner.LastName</option>
+                        }
+                    </InputSelect>
+                }
+            </section>
+        </div>
+
+        <div class="flex">
+            <section>
+                <label>
+                    Check kennel availability
+                </label>
+
+            </section>
+            <section>
+                <label>
+                    Start date
+                </label>
+                <InputDate @bind-Value="selectedStartDate" @bind-Value:after="HandleDateChosen" />
+            </section>
+
+            <section>
+                <label>
+                    End date
+                </label>
+                <InputDate @bind-Value="selectedEndDate" @bind-Value:after="HandleDateChosen" />
+            </section>
+            <section>
+
+                <button type="button" class="btn btn-blue" @onclick="HandleCheckKennelAvailable">Check</button>
+            </section>
+        </div>
+
+        @if (availableKennels.Count > 0 && validDate)
+        {
+            foreach (var kennel in availableKennels)
+            {
+                <section>
+                    <label>
+                        Kennel @kennel.KennelID
+                    </label>
+                    @if (selectedOwnerId != Guid.Empty)
+                    {
+                        @foreach (var dog in OwnerDogs)
+                        {
+                            <label>
+                                <input name="" disabled="@IsKennelDisabled(dog.ID, kennel.KennelID)" type="checkbox" @onchange="e => HandleDogKennelAssignment(dog.ID, kennel.KennelID, e)" />
+                                @dog.DogName
+                            </label>
+                        }
+                    }
+                </section>
+            }
+        }
+        <section>
+            <label>
+                AM or PM drop off?
+            </label>
+            <InputRadioGroup @bind-Value="amDropOff">
+                <label>
+                    <InputRadio Value="true" />
+                    AM
+                </label>
+
+                <label>
+                    <InputRadio Value="false" />
+                    PM
+                </label>
+            </InputRadioGroup>
+        </section>
+        <section>
+            <InputRadioGroup @bind-Value="amPickUp">
+                <label>
+                    AM or PM pick up?
+                </label>
+                <label>
+                    <InputRadio Value="true" />
+                    AM
+                </label>
+
+                <label>
+                    <InputRadio Value="false" />
+                    PM
+                </label>
+            </InputRadioGroup>
+        </section>
+        <section>
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+            @if (dogBookingError != null)
+            {
+                <div class="validation-message">
+                    @dogBookingError
+                </div>
+            }
+
+            @if (dateError != null)
+            {
+                <div class="validation-message">
+                    @dateError
+                </div>
+            }
+        </section>
+        @if (newBooking.DogKennelAssignments.Count > 0)
+        {
+            <section>
+                <button type="submit" class="btn btn-blue">
+                    Submit
+                </button>
+            </section>
+        }
+
+    </EditForm>
+}
+@if (completedNewBooking != null)
+{
+    <section>
+        Completed booking for @completedNewBooking.StartDate.ToShortDateString() to @completedNewBooking.EndDate.ToShortDateString()
+    </section>
+}
