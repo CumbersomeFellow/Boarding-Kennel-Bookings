@@ -3,6 +3,7 @@
 @using BoardingKennelBookings.Components.Services
 @using BoardingKennelBookings.Components.Helpers
 @using BoardingKennelBookings.Components.Models
+@using BoardingKennelBookings.Components.Shared
 
 @rendermode InteractiveServer
 @inject DogService DogService
@@ -21,6 +22,8 @@
     private List<Owner> allOwners = new List<Owner>();
     private bool dataLoaded = false;
     private string dateError = "";
+    private bool callPopup = false;
+    private Booking selectedBooking = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -55,6 +58,12 @@
                 currentDogs.Add(await DogService.GetDog(bdk.DogID));
             }
         }
+    }
+
+    private void HandleBookingEdit(Booking booking)
+    {
+        selectedBooking = booking;
+        callPopup = true;
     }
 }
 
@@ -114,10 +123,20 @@
                     }
                     in for 
                     @booking.StartDate.ToShortDateString() --> @booking.EndDate.ToShortDateString()
-                    
-                    <a class="button">Edit</a>
+
+                    <button class="button" @onclick="() => HandleBookingEdit(booking)"> Edit </button>
                 </li>
             }
         </ul>
     </div>
+
+    @if (callPopup)
+    {
+        <popup>
+            <p>
+                @selectedBooking.BookingID
+            </p>
+        </popup>
+    }
+   
 }

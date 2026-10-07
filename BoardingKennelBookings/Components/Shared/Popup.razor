@@ -1,0 +1,11 @@
+﻿
+@code {
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+}
+
+<div class="popup-form wd-100">
+    <div class="popup-content">
+        @ChildContent
+    </div>
+</div>
