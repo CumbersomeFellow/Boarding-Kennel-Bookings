@@ -24,10 +24,13 @@
     private string dateError = "";
     private bool callPopup = false;
     private Booking selectedBooking = new();
+    private Owner selectedOwner = new();
 
     private List<Kennel> bookingKennels = new();
     private List<Dog> bookingDogs = new();
     private List<BookingDogKennel> bookingBDKs = new();
+
+    
 
     protected override async Task OnInitializedAsync()
     {
@@ -69,6 +72,7 @@
         callPopup = true;
         bookingDogs = currentDogs.Where(dog => dog.OwnerID == selectedBooking.OwnerID).ToList();
         bookingBDKs = bookingDogKennels.Where(bdk => bdk.BookingID == selectedBooking.BookingID).ToList();
+        selectedOwner = allOwners.FirstOrDefault(owner => owner.OwnerID == booking.OwnerID);
        
         foreach (var bdk in bookingBDKs)
         {
@@ -81,7 +85,6 @@
 
 @if (dataLoaded)
 {
-
     <div class="row wd-100">
     
         <section>
@@ -151,8 +154,7 @@
                     @selectedBooking.BookingID
                 </p>
             </section>
-         <KennelList allKennels="" bookings="" bookingDogKennels="" currentDogs=""  />
+            <BookingFormComponent Owners="new List<Owner> { selectedOwner }" selectedOwnerId="selectedBooking.OwnerID" selectedOwner="selectedOwner" OwnerDogs="bookingDogs" selectedStartDate="selectedBooking.StartDate" selectedEndDate="selectedBooking.EndDate" amPickUp="selectedBooking.AMPickup" amDropOff="selectedBooking.AMDropoff" />
         </popup>
     }
-   
 }

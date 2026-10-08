@@ -13,32 +13,38 @@
 
 @code {
     private BookingForm newBooking = new();
-    private List<Owner> Owners = new();
+    [Parameter]
+    public List<Owner> Owners { get; set; } = new();
 
-    protected override async Task OnInitializedAsync()
-    {
-        Owners = await OwnerService.GetAllOwnersAsync();
-        newBooking.StartDate = DateTime.Today;
-        newBooking.EndDate = DateTime.Today.AddDays(1);
+    // protected override async Task OnInitializedAsync()
+    // {
+    //     Owners = await OwnerService.GetAllOwnersAsync();
+    //     newBooking.StartDate = DateTime.Today;
+    //     newBooking.EndDate = DateTime.Today.AddDays(1);
 
-    }
+    // }
 
     private Booking? completedNewBooking;
-    private Guid selectedOwnerId;
-    private Owner selectedOwner = new();
-    private List<Dog> OwnerDogs = new();
-    private List<Kennel> availableKennels = new List<Kennel>();
+    [Parameter]
+    public Guid selectedOwnerId { get; set; }
+    [Parameter]
+    public Owner selectedOwner { get; set; } = new();
+    [Parameter]
+    public List<Dog> OwnerDogs { get; set; } = new();
+    
+    private List<Kennel> availableKennels { get; set; } = new List<Kennel>();
+
     [Parameter]
     public DateTime selectedStartDate { get; set; } = DateTime.Today;
     [Parameter]
     public DateTime selectedEndDate { get; set; } = DateTime.Today.AddDays(1);
     private bool validDate = true;
-    private bool amPickUp = true;
-    private bool amDropOff = true;
+    [Parameter]
+    public bool amPickUp { get; set; } = true;
+    [Parameter]
+    public bool amDropOff { get; set; } = true;
     private string? dateError;
     private string? dogBookingError;
-    private bool dogsAssigned = false;
-
 
     private async Task HandleOwnerChange()
     {
@@ -47,12 +53,10 @@
     }
     private bool IsKennelDisabled(Guid dogID, int kennelID)
     {
-
         if (!newBooking.DogKennelAssignments.TryGetValue(dogID, out var assignedKennel))
         {
             return false;
         }
-
 
         return assignedKennel != kennelID;
     }
@@ -94,15 +98,7 @@
 
             //Console.WriteLine($"bookingDog {OwnerDogs.First(dog => dog.ID == dogIDs).DogName}");
         }
-        // Console.WriteLine($"DogKennelAssignments {newBooking.DogKennelAssignments.Count}");
-        // Console.WriteLine($"OwnerDogs {OwnerDogs.Count}");
 
-        // if (newBooking.DogKennelAssignments.Count > OwnerDogs.Count)
-        // {
-        //     dogBookingError = $"Please remove {newBooking.DogKennelAssignments.Count - OwnerDogs.Count} dogs from the selected kennels";
-        //     value = false;
-        //     return;
-        // }
     }
 
     private void HandleDateChosen()
@@ -164,15 +160,20 @@
     <EditForm Model="newBooking" FormName="BookingForm" OnValidSubmit="HandleSubmit">
         <div class="flex">
             <section>
-                <label>
-                    Choose the owner:
-                </label>
+         
                 @if (Owners.Count == 0)
                 {
                     <p>Loading Owners...</p>
                 }
+                else if (Owners.Count == 1)
+                {
+                    <p>Owner: @Owners.FirstOrDefault().FirstName @Owners.FirstOrDefault().LastName</p>
+                }
                 else
                 {
+                    <label>
+                        Choose the owner:
+                    </label>
                     <InputSelect @bind-Value="selectedOwnerId" @bind-Value:after="HandleOwnerChange" style="background:black;">
 
                         <option value="">--Choose an owner--</option>
@@ -289,7 +290,6 @@
                 </button>
             </section>
         }
-
     </EditForm>
 }
 @if (completedNewBooking != null)

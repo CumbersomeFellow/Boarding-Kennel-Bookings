@@ -38,7 +38,6 @@
     private string? dogBookingError;
     private bool dogsAssigned = false;
 
-
     private async Task HandleOwnerChange()
     {
         OwnerDogs = await DogService.GetOwnerDogsAsync(selectedOwnerId);
