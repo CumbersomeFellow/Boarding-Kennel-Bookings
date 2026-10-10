@@ -26,7 +26,8 @@ namespace BoardingKennelBookings.Components.Services
             return false;
         }
 
-        public async Task<List<Kennel>> GetAllKennelsAvailable(DateTime startDate, DateTime endDate)
+        //if booking ID is provided - don't check that booking
+        public async Task<List<Kennel>> GetAllKennelsAvailable(DateTime startDate, DateTime endDate, Guid? bookingID = null)
         {
             List<Kennel> result = new List<Kennel>();
             List<Booking> bookings = await _bookingService.FindBookingsWithInDateRange(startDate, endDate);
@@ -37,17 +38,8 @@ namespace BoardingKennelBookings.Components.Services
             {
                 foreach (var booking in bookings)
                 {
-                    foreach(var BDK in _context.BookingDogKennel)
-                    {
-                        if(BDK.BookingID == booking.BookingID)
-                        {
-                            BookingDogKennelResult.Add(BDK);
-                        }
-                     
-                    }
-
-                    //Console.WriteLine($"booking ID {booking.BookingID}");
-                    //BookingDogKennelResult = _context.BookingDogKennel.Where(bookDogKennel => booking.BookingID == bookDogKennel.BookingID).ToList();
+                    if(booking.BookingID != bookingID)
+                    BookingDogKennelResult.AddRange(await _bookingService.FindBookingDogKennelsWithBookingID(booking.BookingID));
                 }               
             }
 

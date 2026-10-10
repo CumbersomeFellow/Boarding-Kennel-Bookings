@@ -65,7 +65,7 @@
     private async Task HandleSubmit()
     {
         //filter owners with id to give owner to the dog
-        selectedOwner = await OwnerService.FindOwnerAsync(selectedOwnerId);
+        selectedOwner = await OwnerService.FindOwnerByID(selectedOwnerId);
 
         if (selectedOwner != null)
         {

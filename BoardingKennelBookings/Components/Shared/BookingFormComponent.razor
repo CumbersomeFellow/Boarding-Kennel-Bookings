@@ -16,41 +16,54 @@
     [Parameter]
     public List<Owner> Owners { get; set; } = new();
 
-    // protected override async Task OnInitializedAsync()
-    // {
-    //     Owners = await OwnerService.GetAllOwnersAsync();
-    //     newBooking.StartDate = DateTime.Today;
-    //     newBooking.EndDate = DateTime.Today.AddDays(1);
-
-    // }
-
     private Booking? completedNewBooking;
     [Parameter]
-    public Guid selectedOwnerId { get; set; }
-    [Parameter]
-    public Owner selectedOwner { get; set; } = new();
+    public Booking? selectedBooking { get; set; } = null;
+
+    private Guid selectedOwnerId { get; set; }
+
+    private Owner selectedOwner { get; set; } = new();
     [Parameter]
     public List<Dog> OwnerDogs { get; set; } = new();
-    
+
     private List<Kennel> availableKennels { get; set; } = new List<Kennel>();
 
-    [Parameter]
-    public DateTime selectedStartDate { get; set; } = DateTime.Today;
-    [Parameter]
-    public DateTime selectedEndDate { get; set; } = DateTime.Today.AddDays(1);
+
+    private DateTime selectedStartDate { get; set; } = DateTime.Today;
+
+    private DateTime selectedEndDate { get; set; } = DateTime.Today.AddDays(1);
     private bool validDate = true;
+
+    private bool amPickUp { get; set; } = true;
+
+    private bool amDropOff { get; set; } = true;
     [Parameter]
-    public bool amPickUp { get; set; } = true;
-    [Parameter]
-    public bool amDropOff { get; set; } = true;
+    public bool allowPreviousDates { get; set; } = false;
     private string? dateError;
     private string? dogBookingError;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Console.WriteLine(allowPreviousDates);
+        //if on edit booking
+        Console.WriteLine($"selectedBooking {selectedBooking != null} allowPreviousDates {allowPreviousDates}");
+        if (allowPreviousDates && selectedBooking != null)
+        {
+            selectedOwner = selectedBooking.Owner; 
+            amPickUp = selectedBooking.AMPickup;
+            amDropOff = selectedBooking.AMDropoff;
+            selectedOwnerId = selectedBooking.OwnerID;
+            selectedStartDate = selectedBooking.StartDate;
+            selectedEndDate = selectedBooking.EndDate;
+        }
+    }
 
     private async Task HandleOwnerChange()
     {
         OwnerDogs = await DogService.GetOwnerDogsAsync(selectedOwnerId);
         newBooking.OwnerID = selectedOwnerId;
     }
+
     private bool IsKennelDisabled(Guid dogID, int kennelID)
     {
         if (!newBooking.DogKennelAssignments.TryGetValue(dogID, out var assignedKennel))
@@ -60,18 +73,13 @@
 
         return assignedKennel != kennelID;
     }
+
     private void HandleDogKennelAssignment(Guid dogID, int kennelID, ChangeEventArgs eventArgs)
     {
-
         bool value = (bool)eventArgs.Value;
-
-        //remove if unchecked
-        Console.WriteLine($"fires this many times");
 
         if (!value)
         {
-            //Console.WriteLine($"Dog removed? value = {value}");
-
             newBooking.DogKennelAssignments.Remove(dogID);
             if (!newBooking.DogKennelAssignments.ContainsKey(dogID))
             {
@@ -88,25 +96,11 @@
             {
                 newBooking.DogKennelAssignments[dogID] = kennelID;
             }
-
         }
 
-        //Console.WriteLine("---------------------------");
         foreach (var (dogIDs, kennelIDs) in newBooking.DogKennelAssignments)
         {
-
-
-            //Console.WriteLine($"bookingDog {OwnerDogs.First(dog => dog.ID == dogIDs).DogName}");
         }
-
-    }
-
-    private void HandleDateChosen()
-    {
-        newBooking.StartDate = selectedStartDate;
-        newBooking.EndDate = selectedEndDate;
-
-        if (!DateHelper.IsValidDateRange(selectedStartDate, selectedEndDate)) { dateError = "End date is earlier than Start date"; }
     }
 
     private async Task HandleCheckKennelAvailable()
@@ -115,8 +109,19 @@
 
         if (validDate)
         {
-            availableKennels = await KennelAvailabilityService.GetAllKennelsAvailable(selectedStartDate, selectedEndDate);
+            availableKennels = await KennelAvailabilityService.GetAllKennelsAvailable(selectedStartDate, selectedEndDate, selectedBooking.BookingID);
         }
+    }
+
+    private void HandleDateChosen()
+    {
+        newBooking.StartDate = selectedStartDate;
+        newBooking.EndDate = selectedEndDate;
+        DateTime todaysDate = DateTime.Today;
+
+        if (!DateHelper.IsValidDateRange(selectedStartDate, selectedEndDate)) { dateError = "End date is earlier than start date."; }
+
+        if (!allowPreviousDates && selectedStartDate < todaysDate || selectedEndDate < todaysDate) dateError = "Please choose a future date.";
     }
 
     private async Task HandleSubmit()
@@ -138,8 +143,6 @@
 
         completedNewBooking = await BookingService.CreateBookingAsync(booking);
 
-        //i need to sort the dog with the kennel
-        //when selecting the kennel - select the dog also.
         foreach (var (dogID, kennelID) in newBooking.DogKennelAssignments)
         {
             BookingDogKennel bookingDogKennel = new BookingDogKennel

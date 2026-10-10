@@ -28,7 +28,7 @@ namespace BoardingKennelBookings.Components.Services
                 .ToListAsync();
         }
 
-        public async Task<Owner?> FindOwnerAsync(Guid ownerID)
+        public async Task<Owner?> FindOwnerByID(Guid ownerID)
         {
             return await _context.Owners.FirstOrDefaultAsync(x => x.OwnerID == ownerID);
         }

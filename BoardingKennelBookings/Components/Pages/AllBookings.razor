@@ -154,7 +154,7 @@
                     @selectedBooking.BookingID
                 </p>
             </section>
-            <BookingFormComponent Owners="new List<Owner> { selectedOwner }" selectedOwnerId="selectedBooking.OwnerID" selectedOwner="selectedOwner" OwnerDogs="bookingDogs" selectedStartDate="selectedBooking.StartDate" selectedEndDate="selectedBooking.EndDate" amPickUp="selectedBooking.AMPickup" amDropOff="selectedBooking.AMDropoff" />
+            <BookingFormComponent allowPreviousDates="true" Owners="new List<Owner> { selectedOwner }" selectedBooking="selectedBooking" OwnerDogs="bookingDogs" />
         </popup>
     }
 }
