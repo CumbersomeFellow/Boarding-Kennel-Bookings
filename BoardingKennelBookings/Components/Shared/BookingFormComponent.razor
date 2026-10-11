@@ -43,6 +43,9 @@
             selectedOwnerId = editedBooking.OwnerID;
             selectedStartDate = editedBooking.StartDate;
             selectedEndDate = editedBooking.EndDate;
+
+            Console.WriteLine($"selectedOwnerId {selectedOwnerId} editedBooking ownerID {editedBooking.OwnerID}");
+
         }
     }
 
@@ -110,10 +113,6 @@
 
     private async Task HandleSubmit()
     {
-        newBooking.AMDropoff = amDropOff;
-        newBooking.AMPickup = amPickUp;
-        Guid _bookingID = Guid.NewGuid();
-        List<Dog> Dogs = new List<Dog>();
 
         if (isEditingBooking)
         {
@@ -121,32 +120,64 @@
             editedBooking.EndDate = selectedEndDate;
             editedBooking.AMDropoff = amDropOff;
             editedBooking.AMPickup = amPickUp;
-
             List<BookingDogKennel> selectedBDKs = await BookingService.FindBookingDogKennelsWithBookingID(editedBooking.BookingID);
 
-            //if the dogs have been put in the same kennel - will 
-            foreach (var (dogID, kennelID) in newBooking.DogKennelAssignments)
+            //if we've removed a dog from the booking - we need to remove the bdk
+            if (newBooking.DogKennelAssignments.Count < selectedBDKs.Count)
             {
-                var curBdk = selectedBDKs.FirstOrDefault(bdk => bdk.DogID == dogID);
-                BookingDogKennel bookingDogKennel = new BookingDogKennel
+                List<Guid> dogIDs = new();
+
+                foreach (var (dogID, kennelID) in newBooking.DogKennelAssignments)
                 {
-                    BookingDogKennelID = curBdk.BookingDogKennelID,
-                    BookingID = curBdk.BookingID,
-                    DogID = dogID,
-                    KennelID = kennelID
-                };
+                    dogIDs.Add(dogID);
+                }
 
-                await BookingService.CreateBookingDogKennel(bookingDogKennel);
+                foreach (var bdk in selectedBDKs)
+                {
+                    //if the dogid list from assignment doesnt contain this bdk dog id - remove it
+                    if (dogIDs.Contains(bdk.DogID))
+                    {
+                        await BookingService.DeleteBookingDogKennels(bdk.BookingID);
+                    }
+                }
             }
+            else
+            {
+                foreach (var (dogID, kennelID) in newBooking.DogKennelAssignments)
+                {
+                    var curBdk = selectedBDKs.FirstOrDefault(bdk => bdk.DogID == dogID);
 
+                    //if you've added a new dog in - assignments will be more than bdks
+                    //so we need to create a new bdk in that case
+                    if (curBdk == null)
+                    {
+                        BookingDogKennel bookingDogKennel = new BookingDogKennel
+                        {
+                            BookingDogKennelID = Guid.NewGuid(),
+                            BookingID = editedBooking.BookingID,
+                            DogID = dogID,
+                            KennelID = kennelID
+                        };
+                        await BookingService.CreateBookingDogKennel(bookingDogKennel);
+                    }
+                    else
+                    {
+                        curBdk.KennelID = kennelID;
+                    }
+                }
+            }
+            await BookingService.EditBooking(editedBooking);
             completedNewBooking = editedBooking;
-
         }
         else
         {
+            newBooking.AMDropoff = amDropOff;
+            newBooking.AMPickup = amPickUp;
+            List<Dog> Dogs = new List<Dog>();
+
             Booking booking = new Booking
             {
-                BookingID = _bookingID,
+                BookingID = Guid.NewGuid(),
                 OwnerID = newBooking.OwnerID.Value,
                 StartDate = newBooking.StartDate,
                 EndDate = newBooking.EndDate,
@@ -168,7 +199,6 @@
             }
 
             completedNewBooking = await BookingService.CreateBookingAsync(booking);
-
         }
     }
 }

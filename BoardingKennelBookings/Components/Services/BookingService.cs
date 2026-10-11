@@ -26,7 +26,7 @@ namespace BoardingKennelBookings.Components.Services
 
             return booking;
         }
-        public async Task EditBookingAsync(Booking updatedBooking)
+        public async Task EditBooking(Booking updatedBooking)
         {
             var existingBooking = await _context.Bookings.FirstOrDefaultAsync(booking => booking.BookingID == updatedBooking.BookingID);
 
