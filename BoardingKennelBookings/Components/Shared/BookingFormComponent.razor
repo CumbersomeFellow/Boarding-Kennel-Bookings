@@ -38,14 +38,17 @@
         if (isEditingBooking && editedBooking != null)
         {
             selectedOwner = editedBooking.Owner; 
+            selectedOwnerId = editedBooking.OwnerID;
             amPickUp = editedBooking.AMPickup;
             amDropOff = editedBooking.AMDropoff;
-            selectedOwnerId = editedBooking.OwnerID;
             selectedStartDate = editedBooking.StartDate;
             selectedEndDate = editedBooking.EndDate;
 
-            Console.WriteLine($"selectedOwnerId {selectedOwnerId} editedBooking ownerID {editedBooking.OwnerID}");
-
+            newBooking.OwnerID = editedBooking.OwnerID;
+            newBooking.EndDate = editedBooking.StartDate;
+            newBooking.StartDate = editedBooking.EndDate;
+            newBooking.AMDropoff = editedBooking.AMDropoff;
+            newBooking.AMPickup = editedBooking.AMPickup;
         }
     }
 
@@ -113,13 +116,23 @@
 
     private async Task HandleSubmit()
     {
+        newBooking.AMDropoff = amDropOff;
+        newBooking.AMPickup = amPickUp;
+
+        Booking booking = new Booking
+        {
+            BookingID = Guid.NewGuid(),
+            OwnerID = newBooking.OwnerID.Value,
+            StartDate = newBooking.StartDate,
+            EndDate = newBooking.EndDate,
+            AMDropoff = newBooking.AMDropoff,
+            AMPickup = newBooking.AMPickup
+        };
 
         if (isEditingBooking)
         {
-            editedBooking.StartDate = selectedStartDate;
-            editedBooking.EndDate = selectedEndDate;
-            editedBooking.AMDropoff = amDropOff;
-            editedBooking.AMPickup = amPickUp;
+            booking.BookingID = editedBooking.BookingID;
+  
             List<BookingDogKennel> selectedBDKs = await BookingService.FindBookingDogKennelsWithBookingID(editedBooking.BookingID);
 
             //if we've removed a dog from the booking - we need to remove the bdk
@@ -166,24 +179,12 @@
                     }
                 }
             }
-            await BookingService.EditBooking(editedBooking);
-            completedNewBooking = editedBooking;
+            await BookingService.EditBooking(booking);
+            completedNewBooking = booking;
         }
         else
         {
-            newBooking.AMDropoff = amDropOff;
-            newBooking.AMPickup = amPickUp;
             List<Dog> Dogs = new List<Dog>();
-
-            Booking booking = new Booking
-            {
-                BookingID = Guid.NewGuid(),
-                OwnerID = newBooking.OwnerID.Value,
-                StartDate = newBooking.StartDate,
-                EndDate = newBooking.EndDate,
-                AMDropoff = newBooking.AMDropoff,
-                AMPickup = newBooking.AMPickup
-            };
 
             foreach (var (dogID, kennelID) in newBooking.DogKennelAssignments)
             {
