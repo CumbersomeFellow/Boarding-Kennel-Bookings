@@ -26,6 +26,19 @@ namespace BoardingKennelBookings.Components.Services
 
             return booking;
         }
+        public async Task EditBookingAsync(Booking updatedBooking)
+        {
+            var existingBooking = await _context.Bookings.FirstOrDefaultAsync(booking => booking.BookingID == updatedBooking.BookingID);
+
+            if (existingBooking == null) return;
+
+            existingBooking.StartDate = updatedBooking.StartDate;
+            existingBooking.EndDate = updatedBooking.EndDate;
+            existingBooking.AMDropoff = updatedBooking.AMDropoff;
+            existingBooking.AMPickup = updatedBooking.AMPickup;
+
+            await _context.SaveChangesAsync();
+        }
         public async Task<BookingDogKennel> CreateBookingDogKennel(BookingDogKennel bookingDogKennel)
         {
             _context.BookingDogKennel.Add(bookingDogKennel);
@@ -35,11 +48,31 @@ namespace BoardingKennelBookings.Components.Services
             return bookingDogKennel;
         }
 
-
         public async Task<List<BookingDogKennel>> FindBookingDogKennelsWithBookingID(Guid bookingID)
         {
             return await _context.BookingDogKennel.Where(bdk => bookingID == bdk.BookingID).ToListAsync();
         }
 
+        public async Task EditBookingDogKennels(BookingDogKennel updatedBDK)
+        {            
+            var existingBDK = await _context.BookingDogKennel.FirstOrDefaultAsync(bdk => bdk.BookingDogKennelID == updatedBDK.BookingDogKennelID);
+            
+            if (existingBDK == null) return;
+
+            existingBDK.KennelID = updatedBDK.KennelID;
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteBookingDogKennels(Guid bdkID)
+        {
+            var existingBDK = await _context.BookingDogKennel.FirstOrDefaultAsync(bdk => bdk.BookingDogKennelID == bdkID);
+
+            if (existingBDK == null) return;
+
+            _context.BookingDogKennel.Remove(existingBDK);
+
+            await _context.SaveChangesAsync();
+        }
     }
 }

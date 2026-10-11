@@ -152,9 +152,15 @@
                 </label>
                 <p>
                     @selectedBooking.BookingID
+                    @foreach (var bdk in bookingBDKs)
+                    {
+                        Dog curDog = bookingDogs.FirstOrDefault(dog => dog.ID == bdk.DogID);
+                        //show which dogs are in which kennel
+                       <br> @curDog.DogName <span>is in kennel </span> @bdk.KennelID 
+                    }
                 </p>
             </section>
-            <BookingFormComponent allowPreviousDates="true" Owners="new List<Owner> { selectedOwner }" selectedBooking="selectedBooking" OwnerDogs="bookingDogs" />
+            <BookingFormComponent isEditingBooking="true" Owners="new List<Owner> { selectedOwner }" editedBooking="selectedBooking" OwnerDogs="bookingDogs" />
         </popup>
     }
 }

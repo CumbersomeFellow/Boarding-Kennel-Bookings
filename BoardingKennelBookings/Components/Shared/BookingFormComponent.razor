@@ -10,51 +10,39 @@
 @inject KennelAvailabilityService KennelAvailabilityService
 @inject BookingService BookingService
 
-
 @code {
-    private BookingForm newBooking = new();
     [Parameter]
     public List<Owner> Owners { get; set; } = new();
-
-    private Booking? completedNewBooking;
     [Parameter]
-    public Booking? selectedBooking { get; set; } = null;
-
-    private Guid selectedOwnerId { get; set; }
-
-    private Owner selectedOwner { get; set; } = new();
+    public Booking? editedBooking { get; set; } = null;
     [Parameter]
     public List<Dog> OwnerDogs { get; set; } = new();
-
+    [Parameter]
+    public bool isEditingBooking { get; set; } = false;
+    private Guid selectedOwnerId { get; set; }
+    private Owner selectedOwner { get; set; } = new();
     private List<Kennel> availableKennels { get; set; } = new List<Kennel>();
-
-
     private DateTime selectedStartDate { get; set; } = DateTime.Today;
-
     private DateTime selectedEndDate { get; set; } = DateTime.Today.AddDays(1);
     private bool validDate = true;
-
     private bool amPickUp { get; set; } = true;
-
     private bool amDropOff { get; set; } = true;
-    [Parameter]
-    public bool allowPreviousDates { get; set; } = false;
     private string? dateError;
     private string? dogBookingError;
+    private Booking? completedNewBooking;
+    private BookingForm newBooking = new();
 
     protected override async Task OnInitializedAsync()
     {
-        Console.WriteLine(allowPreviousDates);
         //if on edit booking
-        Console.WriteLine($"selectedBooking {selectedBooking != null} allowPreviousDates {allowPreviousDates}");
-        if (allowPreviousDates && selectedBooking != null)
+        if (isEditingBooking && editedBooking != null)
         {
-            selectedOwner = selectedBooking.Owner; 
-            amPickUp = selectedBooking.AMPickup;
-            amDropOff = selectedBooking.AMDropoff;
-            selectedOwnerId = selectedBooking.OwnerID;
-            selectedStartDate = selectedBooking.StartDate;
-            selectedEndDate = selectedBooking.EndDate;
+            selectedOwner = editedBooking.Owner; 
+            amPickUp = editedBooking.AMPickup;
+            amDropOff = editedBooking.AMDropoff;
+            selectedOwnerId = editedBooking.OwnerID;
+            selectedStartDate = editedBooking.StartDate;
+            selectedEndDate = editedBooking.EndDate;
         }
     }
 
@@ -97,10 +85,6 @@
                 newBooking.DogKennelAssignments[dogID] = kennelID;
             }
         }
-
-        foreach (var (dogIDs, kennelIDs) in newBooking.DogKennelAssignments)
-        {
-        }
     }
 
     private async Task HandleCheckKennelAvailable()
@@ -109,7 +93,7 @@
 
         if (validDate)
         {
-            availableKennels = await KennelAvailabilityService.GetAllKennelsAvailable(selectedStartDate, selectedEndDate, selectedBooking.BookingID);
+            availableKennels = await KennelAvailabilityService.GetAllKennelsAvailable(selectedStartDate, selectedEndDate, editedBooking.BookingID);
         }
     }
 
@@ -121,7 +105,7 @@
 
         if (!DateHelper.IsValidDateRange(selectedStartDate, selectedEndDate)) { dateError = "End date is earlier than start date."; }
 
-        if (!allowPreviousDates && selectedStartDate < todaysDate || selectedEndDate < todaysDate) dateError = "Please choose a future date.";
+        if (!isEditingBooking && selectedStartDate < todaysDate || selectedEndDate < todaysDate) dateError = "Please choose a future date.";
     }
 
     private async Task HandleSubmit()
@@ -131,29 +115,60 @@
         Guid _bookingID = Guid.NewGuid();
         List<Dog> Dogs = new List<Dog>();
 
-        Booking booking = new Booking
+        if (isEditingBooking)
         {
-            BookingID = _bookingID,
-            OwnerID = newBooking.OwnerID.Value,
-            StartDate = newBooking.StartDate,
-            EndDate = newBooking.EndDate,
-            AMDropoff = newBooking.AMDropoff,
-            AMPickup = newBooking.AMPickup
-        };
+            editedBooking.StartDate = selectedStartDate;
+            editedBooking.EndDate = selectedEndDate;
+            editedBooking.AMDropoff = amDropOff;
+            editedBooking.AMPickup = amPickUp;
 
-        completedNewBooking = await BookingService.CreateBookingAsync(booking);
+            List<BookingDogKennel> selectedBDKs = await BookingService.FindBookingDogKennelsWithBookingID(editedBooking.BookingID);
 
-        foreach (var (dogID, kennelID) in newBooking.DogKennelAssignments)
-        {
-            BookingDogKennel bookingDogKennel = new BookingDogKennel
+            //if the dogs have been put in the same kennel - will 
+            foreach (var (dogID, kennelID) in newBooking.DogKennelAssignments)
             {
-                BookingDogKennelID = Guid.NewGuid(),
-                BookingID = booking.BookingID,
-                DogID = dogID,
-                KennelID = kennelID
+                var curBdk = selectedBDKs.FirstOrDefault(bdk => bdk.DogID == dogID);
+                BookingDogKennel bookingDogKennel = new BookingDogKennel
+                {
+                    BookingDogKennelID = curBdk.BookingDogKennelID,
+                    BookingID = curBdk.BookingID,
+                    DogID = dogID,
+                    KennelID = kennelID
+                };
+
+                await BookingService.CreateBookingDogKennel(bookingDogKennel);
+            }
+
+            completedNewBooking = editedBooking;
+
+        }
+        else
+        {
+            Booking booking = new Booking
+            {
+                BookingID = _bookingID,
+                OwnerID = newBooking.OwnerID.Value,
+                StartDate = newBooking.StartDate,
+                EndDate = newBooking.EndDate,
+                AMDropoff = newBooking.AMDropoff,
+                AMPickup = newBooking.AMPickup
             };
 
-            await BookingService.CreateBookingDogKennel(bookingDogKennel);
+            foreach (var (dogID, kennelID) in newBooking.DogKennelAssignments)
+            {
+                BookingDogKennel bookingDogKennel = new BookingDogKennel
+                {
+                    BookingDogKennelID = Guid.NewGuid(),
+                    BookingID = booking.BookingID,
+                    DogID = dogID,
+                    KennelID = kennelID
+                };
+
+                await BookingService.CreateBookingDogKennel(bookingDogKennel);
+            }
+
+            completedNewBooking = await BookingService.CreateBookingAsync(booking);
+
         }
     }
 }
