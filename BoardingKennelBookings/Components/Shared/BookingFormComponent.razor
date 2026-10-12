@@ -24,7 +24,8 @@
     private bool validDate = true;
     private bool amPickUp { get; set; } = true;
     private bool amDropOff { get; set; } = true;
-    private string? dateError;
+    private string? prevDateError;
+    private string? invalidDateError;
     private string? dogBookingError;
     private Booking? completedNewBooking;
     private BookingForm newBooking = new();
@@ -110,19 +111,21 @@
 
         if ((selectedStartDate < todaysDate || selectedEndDate < todaysDate) && !isEditingBooking) 
         { 
-            dateError = "Please choose a future date."; 
+            prevDateError = "Please choose a future date.";
         }
         else
         {
-            if (isValidDate)
-            {
-                dateError = "";
-            }
-            else
-            {
-                dateError = "End date is earlier than start date.";
-            }
-          
+           
+            prevDateError = "";
+        }
+
+        if (isValidDate)
+        {
+            invalidDateError = "";
+        }
+        else
+        {
+            invalidDateError = "End date is earlier than start date.";
         }
     }
 
@@ -335,14 +338,20 @@
                 </div>
             }
 
-            @if (dateError != null)
+            @if (prevDateError != null)
             {
                 <div class="validation-message">
-                    @dateError
+                    @prevDateError
+                </div>
+            }
+            @if (invalidDateError != null)
+            {
+                <div class="validation-message">
+                    @invalidDateError
                 </div>
             }
         </section>
-        @if (newBooking.DogKennelAssignments.Count > 0)
+        @if (newBooking.DogKennelAssignments.Count > 0 && invalidDateError != null && prevDateError != null)
         {
             <section>
                 <button type="submit" class="btn btn-blue">
