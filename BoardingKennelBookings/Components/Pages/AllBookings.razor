@@ -70,7 +70,6 @@
     {
         selectedBooking = booking;
         callPopup = true;
-        bookingDogs = currentDogs.Where(dog => dog.OwnerID == selectedBooking.OwnerID).ToList();
         bookingBDKs = bookingDogKennels.Where(bdk => bdk.BookingID == selectedBooking.BookingID).ToList();
         selectedOwner = allOwners.FirstOrDefault(owner => owner.OwnerID == booking.OwnerID);
        
@@ -160,7 +159,7 @@
                     }
                 </p>
             </section>
-            <BookingFormComponent isEditingBooking="true" Owners="new List<Owner> { selectedOwner }" editedBooking="selectedBooking" OwnerDogs="bookingDogs" />
+            <BookingFormComponent isEditingBooking="true" Owners="new List<Owner> { selectedOwner }" editedBooking="selectedBooking" />
         </popup>
     }
 }

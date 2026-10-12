@@ -1,6 +1,4 @@
-﻿<h3>BookingFormComponent</h3>
-
-@using BoardingKennelBookings.Components.Services
+﻿@using BoardingKennelBookings.Components.Services
 @using BoardingKennelBookings.Components.Models
 @using BoardingKennelBookings.Components.Helpers
 
@@ -16,9 +14,8 @@
     [Parameter]
     public Booking? editedBooking { get; set; } = null;
     [Parameter]
-    public List<Dog> OwnerDogs { get; set; } = new();
-    [Parameter]
     public bool isEditingBooking { get; set; } = false;
+    private List<Dog> OwnerDogs { get; set; } = new();
     private Guid selectedOwnerId { get; set; }
     private Owner selectedOwner { get; set; } = new();
     private List<Kennel> availableKennels { get; set; } = new List<Kennel>();
@@ -34,7 +31,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-        //if on edit booking
         if (isEditingBooking && editedBooking != null)
         {
             selectedOwner = editedBooking.Owner; 
@@ -49,6 +45,8 @@
             newBooking.StartDate = editedBooking.EndDate;
             newBooking.AMDropoff = editedBooking.AMDropoff;
             newBooking.AMPickup = editedBooking.AMPickup;
+
+            OwnerDogs = await DogService.GetOwnerDogsAsync(editedBooking.OwnerID);
         }
     }
 
@@ -108,10 +106,24 @@
         newBooking.StartDate = selectedStartDate;
         newBooking.EndDate = selectedEndDate;
         DateTime todaysDate = DateTime.Today;
+        bool isValidDate = DateHelper.IsValidDateRange(selectedStartDate, selectedEndDate);
 
-        if (!DateHelper.IsValidDateRange(selectedStartDate, selectedEndDate)) { dateError = "End date is earlier than start date."; }
-
-        if (!isEditingBooking && selectedStartDate < todaysDate || selectedEndDate < todaysDate) dateError = "Please choose a future date.";
+        if ((selectedStartDate < todaysDate || selectedEndDate < todaysDate) && !isEditingBooking) 
+        { 
+            dateError = "Please choose a future date."; 
+        }
+        else
+        {
+            if (isValidDate)
+            {
+                dateError = "";
+            }
+            else
+            {
+                dateError = "End date is earlier than start date.";
+            }
+          
+        }
     }
 
     private async Task HandleSubmit()
@@ -132,7 +144,6 @@
         if (isEditingBooking)
         {
             booking.BookingID = editedBooking.BookingID;
-  
             List<BookingDogKennel> selectedBDKs = await BookingService.FindBookingDogKennelsWithBookingID(editedBooking.BookingID);
 
             //if we've removed a dog from the booking - we need to remove the bdk
