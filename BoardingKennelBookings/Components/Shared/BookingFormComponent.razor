@@ -42,8 +42,8 @@
             selectedEndDate = editedBooking.EndDate;
 
             newBooking.OwnerID = editedBooking.OwnerID;
-            newBooking.EndDate = editedBooking.StartDate;
-            newBooking.StartDate = editedBooking.EndDate;
+            newBooking.StartDate = editedBooking.StartDate;
+            newBooking.EndDate = editedBooking.EndDate;
             newBooking.AMDropoff = editedBooking.AMDropoff;
             newBooking.AMPickup = editedBooking.AMPickup;
 
@@ -116,12 +116,12 @@
         else
         {
            
-            prevDateError = "";
+            prevDateError = null;
         }
 
         if (isValidDate)
         {
-            invalidDateError = "";
+            invalidDateError = null;
         }
         else
         {
@@ -337,7 +337,6 @@
                     @dogBookingError
                 </div>
             }
-
             @if (prevDateError != null)
             {
                 <div class="validation-message">
