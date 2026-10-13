@@ -15,20 +15,23 @@
     public Booking? editedBooking { get; set; } = null;
     [Parameter]
     public bool isEditingBooking { get; set; } = false;
-    private List<Dog> OwnerDogs { get; set; } = new();
-    private Guid selectedOwnerId { get; set; }
-    private Owner selectedOwner { get; set; } = new();
-    private List<Kennel> availableKennels { get; set; } = new List<Kennel>();
-    private DateTime selectedStartDate { get; set; } = DateTime.Today;
-    private DateTime selectedEndDate { get; set; } = DateTime.Today.AddDays(1);
+    private List<Dog> OwnerDogs = new();
+    private Guid selectedOwnerId;
+    private Owner selectedOwner  = new();
+    private List<Booking> selectedOwnerBookings  = new();
+    private List<BookingDogKennel> selectedOwnerBDKs = new();
+    private List<Kennel> availableKennels = new List<Kennel>();
+    private DateTime selectedStartDate = DateTime.Today;
+    private DateTime selectedEndDate = DateTime.Today.AddDays(1);
     private bool validDate = true;
-    private bool amPickUp { get; set; } = true;
-    private bool amDropOff { get; set; } = true;
+    private bool amPickUp = true;
+    private bool amDropOff = true;
     private string? prevDateError;
     private string? invalidDateError;
     private string? dogBookingError;
     private Booking? completedNewBooking;
     private BookingForm newBooking = new();
+    private List<Booking> prevOwnerBookings = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -53,6 +56,7 @@
 
     private async Task HandleOwnerChange()
     {
+        Console.WriteLine("changed");
         OwnerDogs = await DogService.GetOwnerDogsAsync(selectedOwnerId);
         newBooking.OwnerID = selectedOwnerId;
     }
@@ -98,7 +102,25 @@
 
         if (validDate)
         {
-            availableKennels = await KennelAvailabilityService.GetAllKennelsAvailable(selectedStartDate, selectedEndDate, editedBooking.BookingID);
+            selectedOwnerBookings = await BookingService.FindBookingsWithDateOwnerID(selectedStartDate, selectedEndDate, selectedOwnerId);
+
+            if (selectedOwnerBookings.Count > 0)
+            {
+                foreach (var booking in selectedOwnerBookings)
+                {
+                    selectedOwnerBDKs.AddRange(await BookingService.FindBookingDogKennelsWithBookingID(booking.BookingID));
+                }
+            }
+            if (isEditingBooking)
+            {
+                availableKennels = await KennelAvailabilityService.GetAllKennelsAvailable(selectedStartDate, selectedEndDate, editedBooking.BookingID);
+
+            }
+            else
+            {
+                availableKennels = await KennelAvailabilityService.GetAllKennelsAvailable(selectedStartDate, selectedEndDate);
+
+            }
         }
     }
 
@@ -115,7 +137,7 @@
         }
         else
         {
-           
+
             prevDateError = null;
         }
 
@@ -275,6 +297,29 @@
             </section>
         </div>
 
+        @if (selectedOwnerBookings.Count > 0)
+        {
+            <div class="flex">
+                <section>
+                    <label>
+                        Previous Bookings
+                    </label>
+
+                </section>
+                <section>
+                    @foreach (var curBDK in selectedOwnerBDKs)
+                    {
+                        var curBooking = selectedOwnerBookings.FirstOrDefault(booking => booking.BookingID == curBDK.BookingID);
+                        var curDog = OwnerDogs.FirstOrDefault(dog => dog.ID == curBDK.DogID);
+
+                        <p>
+                            @curDog.DogName is booked in kennel @curBDK.KennelID for @curBooking.StartDate.ToShortDateString() to @curBooking.EndDate.ToShortDateString()
+                        </p>
+                    }
+                </section>
+            </div>
+        }
+        
         @if (availableKennels.Count > 0 && validDate)
         {
             foreach (var kennel in availableKennels)
