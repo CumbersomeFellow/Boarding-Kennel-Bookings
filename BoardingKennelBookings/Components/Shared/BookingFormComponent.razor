@@ -149,6 +149,7 @@
         {
             invalidDateError = "End date is earlier than start date.";
         }
+
     }
 
     private async Task HandleSubmit()
@@ -395,7 +396,7 @@
                 </div>
             }
         </section>
-        @if (newBooking.DogKennelAssignments.Count > 0 && invalidDateError != null && prevDateError != null)
+        @if (newBooking.DogKennelAssignments.Count > 0 && invalidDateError == null && prevDateError == null)
         {
             <section>
                 <button type="submit" class="btn btn-blue">
