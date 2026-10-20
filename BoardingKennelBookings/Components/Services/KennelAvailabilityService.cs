@@ -33,6 +33,7 @@ namespace BoardingKennelBookings.Components.Services
             List<Booking> bookings = await _bookingService.FindBookingsWithInDateRange(startDate, endDate);
             List<Kennel> kennels = await _kennelService.GetAllKennels();
             List<BookingDogKennel> BookingDogKennelResult = new List<BookingDogKennel>();
+            List<int> unavailableKennelIDs = new();
 
             if (bookings.Count > 0)
             {
@@ -45,14 +46,15 @@ namespace BoardingKennelBookings.Components.Services
 
             if (BookingDogKennelResult.Count > 0)
             {
+                foreach (var BookingDogKennelSingle in BookingDogKennelResult)
+                {
+                    unavailableKennelIDs.Add(BookingDogKennelSingle.KennelID);
+                }
                 foreach (var kennel in kennels)
                 {
-                    foreach (var BookingDogKennelSingle in BookingDogKennelResult)
+                    if (!unavailableKennelIDs.Any(k => k == kennel.KennelID))
                     {
-                        if (BookingDogKennelSingle.KennelID != kennel.KennelID && !result.Any(k => k.KennelID == kennel.KennelID))
-                        {
-                            result.Add(kennel);
-                        }
+                        result.Add(kennel);
                     }
                 }
             }
