@@ -139,6 +139,7 @@
             newBooking.StartDate = selectedStartDate;
             newBooking.EndDate = selectedEndDate;
             selectedOwnerBookings = await BookingService.FindBookingsWithDateOwnerID(selectedStartDate, selectedEndDate, selectedOwnerId);
+            selectedOwnerBDKs = new();
 
             if (selectedOwnerBookings.Count > 0)
             {
@@ -150,7 +151,6 @@
             if (isEditingBooking)
             {
                 availableKennels = await KennelAvailabilityService.GetAllKennelsAvailable(selectedStartDate, selectedEndDate, editedBooking.BookingID);
-
             }
             else
             {
@@ -273,16 +273,19 @@
 
                 </section>
                 <section>
+           
                     @foreach (var curBDK in selectedOwnerBDKs)
                     {
                         var curBooking = selectedOwnerBookings.FirstOrDefault(booking => booking.BookingID == curBDK.BookingID);
                         var curDog = OwnerDogs.FirstOrDefault(dog => dog.ID == curBDK.DogID);
-                         
+
 
                         <p>
                             @curDog.DogName is booked in kennel @curBDK.KennelID for @curBooking.StartDate.ToShortDateString() to @curBooking.EndDate.ToShortDateString()
                         </p>
                     }
+                    
+                  
                 </section>
             </div>
         }
