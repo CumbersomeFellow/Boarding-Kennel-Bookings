@@ -207,6 +207,81 @@
     }
 }
 
+<div class="booking-form">
+
+    <div class="booking-form-header">
+        <h2>@(isEditingBooking ? "Edit booking" : "Create booking")</h2>
+        <p>Enter the booking details below.</p>
+    </div>
+
+    <div class="booking-form-fields">
+
+        <div class="booking-form-field">
+          
+                @if (Owners.Count == 0)
+                {
+                    <p>Loading Owners...</p>
+                }
+                else if (Owners.Count == 1)
+                {
+                <p>Owner: @Owners.FirstOrDefault().FirstName @Owners.FirstOrDefault().LastName</p>
+                }
+                else
+                {   
+
+                <label for="owner">Owner</label>
+                    <InputSelect class="booking-form-input" @bind-Value="selectedOwnerId" @bind-Value:after="HandleOwnerChange">
+
+                        <option value="">--Choose an owner--</option>
+                        @foreach (var owner in Owners)
+                        {
+                            <option value="@owner.OwnerID">@owner.FirstName @owner.LastName</option>
+                        }
+                    </InputSelect>
+                }
+            
+            @* <ValidationMessage For="@(() => newBooking.OwnerID)" /> *@
+        </div>
+
+    </div>
+    <div class="booking-form-fields">
+        <div class="booking-form-field">
+            <label for="startDate">Start date</label>
+            <InputDate id="startDate" class="booking-form-input" @bind-Value="selectedStartDate" @bind-Value:after="HandleDateChosen" />
+        </div>
+
+        <div class="booking-form-field">
+            <label for="endDate">End date</label>
+            <InputDate id="endDate" class="booking-form-input" @bind-Value="selectedEndDate" @bind-Value:after="HandleDateChosen" />
+        </div>
+    </div>
+    <div class="booking-form-actions">
+        <button type="submit" class="booking-form-button booking-form-button-primary" @onclick="HandleCheckKennelAvailable">
+            Check Dates
+        </button>
+    </div>
+    <div class="booking-form-kennels">
+        <h3>Available kennels</h3>
+        <p>Select the kennels required for this booking.</p>
+
+        @* Keep your existing availableKennels loop here.
+               Put booking-form-kennel on each kennel row. *@
+    </div>
+
+    <div class="booking-form-actions final">
+        <button type="button"
+                class="booking-form-button booking-form-button-secondary">
+            Cancel
+        </button>
+
+        <button type="submit"
+                class="booking-form-button booking-form-button-primary">
+            @(isEditingBooking ? "Update booking" : "Save booking")
+        </button>
+    </div>
+
+</div>
+
 @if (completedNewBooking == null)
 {
     <EditForm Model="newBooking" FormName="BookingForm" OnValidSubmit="HandleSubmit">

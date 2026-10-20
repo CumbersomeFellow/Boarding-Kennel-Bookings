@@ -205,5 +205,163 @@ html form, body form {
 html .form-row section, body .form-row section {
   width: 100%;
 }
+html .booking-form, body .booking-form {
+  width: 100%;
+  max-width: 48rem;
+  margin: 0 auto;
+  padding: 1.5rem;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+html .booking-form-header, body .booking-form-header {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+html .booking-form-header h2, body .booking-form-header h2 {
+  margin: 0;
+  color: #111827;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+html .booking-form-header p, body .booking-form-header p {
+  margin: 0.375rem 0 0;
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+html .booking-form-fields, body .booking-form-fields {
+  display: flex;
+  margin-bottom: 1.5rem;
+  gap: 1.25rem;
+}
+html .booking-form-field, body .booking-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
+  box-sizing: border-box;
+}
+html .booking-form-field label, body .booking-form-field label {
+  color: #374151;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+html .booking-form-input, body .booking-form-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.625rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  background: #ffffff;
+  color: #111827;
+  font: inherit;
+  font-size: 0.875rem;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+html .booking-form-input:focus, body .booking-form-input:focus {
+  border-color: #047857;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+}
+html .booking-form-input:disabled, body .booking-form-input:disabled {
+  cursor: not-allowed;
+  background: #f3f4f6;
+  color: #6b7280;
+}
+html .booking-form-kennels, body .booking-form-kennels {
+  margin-top: 2rem;
+}
+html .booking-form-kennels h3, body .booking-form-kennels h3 {
+  margin: 0;
+  color: #111827;
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+html .booking-form-kennels > p, body .booking-form-kennels > p {
+  margin: 0.375rem 0 1rem;
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+html .booking-form-kennel, body .booking-form-kennel {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  padding: 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+html .booking-form-kennel:hover, body .booking-form-kennel:hover {
+  border-color: #a7f3d0;
+  background: #ecfdf5;
+}
+html .booking-form-kennel input[type=checkbox], body .booking-form-kennel input[type=checkbox] {
+  width: 1rem;
+  height: 1rem;
+  accent-color: #047857;
+  cursor: pointer;
+}
+html .booking-form-actions, body .booking-form-actions {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 0.75rem;
+  margin-top: 2rem;
+  padding-top: 1.25rem;
+}
+html .booking-form-actions:last-child, body .booking-form-actions:last-child {
+  border-top: 1px solid #e5e7eb;
+}
+html .booking-form-button, body .booking-form-button {
+  padding: 0.625rem 1.25rem;
+  border: 1px solid transparent;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+html .booking-form-button-primary, body .booking-form-button-primary {
+  background: #047857;
+  color: #ffffff;
+}
+html .booking-form-button-primary:hover, body .booking-form-button-primary:hover {
+  background: #065f46;
+}
+html .booking-form-button-secondary, body .booking-form-button-secondary {
+  border-color: #d1d5db;
+  background: #ffffff;
+  color: #374151;
+}
+html .booking-form-button-secondary:hover, body .booking-form-button-secondary:hover {
+  background: #f9fafb;
+}
+html .booking-form-button:focus-visible, body .booking-form-button:focus-visible {
+  outline: 2px solid #10b981;
+  outline-offset: 2px;
+}
+html .booking-form-button:disabled, body .booking-form-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+@media (min-width: 640px) {
+  html .booking-form, body .booking-form {
+    padding: 2rem;
+  }
+  html .booking-form-actions, body .booking-form-actions {
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+  html .booking-form-button, body .booking-form-button {
+    min-width: 120px;
+  }
+}
+@media (min-width: 768px) {
+  html .booking-form-fields, body .booking-form-fields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
 
 /*# sourceMappingURL=app.css.map */
