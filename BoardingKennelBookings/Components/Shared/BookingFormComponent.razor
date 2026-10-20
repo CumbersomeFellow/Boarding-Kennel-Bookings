@@ -56,7 +56,6 @@
 
     private async Task HandleOwnerChange()
     {
-        Console.WriteLine("changed");
         OwnerDogs = await DogService.GetOwnerDogsAsync(selectedOwnerId);
         newBooking.OwnerID = selectedOwnerId;
     }
@@ -122,6 +121,15 @@
 
             }
         }
+
+
+        // @foreach (var curBDK in selectedOwnerBDKs)
+        // {
+        //     var curBooking = selectedOwnerBookings.FirstOrDefault(booking => booking.BookingID == curBDK.BookingID);
+        //     var curDog = OwnerDogs.FirstOrDefault(dog => dog.ID == curBDK.DogID);
+
+        //     Console.WriteLine($" curBDK.DogID {curBDK.DogID} curDog name {curDog.DogName}");
+        // }
     }
 
     private void HandleDateChosen()
@@ -149,7 +157,6 @@
         {
             invalidDateError = "End date is earlier than start date.";
         }
-
     }
 
     private async Task HandleSubmit()
@@ -159,7 +166,7 @@
 
         Booking booking = new Booking
         {
-            BookingID = Guid.NewGuid(),
+            BookingID = isEditingBooking ? editedBooking.BookingID : Guid.NewGuid(),
             OwnerID = newBooking.OwnerID.Value,
             StartDate = newBooking.StartDate,
             EndDate = newBooking.EndDate,
@@ -169,74 +176,34 @@
 
         if (isEditingBooking)
         {
-            booking.BookingID = editedBooking.BookingID;
+            //bit long winded - could do most of this in the service. Leave for now.
             List<BookingDogKennel> selectedBDKs = await BookingService.FindBookingDogKennelsWithBookingID(editedBooking.BookingID);
 
-            //if we've removed a dog from the booking - we need to remove the bdk
-            if (newBooking.DogKennelAssignments.Count < selectedBDKs.Count)
+            foreach (var bdk in selectedBDKs)
             {
-                List<Guid> dogIDs = new();
-
-                foreach (var (dogID, kennelID) in newBooking.DogKennelAssignments)
-                {
-                    dogIDs.Add(dogID);
-                }
-
-                foreach (var bdk in selectedBDKs)
-                {
-                    //if the dogid list from assignment doesnt contain this bdk dog id - remove it
-                    if (dogIDs.Contains(bdk.DogID))
-                    {
-                        await BookingService.DeleteBookingDogKennels(bdk.BookingID);
-                    }
-                }
+                await BookingService.DeleteBookingDogKennels(bdk.BookingDogKennelID);
             }
-            else
-            {
-                foreach (var (dogID, kennelID) in newBooking.DogKennelAssignments)
-                {
-                    var curBdk = selectedBDKs.FirstOrDefault(bdk => bdk.DogID == dogID);
-
-                    //if you've added a new dog in - assignments will be more than bdks
-                    //so we need to create a new bdk in that case
-                    if (curBdk == null)
-                    {
-                        BookingDogKennel bookingDogKennel = new BookingDogKennel
-                        {
-                            BookingDogKennelID = Guid.NewGuid(),
-                            BookingID = editedBooking.BookingID,
-                            DogID = dogID,
-                            KennelID = kennelID
-                        };
-                        await BookingService.CreateBookingDogKennel(bookingDogKennel);
-                    }
-                    else
-                    {
-                        curBdk.KennelID = kennelID;
-                    }
-                }
-            }
+            
             await BookingService.EditBooking(booking);
+
             completedNewBooking = booking;
         }
         else
         {
-            List<Dog> Dogs = new List<Dog>();
-
-            foreach (var (dogID, kennelID) in newBooking.DogKennelAssignments)
-            {
-                BookingDogKennel bookingDogKennel = new BookingDogKennel
-                {
-                    BookingDogKennelID = Guid.NewGuid(),
-                    BookingID = booking.BookingID,
-                    DogID = dogID,
-                    KennelID = kennelID
-                };
-
-                await BookingService.CreateBookingDogKennel(bookingDogKennel);
-            }
-
             completedNewBooking = await BookingService.CreateBookingAsync(booking);
+        }
+
+        foreach (var (dogID, kennelID) in newBooking.DogKennelAssignments)
+        {
+            BookingDogKennel bookingDogKennel = new BookingDogKennel
+            {
+                BookingDogKennelID = Guid.NewGuid(),
+                BookingID = booking.BookingID,
+                DogID = dogID,
+                KennelID = kennelID
+            };
+
+            await BookingService.CreateBookingDogKennel(bookingDogKennel);
         }
     }
 }
@@ -312,6 +279,7 @@
                     {
                         var curBooking = selectedOwnerBookings.FirstOrDefault(booking => booking.BookingID == curBDK.BookingID);
                         var curDog = OwnerDogs.FirstOrDefault(dog => dog.ID == curBDK.DogID);
+                         
 
                         <p>
                             @curDog.DogName is booked in kennel @curBDK.KennelID for @curBooking.StartDate.ToShortDateString() to @curBooking.EndDate.ToShortDateString()
