@@ -294,7 +294,7 @@ html, body {
             right: 52px;
         }
     }
- 
+
     form {
         display: flex;
         flex-direction: column;
@@ -318,6 +318,47 @@ html, body {
         border-radius: 0.75rem;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
 
+        &-kennels {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1rem;
+            width: 100%;
+        }
+
+        &-kennel {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            padding: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            color: black;
+
+            h4 {
+                margin: 0;
+                padding-bottom: 0.5rem;
+                border-bottom: 1px solid #eee;
+            }
+        }
+
+        &-dog-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        &-dog-option {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+
+
+            input {
+                cursor: pointer;
+            }
+        }
+
         &-header {
             margin-bottom: 1.5rem;
             padding-bottom: 1rem;
@@ -335,6 +376,26 @@ html, body {
                 color: #6b7280;
                 font-size: 0.875rem;
             }
+        }
+
+        &-row {
+            display: flex;
+            gap: 1rem;
+            width: 100%;
+        }
+
+
+
+        &-radio-group {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        &-radio-option {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            cursor: pointer;
         }
 
         &-fields {
@@ -382,46 +443,6 @@ html, body {
                 cursor: not-allowed;
                 background: #f3f4f6;
                 color: #6b7280;
-            }
-        }
-
-        &-kennels {
-            margin-top: 2rem;
-
-            h3 {
-                margin: 0;
-                color: #111827;
-                font-size: 1.125rem;
-                font-weight: 600;
-            }
-
-            > p {
-                margin: 0.375rem 0 1rem;
-                color: #6b7280;
-                font-size: 0.875rem;
-            }
-        }
-
-        &-kennel {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            margin-bottom: 0.75rem;
-            padding: 1rem;
-            border: 1px solid #e5e7eb;
-            border-radius: 0.5rem;
-            transition: border-color 0.2s, background-color 0.2s;
-
-            &:hover {
-                border-color: #a7f3d0;
-                background: #ecfdf5;
-            }
-
-            input[type="checkbox"] {
-                width: 1rem;
-                height: 1rem;
-                accent-color: #047857;
-                cursor: pointer;
             }
         }
 

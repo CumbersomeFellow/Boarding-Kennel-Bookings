@@ -215,6 +215,40 @@ html .booking-form, body .booking-form {
   border-radius: 0.75rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
 }
+html .booking-form-kennels, body .booking-form-kennels {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  width: 100%;
+}
+html .booking-form-kennel, body .booking-form-kennel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  color: black;
+}
+html .booking-form-kennel h4, body .booking-form-kennel h4 {
+  margin: 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #eee;
+}
+html .booking-form-dog-list, body .booking-form-dog-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+html .booking-form-dog-option, body .booking-form-dog-option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+html .booking-form-dog-option input, body .booking-form-dog-option input {
+  cursor: pointer;
+}
 html .booking-form-header, body .booking-form-header {
   margin-bottom: 1.5rem;
   padding-bottom: 1rem;
@@ -230,6 +264,21 @@ html .booking-form-header p, body .booking-form-header p {
   margin: 0.375rem 0 0;
   color: #6b7280;
   font-size: 0.875rem;
+}
+html .booking-form-row, body .booking-form-row {
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+}
+html .booking-form-radio-group, body .booking-form-radio-group {
+  display: flex;
+  gap: 1.5rem;
+}
+html .booking-form-radio-option, body .booking-form-radio-option {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
 }
 html .booking-form-fields, body .booking-form-fields {
   display: flex;
@@ -269,40 +318,6 @@ html .booking-form-input:disabled, body .booking-form-input:disabled {
   cursor: not-allowed;
   background: #f3f4f6;
   color: #6b7280;
-}
-html .booking-form-kennels, body .booking-form-kennels {
-  margin-top: 2rem;
-}
-html .booking-form-kennels h3, body .booking-form-kennels h3 {
-  margin: 0;
-  color: #111827;
-  font-size: 1.125rem;
-  font-weight: 600;
-}
-html .booking-form-kennels > p, body .booking-form-kennels > p {
-  margin: 0.375rem 0 1rem;
-  color: #6b7280;
-  font-size: 0.875rem;
-}
-html .booking-form-kennel, body .booking-form-kennel {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 0.75rem;
-  padding: 1rem;
-  border: 1px solid #e5e7eb;
-  border-radius: 0.5rem;
-  transition: border-color 0.2s, background-color 0.2s;
-}
-html .booking-form-kennel:hover, body .booking-form-kennel:hover {
-  border-color: #a7f3d0;
-  background: #ecfdf5;
-}
-html .booking-form-kennel input[type=checkbox], body .booking-form-kennel input[type=checkbox] {
-  width: 1rem;
-  height: 1rem;
-  accent-color: #047857;
-  cursor: pointer;
 }
 html .booking-form-actions, body .booking-form-actions {
   display: flex;

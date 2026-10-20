@@ -260,12 +260,71 @@
             Check Dates
         </button>
     </div>
+    <div class="booking-form-fields">
+        <section class="booking-form-field">
+            <label>AM or PM drop off?</label>
+
+            <InputRadioGroup @bind-Value="amDropOff" class="booking-form-radio-group">
+                <label class="booking-form-radio-option ">
+                    <InputRadio Value="true" />
+                    AM
+                </label>
+
+                <label class="booking-form-radio-option ">
+                    <InputRadio Value="false" />
+                    PM
+                </label>
+            </InputRadioGroup>
+        </section>
+
+        <section class="booking-form-field">
+            <label>AM or PM pick up?</label>
+
+            <InputRadioGroup @bind-Value="amPickUp" class="booking-form-radio-group">
+                <label class="booking-form--radio-option">
+                    <InputRadio Value="true" />
+                    AM
+                </label>
+
+                <label class="booking-form--radio-option">
+                    <InputRadio Value="false" />
+                    PM
+                </label>
+            </InputRadioGroup>
+        </section>
+    </div>
     <div class="booking-form-kennels">
         <h3>Available kennels</h3>
         <p>Select the kennels required for this booking.</p>
 
-        @* Keep your existing availableKennels loop here.
-               Put booking-form-kennel on each kennel row. *@
+        <div class="booking-form__dog-assignments">
+            @if (availableKennels.Count > 0 && validDate)
+            {
+                <div class="booking-form-kennels">
+                    @foreach (var kennel in availableKennels)
+                    {
+                        <section class="booking-form-kennel" @key="kennel.KennelID">
+                            <h4>Kennel @kennel.KennelID</h4>
+
+                            @if (selectedOwnerId != Guid.Empty)
+                            {
+                                <div class="booking-form-dog-list">
+                                    @foreach (var dog in OwnerDogs)
+                                    {
+                                        <label class="booking-form-dog-option" @key="dog.ID">
+
+                                            <input type="checkbox" checked="@IsKennelDisabled(dog.ID, kennel.KennelID)" disabled="@IsKennelDisabled(dog.ID, kennel.KennelID)" @onchange="e => HandleDogKennelAssignment(dog.ID, kennel.KennelID, e)" />
+
+                                            @dog.DogName
+                                        </label>
+                                    }
+                                </div>
+                            }
+                        </section>
+                    }
+                </div>
+            }
+        </div>
     </div>
 
     <div class="booking-form-actions final">
@@ -285,59 +344,6 @@
 @if (completedNewBooking == null)
 {
     <EditForm Model="newBooking" FormName="BookingForm" OnValidSubmit="HandleSubmit">
-        <div class="flex">
-            <section>
-         
-                @if (Owners.Count == 0)
-                {
-                    <p>Loading Owners...</p>
-                }
-                else if (Owners.Count == 1)
-                {
-                    <p>Owner: @Owners.FirstOrDefault().FirstName @Owners.FirstOrDefault().LastName</p>
-                }
-                else
-                {
-                    <label>
-                        Choose the owner:
-                    </label>
-                    <InputSelect @bind-Value="selectedOwnerId" @bind-Value:after="HandleOwnerChange" style="background:black;">
-
-                        <option value="">--Choose an owner--</option>
-                        @foreach (var owner in Owners)
-                        {
-                            <option value="@owner.OwnerID">@owner.FirstName @owner.LastName</option>
-                        }
-                    </InputSelect>
-                }
-            </section>
-        </div>
-
-        <div class="flex">
-            <section>
-                <label>
-                    Check kennel availability
-                </label>
-
-            </section>
-            <section>
-                <label>
-                    Start date
-                </label>
-                <InputDate @bind-Value="selectedStartDate" @bind-Value:after="HandleDateChosen" />
-            </section>
-
-            <section>
-                <label>
-                    End date
-                </label>
-                <InputDate @bind-Value="selectedEndDate" @bind-Value:after="HandleDateChosen" />
-            </section>
-            <section>
-
-                <button type="button" class="btn btn-blue" @onclick="HandleCheckKennelAvailable">Check</button>
-            </section>
-        </div>
 
         @if (selectedOwnerBookings.Count > 0)
         {
