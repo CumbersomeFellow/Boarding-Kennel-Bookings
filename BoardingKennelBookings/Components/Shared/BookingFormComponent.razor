@@ -64,6 +64,9 @@
     {
         OwnerDogs = await DogService.GetOwnerDogsAsync(selectedOwnerId);
         newBooking.OwnerID = selectedOwnerId;
+        selectedOwnerBDKs = new();
+        selectedOwnerBookings = new();
+        availableKennels = new();
     }
 
     private bool IsKennelDisabled(Guid dogID, int kennelID)
@@ -100,8 +103,6 @@
             }
         }
     }
-
-
 
     private void HandleDateChosen()
     {
@@ -289,7 +290,7 @@
                 </section>
             </div>
         }
-        
+
         @if (availableKennels.Count > 0 && validDate)
         {
             foreach (var kennel in availableKennels)
