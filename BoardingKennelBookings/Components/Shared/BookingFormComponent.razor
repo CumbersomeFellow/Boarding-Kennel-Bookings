@@ -28,6 +28,7 @@
     private bool amDropOff = true;
     private string? prevDateError;
     private string? invalidDateError;
+    private bool newSelectedDate = false;
     private string? dogBookingError;
     private Booking? completedNewBooking;
     private BookingForm newBooking = new();
@@ -51,6 +52,11 @@
             newBooking.AMPickup = editedBooking.AMPickup;
 
             OwnerDogs = await DogService.GetOwnerDogsAsync(editedBooking.OwnerID);
+        }
+        else
+        {
+            newBooking.StartDate = selectedStartDate;
+            newBooking.EndDate = selectedEndDate;
         }
     }
 
@@ -95,12 +101,43 @@
         }
     }
 
+
+
+    private void HandleDateChosen()
+    {
+        DateTime todaysDate = DateTime.Today;
+        bool isValidDate = DateHelper.IsValidDateRange(selectedStartDate, selectedEndDate);
+
+        newSelectedDate = true;
+
+        if ((selectedStartDate < todaysDate || selectedEndDate < todaysDate) && !isEditingBooking) 
+        { 
+            prevDateError = "Please choose a future date.";
+        }
+        else
+        {
+            prevDateError = null;
+        }
+
+        if (isValidDate)
+        {
+            invalidDateError = null;
+        }
+        else
+        {
+            invalidDateError = "End date is earlier than start date.";
+        }
+    }
+
     private async Task HandleCheckKennelAvailable()
     {
         validDate = DateHelper.IsValidDateRange(selectedStartDate, selectedEndDate);
 
         if (validDate)
         {
+            newSelectedDate = false;
+            newBooking.StartDate = selectedStartDate;
+            newBooking.EndDate = selectedEndDate;
             selectedOwnerBookings = await BookingService.FindBookingsWithDateOwnerID(selectedStartDate, selectedEndDate, selectedOwnerId);
 
             if (selectedOwnerBookings.Count > 0)
@@ -121,48 +158,9 @@
 
             }
         }
-
-
-        // @foreach (var curBDK in selectedOwnerBDKs)
-        // {
-        //     var curBooking = selectedOwnerBookings.FirstOrDefault(booking => booking.BookingID == curBDK.BookingID);
-        //     var curDog = OwnerDogs.FirstOrDefault(dog => dog.ID == curBDK.DogID);
-
-        //     Console.WriteLine($" curBDK.DogID {curBDK.DogID} curDog name {curDog.DogName}");
-        // }
     }
-
-    private void HandleDateChosen()
-    {
-        newBooking.StartDate = selectedStartDate;
-        newBooking.EndDate = selectedEndDate;
-        DateTime todaysDate = DateTime.Today;
-        bool isValidDate = DateHelper.IsValidDateRange(selectedStartDate, selectedEndDate);
-
-        if ((selectedStartDate < todaysDate || selectedEndDate < todaysDate) && !isEditingBooking) 
-        { 
-            prevDateError = "Please choose a future date.";
-        }
-        else
-        {
-
-            prevDateError = null;
-        }
-
-        if (isValidDate)
-        {
-            invalidDateError = null;
-        }
-        else
-        {
-            invalidDateError = "End date is earlier than start date.";
-        }
-    }
-
     private async Task HandleSubmit()
     {
-        newBooking.AMDropoff = amDropOff;
-        newBooking.AMPickup = amPickUp;
 
         Booking booking = new Booking
         {
@@ -170,8 +168,8 @@
             OwnerID = newBooking.OwnerID.Value,
             StartDate = newBooking.StartDate,
             EndDate = newBooking.EndDate,
-            AMDropoff = newBooking.AMDropoff,
-            AMPickup = newBooking.AMPickup
+            AMDropoff = amDropOff,
+            AMPickup = amPickUp
         };
 
         if (isEditingBooking)
@@ -183,7 +181,7 @@
             {
                 await BookingService.DeleteBookingDogKennels(bdk.BookingDogKennelID);
             }
-            
+
             await BookingService.EditBooking(booking);
 
             completedNewBooking = booking;
@@ -363,8 +361,14 @@
                     @invalidDateError
                 </div>
             }
+            @if (newSelectedDate)
+            {
+                <div class="validation-message">
+                    <span>Please hit check again</span>
+                </div>
+            }
         </section>
-        @if (newBooking.DogKennelAssignments.Count > 0 && invalidDateError == null && prevDateError == null)
+        @if (newBooking.DogKennelAssignments.Count > 0 && invalidDateError == null && prevDateError == null && newSelectedDate == false)
         {
             <section>
                 <button type="submit" class="btn btn-blue">
