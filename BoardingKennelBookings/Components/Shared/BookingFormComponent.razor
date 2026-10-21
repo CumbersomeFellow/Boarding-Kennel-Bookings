@@ -30,6 +30,7 @@
     private string? invalidDateError;
     private bool newSelectedDate = false;
     private string? dogBookingError;
+    private bool noOwnerError;
     private Booking? completedNewBooking;
     private BookingForm newBooking = new();
     private List<Booking> prevOwnerBookings = new();
@@ -67,6 +68,16 @@
         selectedOwnerBDKs = new();
         selectedOwnerBookings = new();
         availableKennels = new();
+
+        if (selectedOwnerId == Guid.Empty)
+        {
+            noOwnerError = true;
+        }
+        Console.WriteLine($"selectedOwnerId {selectedOwnerId} selectedOwnerId == Guid Empty {selectedOwnerId == Guid.Empty}");
+        if(noOwnerError && selectedOwnerId != Guid.Empty)
+        {
+            noOwnerError = false;
+        }
     }
 
     private bool IsKennelDisabled(Guid dogID, int kennelID)
@@ -134,7 +145,11 @@
     {
         validDate = DateHelper.IsValidDateRange(selectedStartDate, selectedEndDate);
 
-        if (validDate)
+        //two different functions - probably should move but its only small!
+        if (selectedOwnerId == Guid.Empty)
+        {
+            noOwnerError = true;
+        }else if (validDate)
         {
             newSelectedDate = false;
             newBooking.StartDate = selectedStartDate;
@@ -230,9 +245,9 @@
                 {   
 
                 <label for="owner">Owner</label>
-                    <InputSelect class="booking-form-input" @bind-Value="selectedOwnerId" @bind-Value:after="HandleOwnerChange">
+                <InputSelect class="booking-form-input" @bind-Value="selectedOwnerId" @bind-Value:after="HandleOwnerChange">
 
-                        <option value="">--Choose an owner--</option>
+                    <option value="@Guid.Empty">--Choose an owner--</option>
                         @foreach (var owner in Owners)
                         {
                             <option value="@owner.OwnerID">@owner.FirstName @owner.LastName</option>
@@ -241,6 +256,12 @@
                 }
             
             @* <ValidationMessage For="@(() => newBooking.OwnerID)" /> *@
+            @if(noOwnerError)
+            {
+                <div class="validation-message">
+                    <span>Please select an owner.</span>
+                </div>
+            }
         </div>
 
     </div>
@@ -453,7 +474,7 @@
                 </div>
             }
         </section>
-        @if (newBooking.DogKennelAssignments.Count > 0 && invalidDateError == null && prevDateError == null && newSelectedDate == false)
+        @if (newBooking.DogKennelAssignments.Count > 0 && invalidDateError == null && prevDateError == null && newSelectedDate == false && noOwnerError == false)
         {
             <section>
                 <button type="submit" class="btn btn-blue">
