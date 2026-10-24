@@ -180,7 +180,7 @@
     }
     private async Task HandleSubmit()
     {
-        Console.WriteLine("ey");
+        Console.WriteLine("SUBMITTING?????!?!??!?!?!");
         Booking booking = new Booking
         {
             BookingID = isEditingBooking ? editedBooking.BookingID : Guid.NewGuid(),
@@ -302,7 +302,7 @@
             }
         </div>
         <div class="booking-form-actions">
-            <button type="submit" class="booking-form-button booking-form-button-primary" @onclick="HandleCheckKennelAvailable">
+            <button type="button" class="booking-form-button booking-form-button-primary" @onclick="HandleCheckKennelAvailable">
                 Check Dates
             </button>
         </div>
@@ -385,36 +385,40 @@
 
 
         </div>
-        @* @if (selectedOwnerBookings.Count > 0)
-        {
-            <div class="flex">
-                <section>
-                    <label>
-                        Previous Bookings
-                    </label>
-
-                </section>
-                <section>
-
-                    @foreach (var curBDK in selectedOwnerBDKs)
-                    {
-                        var curBooking = selectedOwnerBookings.FirstOrDefault(booking => booking.BookingID == curBDK.BookingID);
-                        var curDog = OwnerDogs.FirstOrDefault(dog => dog.ID == curBDK.DogID);
-
-
-                        <p style="color:black">
-                            @curDog.DogName is booked in kennel @curBDK.KennelID for @curBooking.StartDate.ToShortDateString() to @curBooking.EndDate.ToShortDateString()
-                        </p>
-                    }
-
-
-                </section>
-            </div>
-        } *@
+ 
     </div>
 </EditForm>
+
 @* @if (completedNewBooking == null)
 {
+
+
+
+@if (selectedOwnerBookings.Count > 0)
+{
+    <div class="flex">
+        <section>
+            <label>
+                Previous Bookings
+            </label>
+
+        </section>
+        <section>
+            @foreach (var curBDK in selectedOwnerBDKs)
+            {
+                var curBooking = selectedOwnerBookings.FirstOrDefault(booking => booking.BookingID == curBDK.BookingID);
+                var curDog = OwnerDogs.FirstOrDefault(dog => dog.ID == curBDK.DogID);
+
+
+                <p style="color:black">
+                    @curDog.DogName is booked in kennel @curBDK.KennelID for @curBooking.StartDate.ToShortDateString() to @curBooking.EndDate.ToShortDateString()
+                </p>
+            }
+        </section>
+    </div>
+}
+
+
     <EditForm Model="newBooking" FormName="BookingForm" OnValidSubmit="HandleSubmit">
 
         

@@ -29,7 +29,12 @@ namespace BoardingKennelBookings.Components.Services
 
         public async Task<List<Kennel>> GetAllKennels()
         {
-            return await _context.Kennels.ToListAsync();
+            try {
+                Console.WriteLine("GetAllKennels: START");
+                return await _context.Kennels.ToListAsync();
+
+            }
+            finally { Console.WriteLine("GetAllKennels: END"); }
         }
 
         public async Task<Kennel> GetKennel(int kennelID)
