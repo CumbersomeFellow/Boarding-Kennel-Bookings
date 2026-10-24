@@ -395,38 +395,48 @@
                 </div>
             </div>
         }
-        <div class="booking-form-kennels">
-            <h3>Available kennels</h3>
-            <p>Select the kennels required for this booking.</p>
-        
-                @if (availableKennels.Count > 0 && validDate)
-                {
-                    <div class="booking-form-kennels">
-                        @foreach (var kennel in availableKennels)
-                        {
-                            <section class="booking-form-kennel" @key="kennel.KennelID">
-                                <h4>Kennel @kennel.KennelID</h4>
 
-                                @if (selectedOwnerId != Guid.Empty)
-                                {
-                                    <div class="booking-form-dog-list">
-                                        @foreach (var dog in OwnerDogs)
-                                        {
-                                            <label class="booking-form-dog-option" @key="dog.ID">
 
-                                                <input type="checkbox" checked="@IsKennelDisabled(dog.ID, kennel.KennelID)" disabled="@IsKennelDisabled(dog.ID, kennel.KennelID)" @onchange="e => HandleDogKennelAssignment(dog.ID, kennel.KennelID, e)" />
+        <div class="booking-form-kennel-section">
+            <div class="booking-form-kennel-header">
+                <h3>Available kennels</h3>
+                <p>Select the kennels required for this booking.</p>
+            </div>
 
-                                                @dog.DogName
-                                            </label>
-                                        }
-                                    </div>
-                                }
-                            </section>
-                        }
-                    </div>
-                }
-        
+            @if (availableKennels.Count > 0 && validDate)
+            {
+                <div class="booking-form-kennels">
+                    @foreach (var kennel in availableKennels)
+                    {
+                        <section class="booking-form-kennel" @key="kennel.KennelID">
+
+                            <h4>Kennel @kennel.KennelID</h4>
+
+                            @if (selectedOwnerId != Guid.Empty)
+                            {
+                                <div class="booking-form-dog-list">
+                                    @foreach (var dog in OwnerDogs)
+                                    {
+                                        <label class="booking-form-dog-option" @key="dog.ID">
+                                            <input type="checkbox" checked="@IsKennelDisabled(dog.ID, kennel.KennelID)" disabled="@IsKennelDisabled(dog.ID, kennel.KennelID)" @onchange="e => HandleDogKennelAssignment(dog.ID, kennel.KennelID, e)" />
+                                            <span>@dog.DogName</span>
+                                        </label>
+                                    }
+                                </div>
+                            }
+                        </section>
+                    }
+                </div>
+            }
+            else if (validDate)
+            {
+                <p class="booking-form-kennel-empty">
+                    No kennels are available for the selected dates.
+                </p>
+            }
         </div>
+     
+     
 
         <div class="booking-form-actions final">
             <button type="button"

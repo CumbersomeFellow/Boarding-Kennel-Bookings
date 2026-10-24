@@ -217,27 +217,107 @@ html .booking-form, body .booking-form {
   color: #e5e7eb;
   box-sizing: border-box;
 }
+html .booking-form-kennel-section, body .booking-form-kennel-section {
+  width: 100%;
+  margin-top: 1.5rem;
+  padding: 1.25rem;
+  background: #202630;
+  border: 1px solid #3a4352;
+  border-radius: 0.75rem;
+  box-sizing: border-box;
+  color: #e5e7eb;
+}
+html .booking-form-kennel-header, body .booking-form-kennel-header {
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #3a4352;
+}
+html .booking-form-kennel-header h3, body .booking-form-kennel-header h3 {
+  margin: 0;
+  color: #f3f4f6;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+html .booking-form-kennel-header p, body .booking-form-kennel-header p {
+  margin: 0.375rem 0 0;
+  color: #9ca3af;
+  font-size: 0.875rem;
+}
 html .booking-form-kennels, body .booking-form-kennels {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1rem;
+  gap: 0.75rem;
   width: 100%;
 }
 html .booking-form-kennel, body .booking-form-kennel {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 1rem;
+  min-width: 0;
   padding: 1rem;
-  background: #222834;
-  border: 1px solid #3a4352;
-  border-radius: 8px;
+  background: #181e27;
+  border: 1px solid #343d4b;
+  border-radius: 0.5rem;
   color: #e5e7eb;
+  transition: border-color 0.2s ease;
+}
+html .booking-form-kennel:hover, body .booking-form-kennel:hover {
+  border-color: #10b981;
 }
 html .booking-form-kennel h4, body .booking-form-kennel h4 {
   margin: 0;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid #3a4352;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #343d4b;
   color: #f3f4f6;
+  font-size: 1rem;
+  font-weight: 600;
+}
+html .booking-form-dog-list, body .booking-form-dog-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+html .booking-form-dog-option, body .booking-form-dog-option {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.65rem 0.75rem;
+  background: #202630;
+  border: 1px solid #343d4b;
+  border-radius: 0.5rem;
+  color: #d1d5db;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+html .booking-form-dog-option:hover, body .booking-form-dog-option:hover {
+  background: #272e3a;
+  border-color: #596579;
+}
+html .booking-form-dog-option input, body .booking-form-dog-option input {
+  width: 1rem;
+  height: 1rem;
+  margin: 0;
+  accent-color: #10b981;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+html .booking-form-kennel-empty, body .booking-form-kennel-empty {
+  margin: 0;
+  padding: 1rem;
+  background: #181e27;
+  border: 1px solid #343d4b;
+  border-radius: 0.5rem;
+  color: #9ca3af;
+  font-size: 0.875rem;
+}
+@media (max-width: 600px) {
+  html .booking-form-kennel-section, body .booking-form-kennel-section {
+    padding: 0.85rem;
+  }
+  html .booking-form-kennels, body .booking-form-kennels {
+    grid-template-columns: 1fr;
+  }
 }
 html .booking-form-dog-list, body .booking-form-dog-list {
   display: flex;
