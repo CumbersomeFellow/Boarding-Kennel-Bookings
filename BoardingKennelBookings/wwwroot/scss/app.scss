@@ -402,6 +402,10 @@ html, body {
             display: flex;
             margin-bottom: 1.5rem;
             gap: 1.25rem;
+
+            &-validation {
+                margin-bottom: 0;
+            }
         }
 
         &-field {
@@ -497,9 +501,70 @@ html, body {
                 opacity: 0.6;
             }
         }
+
+        &-previous-bookings {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            width: 100%;
+            margin-bottom: 1.5rem;
+
+            h3 {
+                margin: 0;
+                font-size: 1.1rem;
+                font-weight: 600;
+            }
+        }
+
+        &-booking-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        &-booking-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        &-booking-dog {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+
+            span {
+                font-size: 0.875rem;
+                color: #666;
+            }
+        }
+
+        &-booking-dates {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        &-date-separator {
+            color: #777;
+        }
         // Tablet and desktop layout
         @media (min-width: 640px) {
             padding: 2rem;
+
+            &-booking-item {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            &-booking-dates {
+                flex-wrap: wrap;
+            }
 
             &-actions {
                 flex-direction: row;

@@ -34,6 +34,7 @@
     private Booking? completedNewBooking;
     private BookingForm newBooking = new();
     private List<Booking> prevOwnerBookings = new();
+    private bool canSubmit => newBooking.DogKennelAssignments.Count > 0 && invalidDateError == null && prevDateError == null && newSelectedDate == false && noOwnerError == false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -73,7 +74,9 @@
         {
             noOwnerError = true;
         }
+
         Console.WriteLine($"selectedOwnerId {selectedOwnerId} selectedOwnerId == Guid Empty {selectedOwnerId == Guid.Empty}");
+        
         if(noOwnerError && selectedOwnerId != Guid.Empty)
         {
             noOwnerError = false;
@@ -177,7 +180,7 @@
     }
     private async Task HandleSubmit()
     {
-
+        Console.WriteLine("ey");
         Booking booking = new Booking
         {
             BookingID = isEditingBooking ? editedBooking.BookingID : Guid.NewGuid(),
@@ -221,33 +224,30 @@
         }
     }
 }
+<EditForm Model="newBooking" FormName="BookingForm" OnValidSubmit="HandleSubmit">
+    <div class="booking-form">
 
-<div class="booking-form">
+        <div class="booking-form-header">
+            <h2>@(isEditingBooking ? "Edit booking" : "Create booking")</h2>
+            <p>Enter the booking details below.</p>
+        </div>
 
-    <div class="booking-form-header">
-        <h2>@(isEditingBooking ? "Edit booking" : "Create booking")</h2>
-        <p>Enter the booking details below.</p>
-    </div>
+        <div class="booking-form-fields">
 
-    <div class="booking-form-fields">
-
-        <div class="booking-form-field">
-          
+            <div class="booking-form-field">
                 @if (Owners.Count == 0)
                 {
                     <p>Loading Owners...</p>
                 }
                 else if (Owners.Count == 1)
                 {
-                <p>Owner: @Owners.FirstOrDefault().FirstName @Owners.FirstOrDefault().LastName</p>
+                    <p>Owner: @Owners.FirstOrDefault().FirstName @Owners.FirstOrDefault().LastName</p>
                 }
                 else
                 {   
-
-                <label for="owner">Owner</label>
-                <InputSelect class="booking-form-input" @bind-Value="selectedOwnerId" @bind-Value:after="HandleOwnerChange">
-
-                    <option value="@Guid.Empty">--Choose an owner--</option>
+                    <label for="owner">Owner</label>
+                    <InputSelect class="booking-form-input" @bind-Value="selectedOwnerId" @bind-Value:after="HandleOwnerChange">
+                        <option value="@Guid.Empty">--Choose an owner--</option>
                         @foreach (var owner in Owners)
                         {
                             <option value="@owner.OwnerID">@owner.FirstName @owner.LastName</option>
@@ -255,118 +255,137 @@
                     </InputSelect>
                 }
             
-            @* <ValidationMessage For="@(() => newBooking.OwnerID)" /> *@
-            @if(noOwnerError)
+                @if(noOwnerError)
+                {
+                    <div class="validation-message">
+                        <span>Please select an owner.</span>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="booking-form-fields">
+            <div class="booking-form-field">
+                <label for="startDate">Start date</label>
+                <InputDate id="startDate" class="booking-form-input" @bind-Value="selectedStartDate" @bind-Value:after="HandleDateChosen" />
+            </div>
+
+            <div class="booking-form-field">
+                <label for="endDate">End date</label>
+                <InputDate id="endDate" class="booking-form-input" @bind-Value="selectedEndDate" @bind-Value:after="HandleDateChosen" />
+            </div>
+   
+        </div>
+        <div class="booking-form-fields-validation">
+            @if (dogBookingError != null)
             {
                 <div class="validation-message">
-                    <span>Please select an owner.</span>
+                    @dogBookingError
                 </div>
             }
-        </div>
-
-    </div>
-    <div class="booking-form-fields">
-        <div class="booking-form-field">
-            <label for="startDate">Start date</label>
-            <InputDate id="startDate" class="booking-form-input" @bind-Value="selectedStartDate" @bind-Value:after="HandleDateChosen" />
-        </div>
-
-        <div class="booking-form-field">
-            <label for="endDate">End date</label>
-            <InputDate id="endDate" class="booking-form-input" @bind-Value="selectedEndDate" @bind-Value:after="HandleDateChosen" />
-        </div>
-    </div>
-    <div class="booking-form-actions">
-        <button type="submit" class="booking-form-button booking-form-button-primary" @onclick="HandleCheckKennelAvailable">
-            Check Dates
-        </button>
-    </div>
-    <div class="booking-form-fields">
-        <section class="booking-form-field">
-            <label>AM or PM drop off?</label>
-
-            <InputRadioGroup @bind-Value="amDropOff" class="booking-form-radio-group">
-                <label class="booking-form-radio-option ">
-                    <InputRadio Value="true" />
-                    AM
-                </label>
-
-                <label class="booking-form-radio-option ">
-                    <InputRadio Value="false" />
-                    PM
-                </label>
-            </InputRadioGroup>
-        </section>
-
-        <section class="booking-form-field">
-            <label>AM or PM pick up?</label>
-
-            <InputRadioGroup @bind-Value="amPickUp" class="booking-form-radio-group">
-                <label class="booking-form--radio-option">
-                    <InputRadio Value="true" />
-                    AM
-                </label>
-
-                <label class="booking-form--radio-option">
-                    <InputRadio Value="false" />
-                    PM
-                </label>
-            </InputRadioGroup>
-        </section>
-    </div>
-    <div class="booking-form-kennels">
-        <h3>Available kennels</h3>
-        <p>Select the kennels required for this booking.</p>
-
-        <div class="booking-form__dog-assignments">
-            @if (availableKennels.Count > 0 && validDate)
+            @if (prevDateError != null)
             {
-                <div class="booking-form-kennels">
-                    @foreach (var kennel in availableKennels)
-                    {
-                        <section class="booking-form-kennel" @key="kennel.KennelID">
-                            <h4>Kennel @kennel.KennelID</h4>
-
-                            @if (selectedOwnerId != Guid.Empty)
-                            {
-                                <div class="booking-form-dog-list">
-                                    @foreach (var dog in OwnerDogs)
-                                    {
-                                        <label class="booking-form-dog-option" @key="dog.ID">
-
-                                            <input type="checkbox" checked="@IsKennelDisabled(dog.ID, kennel.KennelID)" disabled="@IsKennelDisabled(dog.ID, kennel.KennelID)" @onchange="e => HandleDogKennelAssignment(dog.ID, kennel.KennelID, e)" />
-
-                                            @dog.DogName
-                                        </label>
-                                    }
-                                </div>
-                            }
-                        </section>
-                    }
+                <div class="validation-message">
+                    @prevDateError
+                </div>
+            }
+            @if (invalidDateError != null)
+            {
+                <div class="validation-message">
+                    @invalidDateError
+                </div>
+            }
+            @if (newSelectedDate)
+            {
+                <div class="validation-message">
+                    <span>Please hit check again</span>
                 </div>
             }
         </div>
-    </div>
+        <div class="booking-form-actions">
+            <button type="submit" class="booking-form-button booking-form-button-primary" @onclick="HandleCheckKennelAvailable">
+                Check Dates
+            </button>
+        </div>
+    
+        <div class="booking-form-fields">
+            <section class="booking-form-field">
+                <label>AM or PM drop off?</label>
 
-    <div class="booking-form-actions final">
-        <button type="button"
-                class="booking-form-button booking-form-button-secondary">
-            Cancel
-        </button>
+                <InputRadioGroup @bind-Value="amDropOff" class="booking-form-radio-group">
+                    <label class="booking-form-radio-option ">
+                        <InputRadio Value="true" />
+                        AM
+                    </label>
 
-        <button type="submit"
-                class="booking-form-button booking-form-button-primary">
-            @(isEditingBooking ? "Update booking" : "Save booking")
-        </button>
-    </div>
+                    <label class="booking-form-radio-option ">
+                        <InputRadio Value="false" />
+                        PM
+                    </label>
+                </InputRadioGroup>
+            </section>
 
-</div>
+            <section class="booking-form-field">
+                <label>AM or PM pick up?</label>
 
-@if (completedNewBooking == null)
-{
-    <EditForm Model="newBooking" FormName="BookingForm" OnValidSubmit="HandleSubmit">
+                <InputRadioGroup @bind-Value="amPickUp" class="booking-form-radio-group">
+                    <label class="booking-form--radio-option">
+                        <InputRadio Value="true" />
+                        AM
+                    </label>
 
-        @if (selectedOwnerBookings.Count > 0)
+                    <label class="booking-form--radio-option">
+                        <InputRadio Value="false" />
+                        PM
+                    </label>
+                </InputRadioGroup>
+            </section>
+        </div>
+        <div class="booking-form-kennels">
+            <h3>Available kennels</h3>
+            <p>Select the kennels required for this booking.</p>
+        
+                @if (availableKennels.Count > 0 && validDate)
+                {
+                    <div class="booking-form-kennels">
+                        @foreach (var kennel in availableKennels)
+                        {
+                            <section class="booking-form-kennel" @key="kennel.KennelID">
+                                <h4>Kennel @kennel.KennelID</h4>
+
+                                @if (selectedOwnerId != Guid.Empty)
+                                {
+                                    <div class="booking-form-dog-list">
+                                        @foreach (var dog in OwnerDogs)
+                                        {
+                                            <label class="booking-form-dog-option" @key="dog.ID">
+
+                                                <input type="checkbox" checked="@IsKennelDisabled(dog.ID, kennel.KennelID)" disabled="@IsKennelDisabled(dog.ID, kennel.KennelID)" @onchange="e => HandleDogKennelAssignment(dog.ID, kennel.KennelID, e)" />
+
+                                                @dog.DogName
+                                            </label>
+                                        }
+                                    </div>
+                                }
+                            </section>
+                        }
+                    </div>
+                }
+        
+        </div>
+
+        <div class="booking-form-actions final">
+            <button type="button"
+                    class="booking-form-button booking-form-button-secondary">
+                Cancel
+            </button>
+
+            <button type="submit"class="booking-form-button booking-form-button-primary" disabled="@(!canSubmit)">
+                    @(isEditingBooking ? "Update booking" : "Save booking")
+            </button>
+
+
+        </div>
+        @* @if (selectedOwnerBookings.Count > 0)
         {
             <div class="flex">
                 <section>
@@ -376,22 +395,29 @@
 
                 </section>
                 <section>
-           
+
                     @foreach (var curBDK in selectedOwnerBDKs)
                     {
                         var curBooking = selectedOwnerBookings.FirstOrDefault(booking => booking.BookingID == curBDK.BookingID);
                         var curDog = OwnerDogs.FirstOrDefault(dog => dog.ID == curBDK.DogID);
 
 
-                        <p>
+                        <p style="color:black">
                             @curDog.DogName is booked in kennel @curBDK.KennelID for @curBooking.StartDate.ToShortDateString() to @curBooking.EndDate.ToShortDateString()
                         </p>
                     }
-                    
-                  
+
+
                 </section>
             </div>
-        }
+        } *@
+    </div>
+</EditForm>
+@* @if (completedNewBooking == null)
+{
+    <EditForm Model="newBooking" FormName="BookingForm" OnValidSubmit="HandleSubmit">
+
+        
 
         @if (availableKennels.Count > 0 && validDate)
         {
@@ -446,44 +472,13 @@
                 </label>
             </InputRadioGroup>
         </section>
-        <section>
+   
             <DataAnnotationsValidator />
             <ValidationSummary />
-            @if (dogBookingError != null)
-            {
-                <div class="validation-message">
-                    @dogBookingError
-                </div>
-            }
-            @if (prevDateError != null)
-            {
-                <div class="validation-message">
-                    @prevDateError
-                </div>
-            }
-            @if (invalidDateError != null)
-            {
-                <div class="validation-message">
-                    @invalidDateError
-                </div>
-            }
-            @if (newSelectedDate)
-            {
-                <div class="validation-message">
-                    <span>Please hit check again</span>
-                </div>
-            }
-        </section>
-        @if (newBooking.DogKennelAssignments.Count > 0 && invalidDateError == null && prevDateError == null && newSelectedDate == false && noOwnerError == false)
-        {
-            <section>
-                <button type="submit" class="btn btn-blue">
-                    Submit
-                </button>
-            </section>
-        }
+     
+
     </EditForm>
-}
+} *@
 @if (completedNewBooking != null)
 {
     <section>

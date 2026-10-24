@@ -285,6 +285,9 @@ html .booking-form-fields, body .booking-form-fields {
   margin-bottom: 1.5rem;
   gap: 1.25rem;
 }
+html .booking-form-fields-validation, body .booking-form-fields-validation {
+  margin-bottom: 0;
+}
 html .booking-form-field, body .booking-form-field {
   display: flex;
   flex-direction: column;
@@ -361,9 +364,60 @@ html .booking-form-button:disabled, body .booking-form-button:disabled {
   cursor: not-allowed;
   opacity: 0.6;
 }
+html .booking-form-previous-bookings, body .booking-form-previous-bookings {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  margin-bottom: 1.5rem;
+}
+html .booking-form-previous-bookings h3, body .booking-form-previous-bookings h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+html .booking-form-booking-list, body .booking-form-booking-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+html .booking-form-booking-item, body .booking-form-booking-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+html .booking-form-booking-dog, body .booking-form-booking-dog {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+html .booking-form-booking-dog span, body .booking-form-booking-dog span {
+  font-size: 0.875rem;
+  color: #666;
+}
+html .booking-form-booking-dates, body .booking-form-booking-dates {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+}
+html .booking-form-date-separator, body .booking-form-date-separator {
+  color: #777;
+}
 @media (min-width: 640px) {
   html .booking-form, body .booking-form {
     padding: 2rem;
+  }
+  html .booking-form-booking-item, body .booking-form-booking-item {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  html .booking-form-booking-dates, body .booking-form-booking-dates {
+    flex-wrap: wrap;
   }
   html .booking-form-actions, body .booking-form-actions {
     flex-direction: row;
