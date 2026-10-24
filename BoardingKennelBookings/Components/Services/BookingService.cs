@@ -15,29 +15,12 @@ namespace BoardingKennelBookings.Components.Services
 
         public async Task<List<Booking>> FindBookingsWithInDateRange(DateTime startDate, DateTime endDate)
         {
-            try
-            {
-                Console.WriteLine("FindBookingsWithInDateRange query START");
-                return await _context.Bookings.Where(booking => startDate <= booking.EndDate && endDate >= booking.StartDate).ToListAsync();
-
-            }
-            finally
-            {
-                Console.WriteLine("FindBookingsWithInDateRange query END");
-            }
+            return await _context.Bookings.Where(booking => startDate <= booking.EndDate && endDate >= booking.StartDate).ToListAsync();
         }
         public async Task<List<Booking>> FindBookingsWithDateOwnerID(DateTime startDate, DateTime endDate, Guid OwnerID)
         {
-            Console.WriteLine("FindBookingsWithDateOwnerID: START");
-            try
-            {
-                var bookings = await _context.Bookings.Where(booking => startDate <= booking.EndDate && endDate >= booking.StartDate && booking.OwnerID == OwnerID).ToListAsync();
-                return bookings;
-            }
-            finally
-            {
-                Console.WriteLine("FindBookingsWithDateOwnerID: END");
-            }
+            var bookings = await _context.Bookings.Where(booking => startDate <= booking.EndDate && endDate >= booking.StartDate && booking.OwnerID == OwnerID).ToListAsync();
+            return bookings;
         }
         public async Task<Booking> CreateBookingAsync(Booking booking)
         {

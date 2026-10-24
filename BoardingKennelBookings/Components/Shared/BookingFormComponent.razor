@@ -340,6 +340,61 @@
                 </InputRadioGroup>
             </section>
         </div>
+        @if (selectedOwnerBookings.Count > 0)
+        {
+            <div class="previous-bookings">
+                <div class="previous-bookings-header">
+                    <h3>Previous Bookings</h3>
+                    <span class="previous-bookings-count">
+                        @selectedOwnerBookings.Count bookings
+                    </span>
+                </div>
+
+                <div class="previous-bookings-list">
+                    @foreach (var curBDK in selectedOwnerBDKs)
+                    {
+                        var curBooking = selectedOwnerBookings.FirstOrDefault(booking => booking.BookingID == curBDK.BookingID);
+                        var curDog = OwnerDogs.FirstOrDefault(dog => dog.ID == curBDK.DogID);
+
+                        @if (curBooking != null && curDog != null)
+                        {
+                            <article class="previous-bookings-card">
+                                <div class="previous-bookings-dog">
+                                    <span class="previous-bookings-dog-name">
+                                        @curDog.DogName
+                                    </span>
+                                    <span class="previous-bookings-kennel">
+                                        Kennel @curBDK.KennelID
+                                    </span>
+                                </div>
+
+                                <div class="previous-bookings-dates">
+                                    <div class="previous-bookings-date">
+                                        <span class="previous-bookings-label">
+                                            Check-in
+                                        </span>
+                                        <span>
+                                            @curBooking.StartDate.ToString("dd MMM yyyy")
+                                        </span>
+                                    </div>
+
+                                    <span class="previous-bookings-arrow">→</span>
+
+                                    <div class="previous-bookings-date">
+                                        <span class="previous-bookings-label">
+                                            Check-out
+                                        </span>
+                                        <span>
+                                            @curBooking.EndDate.ToString("dd MMM yyyy")
+                                        </span>
+                                    </div>
+                                </div>
+                            </article>
+                        }
+                    }
+                </div>
+            </div>
+        }
         <div class="booking-form-kennels">
             <h3>Available kennels</h3>
             <p>Select the kennels required for this booking.</p>
@@ -382,10 +437,8 @@
             <button type="submit"class="booking-form-button booking-form-button-primary" disabled="@(!canSubmit)">
                     @(isEditingBooking ? "Update booking" : "Save booking")
             </button>
-
-
         </div>
- 
+        
     </div>
 </EditForm>
 
@@ -394,29 +447,7 @@
 
 
 
-@if (selectedOwnerBookings.Count > 0)
-{
-    <div class="flex">
-        <section>
-            <label>
-                Previous Bookings
-            </label>
 
-        </section>
-        <section>
-            @foreach (var curBDK in selectedOwnerBDKs)
-            {
-                var curBooking = selectedOwnerBookings.FirstOrDefault(booking => booking.BookingID == curBDK.BookingID);
-                var curDog = OwnerDogs.FirstOrDefault(dog => dog.ID == curBDK.DogID);
-
-
-                <p style="color:black">
-                    @curDog.DogName is booked in kennel @curBDK.KennelID for @curBooking.StartDate.ToShortDateString() to @curBooking.EndDate.ToShortDateString()
-                </p>
-            }
-        </section>
-    </div>
-}
 
 
     <EditForm Model="newBooking" FormName="BookingForm" OnValidSubmit="HandleSubmit">

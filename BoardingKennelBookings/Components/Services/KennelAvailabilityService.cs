@@ -30,8 +30,7 @@ namespace BoardingKennelBookings.Components.Services
         public async Task<List<Kennel>> GetAllKennelsAvailable(DateTime startDate, DateTime endDate, Guid? bookingID = null)
         {
             List<Kennel> result = new List<Kennel>();
-            var bookings = await _bookingService.FindBookingsWithInDateRange(startDate, endDate);
-         
+            List<Booking> bookings = await _bookingService.FindBookingsWithInDateRange(startDate, endDate);
             List<Kennel> kennels = await _kennelService.GetAllKennels();
             List<BookingDogKennel> BookingDogKennelResult = new List<BookingDogKennel>();
             List<int> unavailableKennelIDs = new();
