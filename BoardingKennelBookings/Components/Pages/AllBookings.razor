@@ -200,35 +200,35 @@
                                             <h4>Unknown owner</h4>
                                         }
 
-                                        <span class="booking-history-count">
-                                            @curDogs.Count @(curDogs.Count == 1 ? "dog" : "dogs")
-                                        </span>
+                              
                                     </div>
-
-                                    <div class="previous-bookings-dog">
+                                    <span class="previous-bookings-count">
+                                        @curDogs.Count @(curDogs.Count == 1 ? "dog" : "dogs")
+                                    </span>
+                                    <div class="previous-bookings-dogs">
                                         @foreach (var dog in curDogs)
                                         {
-                                            <span class="booking-history-dog" @key="dog.ID">
+                                        <span class="previous-bookings-dog" @key="dog.ID">
                                                 @dog.DogName
                                             </span>
                                         }
                                     </div>
 
-                                    <div class="previous-bookings-dates">
-                                        <div class="previous-bookings-date" ">
-                                            <span class="previous-bookings-label">Check-in</span>
-                                            <span>@booking.StartDate.ToString("dd MMM yyyy")</span>
-                                        </div>
-
-                                        <span class="previous-bookings-arrow">→</span>
-
-                                        <div class="previous-bookings-date">
-                                            <span class="previous-bookings-label">Check-out</span>
-                                            <span>@booking.EndDate.ToString("dd MMM yyyy")</span>
-                                        </div>
-                                    </div>
+                                   
+                                </div>
+                            <div class="previous-bookings-dates">
+                                <div class="previous-bookings-date">
+                                    <span class="previous-bookings-label">Check-in</span>
+                                    <span>@booking.StartDate.ToString("dd MMM yyyy")</span>
                                 </div>
 
+                                <span class="previous-bookings-arrow">→</span>
+
+                                <div class="previous-bookings-date">
+                                    <span class="previous-bookings-label">Check-out</span>
+                                    <span>@booking.EndDate.ToString("dd MMM yyyy")</span>
+                                </div>
+                            </div>
                             <button type="button" class="previous-bookings-edit" @onclick="() => HandleBookingEdit(booking)">
                                     Edit
                                 </button>

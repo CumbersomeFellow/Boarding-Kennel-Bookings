@@ -255,11 +255,19 @@ html .previous-bookings-card, body .previous-bookings-card {
 html .previous-bookings-card:hover, body .previous-bookings-card:hover {
   border-color: #10b981;
 }
-html .previous-bookings-dog, body .previous-bookings-dog {
+html .previous-bookings-dogs, body .previous-bookings-dogs {
   display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-  min-width: 0;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+html .previous-bookings-dog, body .previous-bookings-dog {
+  padding: 0.3rem 0.6rem;
+  border: 1px solid #343d4b;
+  border-radius: 999px;
+  background: #222834;
+  color: #d1d5db;
+  font-size: 0.8125rem;
 }
 html .previous-bookings-dog-name, body .previous-bookings-dog-name {
   color: #f3f4f6;
@@ -275,6 +283,7 @@ html .previous-bookings-owner, body .previous-bookings-owner {
   align-items: center;
   flex-wrap: wrap;
   gap: 0.75rem;
+  margin-bottom: 0.5rem;
 }
 html .previous-bookings-owner h4, body .previous-bookings-owner h4 {
   margin: 0;
