@@ -205,6 +205,126 @@ html form, body form {
 html .form-row section, body .form-row section {
   width: 100%;
 }
+html .previous-bookings, body .previous-bookings {
+  width: 100%;
+  margin-top: 1.5rem;
+  padding: 1.25rem;
+  background: #202630;
+  border: 1px solid #3a4352;
+  border-radius: 0.75rem;
+  box-sizing: border-box;
+  color: #e5e7eb;
+}
+html .previous-bookings-header, body .previous-bookings-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+html .previous-bookings-header h3, body .previous-bookings-header h3 {
+  margin: 0;
+  color: #f3f4f6;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+html .previous-bookings-count, body .previous-bookings-count {
+  padding: 0.3rem 0.65rem;
+  background: #343d4b;
+  color: #d1d5db;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+html .previous-bookings-list, body .previous-bookings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+html .previous-bookings-card, body .previous-bookings-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 1rem;
+  background: #181e27;
+  border: 1px solid #343d4b;
+  border-radius: 0.5rem;
+  transition: border-color 0.2s ease;
+}
+html .previous-bookings-card:hover, body .previous-bookings-card:hover {
+  border-color: #10b981;
+}
+html .previous-bookings-dog, body .previous-bookings-dog {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-width: 0;
+}
+html .previous-bookings-dog-name, body .previous-bookings-dog-name {
+  color: #f3f4f6;
+  font-size: 1rem;
+  font-weight: 600;
+}
+html .previous-bookings-kennel, body .previous-bookings-kennel {
+  color: #a3acba;
+  font-size: 0.875rem;
+}
+html .previous-bookings-owner, body .previous-bookings-owner {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+html .previous-bookings-owner h4, body .previous-bookings-owner h4 {
+  margin: 0;
+  color: #f3f4f6;
+  font-size: 1rem;
+  font-weight: 600;
+}
+html .previous-bookings-dates, body .previous-bookings-dates {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+html .previous-bookings-date, body .previous-bookings-date {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  color: #d1d5db;
+  font-size: 0.875rem;
+  white-space: nowrap;
+}
+html .previous-bookings-label, body .previous-bookings-label {
+  color: #9ca3af;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+html .previous-bookings-arrow, body .previous-bookings-arrow {
+  color: #10b981;
+  font-size: 1.1rem;
+}
+html .previous-bookings-edit, body .previous-bookings-edit {
+  flex-shrink: 0;
+  padding: 0.5rem 1rem;
+  border: 1px solid #454e5e;
+  border-radius: 0.5rem;
+  background: #272e3a;
+  color: #e5e7eb;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+html .previous-bookings-edit:hover, body .previous-bookings-edit:hover {
+  background: #343d4b;
+  border-color: #10b981;
+}
+html .previous-bookings-edit:focus-visible, body .previous-bookings-edit:focus-visible {
+  outline: 2px solid #10b981;
+  outline-offset: 2px;
+}
 html .booking-form, body .booking-form {
   width: 100%;
   max-width: 48rem;
@@ -458,94 +578,6 @@ html .booking-form-button:focus-visible, body .booking-form-button:focus-visible
 html .booking-form-button:disabled, body .booking-form-button:disabled {
   cursor: not-allowed;
   opacity: 0.5;
-}
-html .booking-form .previous-bookings, body .booking-form .previous-bookings {
-  width: 100%;
-  margin-top: 1.5rem;
-  padding: 1.25rem;
-  background: #202630;
-  border: 1px solid #3a4352;
-  border-radius: 0.75rem;
-  box-sizing: border-box;
-  color: #e5e7eb;
-}
-html .booking-form .previous-bookings-header, body .booking-form .previous-bookings-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 1rem;
-}
-html .booking-form .previous-bookings-header h3, body .booking-form .previous-bookings-header h3 {
-  margin: 0;
-  color: #f3f4f6;
-  font-size: 1.1rem;
-  font-weight: 600;
-}
-html .booking-form .previous-bookings-count, body .booking-form .previous-bookings-count {
-  padding: 0.3rem 0.65rem;
-  background: #343d4b;
-  color: #d1d5db;
-  border-radius: 999px;
-  font-size: 0.8rem;
-  white-space: nowrap;
-}
-html .booking-form .previous-bookings-list, body .booking-form .previous-bookings-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-html .booking-form .previous-bookings-card, body .booking-form .previous-bookings-card {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1.5rem;
-  padding: 1rem;
-  background: #181e27;
-  border: 1px solid #343d4b;
-  border-radius: 0.5rem;
-  transition: border-color 0.2s ease;
-}
-html .booking-form .previous-bookings-card:hover, body .booking-form .previous-bookings-card:hover {
-  border-color: #10b981;
-}
-html .booking-form .previous-bookings-dog, body .booking-form .previous-bookings-dog {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-  min-width: 0;
-}
-html .booking-form .previous-bookings-dog-name, body .booking-form .previous-bookings-dog-name {
-  color: #f3f4f6;
-  font-size: 1rem;
-  font-weight: 600;
-}
-html .booking-form .previous-bookings-kennel, body .booking-form .previous-bookings-kennel {
-  color: #a3acba;
-  font-size: 0.875rem;
-}
-html .booking-form .previous-bookings-dates, body .booking-form .previous-bookings-dates {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-html .booking-form .previous-bookings-date, body .booking-form .previous-bookings-date {
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-  color: #d1d5db;
-  font-size: 0.875rem;
-  white-space: nowrap;
-}
-html .booking-form .previous-bookings-label, body .booking-form .previous-bookings-label {
-  color: #9ca3af;
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-html .booking-form .previous-bookings-arrow, body .booking-form .previous-bookings-arrow {
-  color: #10b981;
-  font-size: 1.1rem;
 }
 html .booking-form-date-separator, body .booking-form-date-separator {
   color: #9ca3af;

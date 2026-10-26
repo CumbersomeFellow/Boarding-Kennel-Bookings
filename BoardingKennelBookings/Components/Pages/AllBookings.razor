@@ -143,23 +143,113 @@
         </ul>
     </div>
 
+<div class="booking-history">
+
+    <div class="booking-history-header">
+        <div>
+            <h3>Bookings</h3>
+            <p>View and manage kennel bookings by date.</p>
+        </div>
+    </div>
+
+    <div class="booking-history-filters">
+        <section class="booking-history-field">
+            <label for="booking-start-date">Start date</label>
+            <InputDate id="booking-start-date"
+                       @bind-Value="startDate"
+                       @bind-Value:after="HandleDateChosen"
+                       class="booking-history-input" />
+        </section>
+
+        <section class="booking-history-field">
+            <label for="booking-end-date">End date</label>
+            <InputDate id="booking-end-date"
+                       @bind-Value="endDate"
+                       @bind-Value:after="HandleDateChosen"
+                       class="booking-history-input" />
+        </section>
+
+        <button type="button"
+                class="booking-history-check"
+                @onclick="HandleCheckBookings">
+            Check bookings
+        </button>
+    </div>
+ 
+            <div class="previous-bookings">
+                <div class="previous-bookings-list">
+                    @if (bookings.Count > 0)
+                    {
+                        @foreach (var booking in bookings)
+                        {
+                            var curOwner = allOwners.FirstOrDefault(owner => owner.OwnerID == booking.OwnerID);
+
+                            var bookingBDKs = bookingDogKennels.FindAll(bdk => bdk.BookingID == booking.BookingID);
+
+                            var curDogs = bookingBDKs.Select(bdk => currentDogs.FirstOrDefault(dog => dog.ID == bdk.DogID)).Where(dog => dog != null).ToList();
+
+                            <article class="previous-bookings-card" @key="booking.BookingID">
+                                <div class="booking-history-details">
+                                <div class="previous-bookings-owner">
+                                        @if (curOwner != null)
+                                        {
+                                            <h4>@curOwner.FirstName @curOwner.LastName</h4>
+                                        }
+                                        else
+                                        {
+                                            <h4>Unknown owner</h4>
+                                        }
+
+                                        <span class="booking-history-count">
+                                            @curDogs.Count @(curDogs.Count == 1 ? "dog" : "dogs")
+                                        </span>
+                                    </div>
+
+                                    <div class="previous-bookings-dog">
+                                        @foreach (var dog in curDogs)
+                                        {
+                                            <span class="booking-history-dog" @key="dog.ID">
+                                                @dog.DogName
+                                            </span>
+                                        }
+                                    </div>
+
+                                    <div class="previous-bookings-dates">
+                                        <div class="previous-bookings-date" ">
+                                            <span class="previous-bookings-label">Check-in</span>
+                                            <span>@booking.StartDate.ToString("dd MMM yyyy")</span>
+                                        </div>
+
+                                        <span class="previous-bookings-arrow">→</span>
+
+                                        <div class="previous-bookings-date">
+                                            <span class="previous-bookings-label">Check-out</span>
+                                            <span>@booking.EndDate.ToString("dd MMM yyyy")</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            <button type="button" class="previous-bookings-edit" @onclick="() => HandleBookingEdit(booking)">
+                                    Edit
+                                </button>
+                            </article>
+                        }
+                    }
+                    else
+                    {
+                        <div class="booking-history-empty">
+                            <p>No bookings found for the selected dates.</p>
+                        </div>
+                    }
+                </div>
+            </div>
+ 
+  
+</div>
+
     @if (callPopup)
     {
         <popup>
-            <section>
-                <label>
-                    Edit Booking
-                </label>
-                <p>
-                    @selectedBooking.BookingID
-                    @foreach (var bdk in bookingBDKs)
-                    {
-                        Dog curDog = bookingDogs.FirstOrDefault(dog => dog.ID == bdk.DogID);
-                        //show which dogs are in which kennel
-                       <br> @curDog.DogName <span>is in kennel </span> @bdk.KennelID 
-                    }
-                </p>
-            </section>
             <BookingFormComponent isEditingBooking="true" Owners="new List<Owner> { selectedOwner }" editedBooking="selectedBooking" @key="selectedBooking" />
         </popup>
     }

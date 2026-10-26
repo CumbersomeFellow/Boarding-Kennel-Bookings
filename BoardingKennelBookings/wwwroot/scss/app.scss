@@ -307,6 +307,145 @@ html, body {
         }
     }
 
+    .previous-bookings {
+        width: 100%;
+        margin-top: 1.5rem;
+        padding: 1.25rem;
+        background: #202630;
+        border: 1px solid #3a4352;
+        border-radius: 0.75rem;
+        box-sizing: border-box;
+        color: #e5e7eb;
+
+        &-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: 1rem;
+
+            h3 {
+                margin: 0;
+                color: #f3f4f6;
+                font-size: 1.1rem;
+                font-weight: 600;
+            }
+        }
+
+        &-count {
+            padding: 0.3rem 0.65rem;
+            background: #343d4b;
+            color: #d1d5db;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            white-space: nowrap;
+        }
+
+        &-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        &-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.5rem;
+            padding: 1rem;
+            background: #181e27;
+            border: 1px solid #343d4b;
+            border-radius: 0.5rem;
+            transition: border-color 0.2s ease;
+
+            &:hover {
+                border-color: #10b981;
+            }
+        }
+
+        &-dog {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+            min-width: 0;
+        }
+
+        &-dog-name {
+            color: #f3f4f6;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        &-kennel {
+            color: #a3acba;
+            font-size: 0.875rem;
+        }
+
+        &-owner {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+
+            h4 {
+                margin: 0;
+                color: #f3f4f6;
+                font-size: 1rem;
+                font-weight: 600;
+            }
+        }
+
+        &-dates {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        &-date {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+            color: #d1d5db;
+            font-size: 0.875rem;
+            white-space: nowrap;
+        }
+
+        &-label {
+            color: #9ca3af;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        &-arrow {
+            color: #10b981;
+            font-size: 1.1rem;
+        }
+
+        &-edit {
+            flex-shrink: 0;
+            padding: 0.5rem 1rem;
+            border: 1px solid #454e5e;
+            border-radius: 0.5rem;
+            background: #272e3a;
+            color: #e5e7eb;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s, border-color 0.2s;
+
+            &:hover {
+                background: #343d4b;
+                border-color: #10b981;
+            }
+
+            &:focus-visible {
+                outline: 2px solid #10b981;
+                outline-offset: 2px;
+            }
+        }
+    }
+
     .booking-form {
         width: 100%;
         max-width: 48rem;
@@ -318,7 +457,6 @@ html, body {
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
         color: #e5e7eb;
         box-sizing: border-box;
-
         // Available kennels section
         &-kennel-section {
             width: 100%;
@@ -602,107 +740,7 @@ html, body {
             }
         }
 
-        .previous-bookings {
-            width: 100%;
-            margin-top: 1.5rem;
-            padding: 1.25rem;
-            background: #202630;
-            border: 1px solid #3a4352;
-            border-radius: 0.75rem;
-            box-sizing: border-box;
-            color: #e5e7eb;
 
-            &-header {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                gap: 1rem;
-                margin-bottom: 1rem;
-
-                h3 {
-                    margin: 0;
-                    color: #f3f4f6;
-                    font-size: 1.1rem;
-                    font-weight: 600;
-                }
-            }
-
-            &-count {
-                padding: 0.3rem 0.65rem;
-                background: #343d4b;
-                color: #d1d5db;
-                border-radius: 999px;
-                font-size: 0.8rem;
-                white-space: nowrap;
-            }
-
-            &-list {
-                display: flex;
-                flex-direction: column;
-                gap: 0.75rem;
-            }
-
-            &-card {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                gap: 1.5rem;
-                padding: 1rem;
-                background: #181e27;
-                border: 1px solid #343d4b;
-                border-radius: 0.5rem;
-                transition: border-color 0.2s ease;
-
-                &:hover {
-                    border-color: #10b981;
-                }
-            }
-
-            &-dog {
-                display: flex;
-                flex-direction: column;
-                gap: 0.4rem;
-                min-width: 0;
-            }
-
-            &-dog-name {
-                color: #f3f4f6;
-                font-size: 1rem;
-                font-weight: 600;
-            }
-
-            &-kennel {
-                color: #a3acba;
-                font-size: 0.875rem;
-            }
-
-            &-dates {
-                display: flex;
-                align-items: center;
-                gap: 1rem;
-            }
-
-            &-date {
-                display: flex;
-                flex-direction: column;
-                gap: 0.35rem;
-                color: #d1d5db;
-                font-size: 0.875rem;
-                white-space: nowrap;
-            }
-
-            &-label {
-                color: #9ca3af;
-                font-size: 0.75rem;
-                text-transform: uppercase;
-                letter-spacing: 0.04em;
-            }
-
-            &-arrow {
-                color: #10b981;
-                font-size: 1.1rem;
-            }
-        }
 
         &-date-separator {
             color: #9ca3af;
