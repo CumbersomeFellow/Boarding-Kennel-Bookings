@@ -897,4 +897,93 @@ html, body {
             }
         }
     }
+
+    // Wraps the booking form. Once a booking is saved the form stays visible but
+    // locked, and the confirmation floats over it so the page height never changes.
+    .booking-form-wrapper {
+        position: relative;
+        width: 100%;
+
+        &-locked {
+            .booking-form {
+                opacity: 0.35;
+                filter: grayscale(0.4);
+                pointer-events: none;
+                user-select: none;
+                transition: opacity 0.2s ease;
+            }
+        }
+    }
+
+    .booking-form-complete {
+        position: absolute;
+        inset: 0;
+        z-index: 5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1.5rem;
+        box-sizing: border-box;
+
+        &-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            width: 100%;
+            max-width: 26rem;
+            padding: 2rem 1.5rem;
+            background: #202630;
+            border: 1px solid #10b981;
+            border-radius: 0.75rem;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+            box-sizing: border-box;
+            color: #e5e7eb;
+            text-align: center;
+
+            h3 {
+                margin: 0;
+                color: #f9fafb;
+                font-size: 1.25rem;
+                font-weight: 600;
+            }
+
+            p {
+                margin: 0;
+                color: #9ca3af;
+                font-size: 0.875rem;
+            }
+        }
+
+        &-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 3rem;
+            height: 3rem;
+            margin-bottom: 0.5rem;
+            border-radius: 50%;
+            background: rgba(16, 185, 129, 0.18);
+            color: #10b981;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        &-dates {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-top: 0.75rem;
+            padding: 0.75rem 1rem;
+            background: #181e27;
+            border: 1px solid #343d4b;
+            border-radius: 0.5rem;
+            color: #f3f4f6;
+            font-size: 0.9rem;
+        }
+
+        &-arrow {
+            color: #10b981;
+        }
+    }
 }

@@ -224,8 +224,8 @@
         }
     }
 }
-@if (completedNewBooking == null)
-{
+<div class="booking-form-wrapper @(completedNewBooking != null ? "booking-form-wrapper-locked" : "")">
+    <div inert="@(completedNewBooking != null)">
     <EditForm Model="newBooking" FormName="BookingForm" OnValidSubmit="HandleSubmit">
         <div class="booking-form">
 
@@ -453,8 +453,25 @@
 
         </div>
     </EditForm>
+    </div>
 
-}
+    @if (completedNewBooking != null)
+    {
+        <div class="booking-form-complete" role="status">
+            <div class="booking-form-complete-card">
+                <span class="booking-form-complete-icon" aria-hidden="true">✓</span>
+                <h3>@(isEditingBooking ? "Booking updated" : "Booking saved")</h3>
+                <p>Your booking has been completed.</p>
+
+                <div class="booking-form-complete-dates">
+                    <span>@completedNewBooking.StartDate.ToString("dd MMM yyyy")</span>
+                    <span class="booking-form-complete-arrow">→</span>
+                    <span>@completedNewBooking.EndDate.ToString("dd MMM yyyy")</span>
+                </div>
+            </div>
+        </div>
+    }
+</div>
 
 @* @if (completedNewBooking == null)
 {
@@ -528,9 +545,3 @@
 
     </EditForm>
 } *@
-@if (completedNewBooking != null)
-{
-    <section>
-        Completed booking for @completedNewBooking.StartDate.ToShortDateString() to @completedNewBooking.EndDate.ToShortDateString()
-    </section>
-}
