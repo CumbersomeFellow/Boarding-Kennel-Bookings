@@ -6,21 +6,40 @@
 @rendermode InteractiveServer
 @inject KennelService KennelService
 
-<h3>Create Kennel</h3>
-
-
 <EditForm Model="newKennel" OnValidSubmit="HandleSubmit" FormName="CreateKennelForm">
     <DataAnnotationsValidator />
-    <ValidationSummary />
-    <div class="form-row">
-        <label>
-            Kennel Number:
-        </label>
-        <InputNumber @bind-Value="newKennel.KennelNumber" />
+    <div class="booking-form">
 
-    </div>
-    <div class="form-row">
-        <button type="submit">Create Kennel</button>
+        <div class="booking-form-header">
+            <h2>Create kennel</h2>
+            <p>Enter the kennel details below.</p>
+        </div>
+
+        <div class="booking-form-fields">
+            <div class="booking-form-field">
+                <label for="kennelNumber">Kennel number</label>
+                <InputNumber id="kennelNumber" class="booking-form-input" @bind-Value="newKennel.KennelNumber" />
+            </div>
+        </div>
+
+        <div class="booking-form-fields-validation">
+            <div class="validation-message">
+                <ValidationSummary />
+            </div>
+            @if (errorMessage != null)
+            {
+                <div class="validation-message">
+                    @errorMessage
+                </div>
+            }
+        </div>
+
+        <div class="booking-form-actions final">
+            <button type="submit" class="booking-form-button booking-form-button-primary">
+                Create kennel
+            </button>
+        </div>
+
     </div>
 </EditForm>
 
@@ -44,19 +63,12 @@
 
     }
 }
-@if (errorMessage != null)
-{
-    <p>
-        @errorMessage
-    </p>
-}
-
 @if (createdKennel != null)
 {
-    <div class="owner-summary">
-        <h3>Kennel Created</h3>
-
-        <p><strong>Kennel Number:</strong> @createdKennel.KennelNumber</p>
-       
+    <div class="booking-form-kennel-section">
+        <div class="booking-form-kennel-header">
+            <h3>Kennel created</h3>
+            <p>Kennel number @createdKennel.KennelNumber has been added.</p>
+        </div>
     </div>
 }

@@ -419,8 +419,7 @@ html .previous-bookings-edit:focus-visible, body .previous-bookings-edit:focus-v
 }
 html .booking-form, body .booking-form {
   width: 100%;
-  max-width: 48rem;
-  margin: 0 auto;
+  margin: 0;
   padding: 1.5rem;
   background: #181c24;
   border: 1px solid #343b48;
