@@ -331,12 +331,21 @@ html, body {
         &-filters {
             display: flex;
             align-items: flex-end;
+            flex-wrap: wrap;
             gap: 1.25rem;
             padding: 1.25rem;
             background: #202630;
             border: 1px solid #3a4352;
             border-radius: 0.75rem;
             box-sizing: border-box;
+        }
+
+        // Validation message - plain red text on its own line under the date inputs
+        &-error {
+            flex: 0 0 100%;
+            margin-top: -0.75rem;
+            color: #e50000;
+            font-size: 0.875rem;
         }
 
         &-field {
@@ -392,6 +401,11 @@ html, body {
             &:focus-visible {
                 outline: none;
                 box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.35);
+            }
+
+            &:disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
             }
         }
 
@@ -724,20 +738,53 @@ html, body {
             width: 100%;
         }
 
+        // AM / PM toggle - two equal buttons that line up with the date inputs
         &-radio-group {
-            display: flex;
-            gap: 1.5rem;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.5rem;
+            width: 100%;
         }
 
-        &-radio-option {
+        &-radio-group &-radio-option {
+            position: relative;
             display: flex;
             align-items: center;
-            gap: 0.4rem;
+            justify-content: center;
+            padding: 0.625rem 0.75rem;
+            border: 1px solid #454e5e;
+            border-radius: 0.5rem;
+            background: #222834;
             color: #d1d5db;
+            font-size: 0.875rem;
+            font-weight: 500;
+            line-height: 1.5;
             cursor: pointer;
+            user-select: none;
+            box-sizing: border-box;
+            transition: background-color 0.2s, border-color 0.2s, color 0.2s;
 
+            // hide the native radio - the whole button is the target
             input {
-                accent-color: #10b981;
+                position: absolute;
+                opacity: 0;
+                pointer-events: none;
+            }
+
+            &:hover {
+                background: #272e3a;
+                border-color: #596579;
+            }
+
+            &:has(input:checked) {
+                background: #047857;
+                border-color: #10b981;
+                color: #ffffff;
+            }
+
+            &:has(input:focus-visible) {
+                outline: 2px solid #10b981;
+                outline-offset: 2px;
             }
         }
 
@@ -747,6 +794,11 @@ html, body {
             gap: 1.25rem;
 
             &-validation {
+                margin-bottom: 0;
+            }
+
+            // fields inside a panel (e.g. drop-off / pick-up times) have no extra bottom gap
+            &-times {
                 margin-bottom: 0;
             }
         }

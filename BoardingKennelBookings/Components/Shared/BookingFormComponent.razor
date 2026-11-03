@@ -309,39 +309,6 @@
                 </button>
             </div>
 
-            <div class="booking-form-fields">
-                <section class="booking-form-field">
-                    <label>AM or PM drop off?</label>
-
-                    <InputRadioGroup @bind-Value="amDropOff" class="booking-form-radio-group">
-                        <label class="booking-form-radio-option ">
-                            <InputRadio Value="true" />
-                            AM
-                        </label>
-
-                        <label class="booking-form-radio-option ">
-                            <InputRadio Value="false" />
-                            PM
-                        </label>
-                    </InputRadioGroup>
-                </section>
-
-                <section class="booking-form-field">
-                    <label>AM or PM pick up?</label>
-
-                    <InputRadioGroup @bind-Value="amPickUp" class="booking-form-radio-group">
-                        <label class="booking-form--radio-option">
-                            <InputRadio Value="true" />
-                            AM
-                        </label>
-
-                        <label class="booking-form--radio-option">
-                            <InputRadio Value="false" />
-                            PM
-                        </label>
-                    </InputRadioGroup>
-                </section>
-            </div>
             @if (selectedOwnerBookings.Count > 0)
             {
                 <div class="previous-bookings">
@@ -436,6 +403,51 @@
                         No kennels are available for the selected dates.
                     </p>
                 }
+            </div>
+
+            <div class="booking-form-kennel-section">
+                <div class="booking-form-kennel-header">
+                    <h3>Drop-off and pick-up times</h3>
+                    <p>Choose AM or PM for each.</p>
+                </div>
+
+                <div class="booking-form-fields booking-form-fields-times">
+                    <section class="booking-form-field">
+                        <label>Drop off</label>
+
+                        <div class="booking-form-radio-group">
+                            <InputRadioGroup @bind-Value="amDropOff">
+                                <label class="booking-form-radio-option">
+                                    <InputRadio Value="true" />
+                                    <span>AM</span>
+                                </label>
+
+                                <label class="booking-form-radio-option">
+                                    <InputRadio Value="false" />
+                                    <span>PM</span>
+                                </label>
+                            </InputRadioGroup>
+                        </div>
+                    </section>
+
+                    <section class="booking-form-field">
+                        <label>Pick up</label>
+
+                        <div class="booking-form-radio-group">
+                            <InputRadioGroup @bind-Value="amPickUp">
+                                <label class="booking-form-radio-option">
+                                    <InputRadio Value="true" />
+                                    <span>AM</span>
+                                </label>
+
+                                <label class="booking-form-radio-option">
+                                    <InputRadio Value="false" />
+                                    <span>PM</span>
+                                </label>
+                            </InputRadioGroup>
+                        </div>
+                    </section>
+                </div>
             </div>
 
 

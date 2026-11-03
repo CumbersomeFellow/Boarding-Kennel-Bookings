@@ -226,12 +226,19 @@ html .booking-history-header p, body .booking-history-header p {
 html .booking-history-filters, body .booking-history-filters {
   display: flex;
   align-items: flex-end;
+  flex-wrap: wrap;
   gap: 1.25rem;
   padding: 1.25rem;
   background: #202630;
   border: 1px solid #3a4352;
   border-radius: 0.75rem;
   box-sizing: border-box;
+}
+html .booking-history-error, body .booking-history-error {
+  flex: 0 0 100%;
+  margin-top: -0.75rem;
+  color: #e50000;
+  font-size: 0.875rem;
 }
 html .booking-history-field, body .booking-history-field {
   display: flex;
@@ -281,6 +288,10 @@ html .booking-history-check:hover, body .booking-history-check:hover {
 html .booking-history-check:focus-visible, body .booking-history-check:focus-visible {
   outline: none;
   box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.35);
+}
+html .booking-history-check:disabled, body .booking-history-check:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 @media (max-width: 600px) {
   html .booking-history-filters, body .booking-history-filters {
@@ -568,18 +579,46 @@ html .booking-form-row, body .booking-form-row {
   width: 100%;
 }
 html .booking-form-radio-group, body .booking-form-radio-group {
-  display: flex;
-  gap: 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+  width: 100%;
 }
-html .booking-form-radio-option, body .booking-form-radio-option {
+html .booking-form-radio-group html .booking-form-radio-option, html .booking-form-radio-group body .booking-form-radio-option, body .booking-form-radio-group html .booking-form-radio-option, body .booking-form-radio-group body .booking-form-radio-option {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 0.4rem;
+  justify-content: center;
+  padding: 0.625rem 0.75rem;
+  border: 1px solid #454e5e;
+  border-radius: 0.5rem;
+  background: #222834;
   color: #d1d5db;
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.5;
   cursor: pointer;
+  user-select: none;
+  box-sizing: border-box;
+  transition: background-color 0.2s, border-color 0.2s, color 0.2s;
 }
-html .booking-form-radio-option input, body .booking-form-radio-option input {
-  accent-color: #10b981;
+html .booking-form-radio-group html .booking-form-radio-option input, html .booking-form-radio-group body .booking-form-radio-option input, body .booking-form-radio-group html .booking-form-radio-option input, body .booking-form-radio-group body .booking-form-radio-option input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+html .booking-form-radio-group html .booking-form-radio-option:hover, html .booking-form-radio-group body .booking-form-radio-option:hover, body .booking-form-radio-group html .booking-form-radio-option:hover, body .booking-form-radio-group body .booking-form-radio-option:hover {
+  background: #272e3a;
+  border-color: #596579;
+}
+html .booking-form-radio-group html .booking-form-radio-option:has(input:checked), html .booking-form-radio-group body .booking-form-radio-option:has(input:checked), body .booking-form-radio-group html .booking-form-radio-option:has(input:checked), body .booking-form-radio-group body .booking-form-radio-option:has(input:checked) {
+  background: #047857;
+  border-color: #10b981;
+  color: #ffffff;
+}
+html .booking-form-radio-group html .booking-form-radio-option:has(input:focus-visible), html .booking-form-radio-group body .booking-form-radio-option:has(input:focus-visible), body .booking-form-radio-group html .booking-form-radio-option:has(input:focus-visible), body .booking-form-radio-group body .booking-form-radio-option:has(input:focus-visible) {
+  outline: 2px solid #10b981;
+  outline-offset: 2px;
 }
 html .booking-form-fields, body .booking-form-fields {
   display: flex;
