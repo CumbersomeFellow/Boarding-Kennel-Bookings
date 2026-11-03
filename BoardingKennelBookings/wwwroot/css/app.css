@@ -89,47 +89,109 @@ html .pad-4, body .pad-4 {
   padding: 1rem;
 }
 html .stat-card, body .stat-card {
-  padding: 0.25rem;
-  font-weight: 600;
+  position: relative;
+  padding: 1.25rem 1.4rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 0.5rem;
   line-height: 1.25;
 }
-html .stat-card:first-child .bg, body .stat-card:first-child .bg {
+html .stat-card-total, body .stat-card-total {
   background-color: #1a2a5e;
+  --stat-accent: #5b8cff;
 }
-html .stat-card:nth-child(2) .bg, body .stat-card:nth-child(2) .bg {
+html .stat-card-occupied, body .stat-card-occupied {
   background-color: #3d1800;
+  --stat-accent: #ff6a00;
 }
-html .stat-card:nth-child(3) .bg, body .stat-card:nth-child(3) .bg {
+html .stat-card-available, body .stat-card-available {
   background-color: #002a40;
+  --stat-accent: #1ea7ff;
 }
-html .stat-card:nth-child(4) .bg, body .stat-card:nth-child(4) .bg {
+html .stat-card-clean, body .stat-card-clean {
   background-color: #3d2800;
+  --stat-accent: #ffa800;
 }
-html .stat-card .bg, body .stat-card .bg {
-  background-color: #0d3330;
-  border-radius: 0.5rem;
+html .stat-card-icon, body .stat-card-icon {
+  position: absolute;
+  top: 1rem;
+  right: 1.1rem;
+  color: var(--stat-accent);
+  opacity: 0.3;
 }
 html .stat-card h4, body .stat-card h4 {
-  font-weight: 600;
-  font-size: 1rem;
-  margin-bottom: 0.25rem;
+  margin: 0 0 0.35rem;
+  color: var(--stat-accent);
+  font-family: ui-monospace, "Cascadia Mono", "SFMono-Regular", Consolas, monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 html .stat-card p, body .stat-card p {
+  margin: 0 0 0.25rem;
+  color: var(--stat-accent);
+  font-family: ui-monospace, "Cascadia Mono", "SFMono-Regular", Consolas, monospace;
+  font-size: 2.25rem;
   font-weight: 700;
-  font-size: 2rem;
-  margin-bottom: 0.05rem;
+  line-height: 1.1;
 }
 html .stat-card label, body .stat-card label {
-  font-weight: 500;
-  font-size: 0.75rem;
   color: #7A85A0;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+html .stat-grid, body .stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  gap: 0.75rem;
+}
+html .kennel-grid, body .kennel-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.8rem;
+  width: 100%;
+}
+@media (max-width: 1000px) {
+  html .kennel-grid, body .kennel-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 600px) {
+  html .kennel-grid, body .kennel-grid {
+    grid-template-columns: 1fr;
+  }
+}
+html .kennel-grid .kennel, body .kennel-grid .kennel {
+  float: none;
+  width: auto;
+  padding: 0;
+}
+html .kennel-grid .kennel .bg, body .kennel-grid .kennel .bg {
+  float: none;
+  display: flow-root;
+  height: 100%;
+  min-height: 5.75rem;
+  padding: 1rem 1.15rem;
+  border-radius: 0.75rem;
+  box-sizing: border-box;
+}
+html .kennel-grid .kennel h4, body .kennel-grid .kennel h4 {
+  margin: 0 0 0.5rem;
+  font-family: ui-monospace, "Cascadia Mono", "SFMono-Regular", Consolas, monospace;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+html .kennel-grid .kennel .kennel-status, body .kennel-grid .kennel .kennel-status {
+  color: #0d99ff;
+  font-size: 1rem;
 }
 html .page-minor-header, body .page-minor-header {
   font-size: 1rem;
+  font-weight: 700;
   padding: 0;
-  margin-left: 0.5rem;
-  margin-top: 0.5rem;
-  margin-bottom: 0.5rem;
+  margin-top: 1.25rem;
+  margin-bottom: 0.75rem;
 }
 html .kennel, body .kennel {
   padding: 0.25rem;
@@ -137,7 +199,7 @@ html .kennel, body .kennel {
 }
 html .kennel.available .bg, body .kennel.available .bg {
   background: linear-gradient(145deg, rgb(13, 30, 42) 0%, rgb(24, 28, 42) 100%);
-  border-color: #0d99ff;
+  border-color: rgba(13, 153, 255, 0.3);
 }
 html .kennel.available P, body .kennel.available P {
   color: transparent;
@@ -626,6 +688,9 @@ html .booking-form-fields, body .booking-form-fields {
   gap: 1.25rem;
 }
 html .booking-form-fields-validation, body .booking-form-fields-validation {
+  margin-bottom: 0;
+}
+html .booking-form-fields-times, body .booking-form-fields-times {
   margin-bottom: 0;
 }
 html .booking-form-field, body .booking-form-field {

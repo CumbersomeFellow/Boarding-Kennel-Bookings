@@ -10,7 +10,7 @@
     [Parameter]
     public List<Dog> currentDogs { get; set; } = new List<Dog>();
 }
-<div class="row wd-100">
+<div class="kennel-grid">
     @foreach (var kennel in allKennels)
     {
         BookingDogKennel curBDK = bookingDogKennels.FirstOrDefault(bdk => bdk.KennelID == kennel.KennelID);
@@ -21,7 +21,7 @@
             <div class="kennel wd-33">
                 <div class="bg pad-2 wd-100">
                     <h4 class="wd-100">
-                        <span class="status-dot">●</span> K @kennel.KennelID
+                        <span class="status-dot">●</span> K@(kennel.KennelID.ToString("00"))
                     </h4>
                     <p class="wd-100">
                         @curDog.DogName
@@ -41,16 +41,10 @@
             <div class="kennel available wd-33">
                 <div class="bg pad-2 wd-100">
                     <h4 class="wd-100">
-                        <span class="status-dot">●</span> K @kennel.KennelID
+                        <span class="status-dot">—</span> K@(kennel.KennelID.ToString("00"))
                     </h4>
-                    <p class="wd-100">
-                        -
-                    </p>
-                    <span class="info wd-100">
-                        -
-                    </span>
-                    <span class="date-output wd-100">
-                        @kennel.Status
+                    <span class="kennel-status wd-100">
+                        — @(kennel.Status == KennelStatus.NeedsCleaning ? "Needs cleaning" : kennel.Status.ToString())
                     </span>
                 </div>
             </div>

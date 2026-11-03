@@ -141,71 +141,130 @@ html, body {
     }
     //dashboard stat cards
     .stat-card {
-        padding: $space-1;
-        font-weight: 600;
+        position: relative;
+        padding: 1.25rem 1.4rem;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: $space-2;
         line-height: 1.25;
 
-        &:first-child {
-
-            .bg {
-                background-color: #1a2a5e;
-            }
+        // Dark card colour + a matching bright accent for the title and number.
+        // Each card has its own modifier class.
+        &-total {
+            background-color: #1a2a5e;
+            --stat-accent: #5b8cff;
         }
 
-        &:nth-child(2) {
-
-
-            .bg {
-                background-color: #3d1800;
-            }
+        &-occupied {
+            background-color: #3d1800;
+            --stat-accent: #ff6a00;
         }
 
-        &:nth-child(3) {
-
-
-            .bg {
-                background-color: #002a40;
-            }
+        &-available {
+            background-color: #002a40;
+            --stat-accent: #1ea7ff;
         }
 
-        &:nth-child(4) {
-
-
-            .bg {
-                background-color: #3d2800;
-            }
+        &-clean {
+            background-color: #3d2800;
+            --stat-accent: #ffa800;
         }
 
-        .bg {
-            background-color: #0d3330;
-            border-radius: $space-2;
+        // faint icon in the top right corner
+        &-icon {
+            position: absolute;
+            top: 1rem;
+            right: 1.1rem;
+            color: var(--stat-accent);
+            opacity: 0.3;
         }
 
         h4 {
-            font-weight: 600;
-            font-size: $fontSize-h4;
-            margin-bottom: $space-1;
+            margin: 0 0 0.35rem;
+            color: var(--stat-accent);
+            font-family: ui-monospace, "Cascadia Mono", "SFMono-Regular", Consolas, monospace;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
         }
 
         p {
+            margin: 0 0 0.25rem;
+            color: var(--stat-accent);
+            font-family: ui-monospace, "Cascadia Mono", "SFMono-Regular", Consolas, monospace;
+            font-size: 2.25rem;
             font-weight: 700;
-            font-size: $fontSize-h2;
-            margin-bottom: 0.05rem;
+            line-height: 1.1;
         }
 
         label {
-            font-weight: 500;
-            font-size: $fontSize-p;
             color: #7A85A0;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+    }
+
+    // Home: row of stat cards
+    .stat-grid {
+        // 4 across when there's room, then 3, 2 and 1 as the content area narrows.
+        // Based on the space the cards actually have (not the window), so the
+        // sidebar is accounted for.
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+        gap: $space-3;
+    }
+
+    // Home: kennel cards - 3 across, 2 on medium screens, 1 on small (replaces floats)
+    .kennel-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.8rem;
+        width: 100%;
+
+        @media (max-width: 1000px) {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        @media (max-width: 600px) {
+            grid-template-columns: 1fr;
+        }
+
+        .kennel {
+            float: none;
+            width: auto;
+            padding: 0;
+
+            .bg {
+                float: none;
+                display: flow-root; // contain the floated text inside the card
+                height: 100%;
+                min-height: 5.75rem;
+                padding: 1rem 1.15rem;
+                border-radius: 0.75rem;
+                box-sizing: border-box;
+            }
+
+            h4 {
+                margin: 0 0 0.5rem;
+                font-family: ui-monospace, "Cascadia Mono", "SFMono-Regular", Consolas, monospace;
+                font-size: 0.95rem;
+                font-weight: 700;
+                letter-spacing: 0.02em;
+            }
+
+            .kennel-status {
+                color: #0d99ff;
+                font-size: 1rem;
+            }
         }
     }
 
     .page-minor-header {
         font-size: $fontSize-h4;
+        font-weight: 700;
         padding: 0;
-        margin-left: $space-2;
-        margin-top: $space-2;
-        margin-bottom: $space-2;
+        margin-top: 1.25rem;
+        margin-bottom: 0.75rem;
     }
 
     .kennel {
@@ -215,7 +274,7 @@ html, body {
         &.available {
             .bg {
                 background: linear-gradient(145deg, rgb(13, 30, 42) 0%, rgb(24, 28, 42) 100%);
-                border-color: #0d99ff;
+                border-color: rgba(13, 153, 255, 0.3);
             }
 
             P {
