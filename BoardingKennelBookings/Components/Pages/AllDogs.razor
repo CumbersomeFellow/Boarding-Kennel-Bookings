@@ -7,8 +7,6 @@
 @inject DogService DogService
 @inject OwnerService OwnerService
 
-<h3>Dogs</h3>
-
 @code {
     private List<Dog> dogs = new();
     private string searchDogNameText = "";
@@ -61,48 +59,70 @@
         //would need to change IF multiple owners.
     }
 }
-<table style="margin-bottom:10px;">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Breed</th>
-            <th>Bookings</th>
-            <th>Owner</th>
-        </tr>
-    </thead>
-    <tbody>
-    @if (dogs.Count == 0)
-    {
-        <tr>
-            <p>Loading dogs...</p>
-        </tr>
-       
-    }
-    else if (noResults)
-    {
-        <tr>
-            <p>No Results</p>
-        </tr>
-    }
-    else
-    {
-        @foreach (var dog in dogs)
-        {
-             <tr>
-                <td>@dog.DogName</td>
-                <td>@dog.Breed</td>
-                <td>Need bookings</td>
-                <td>@FilterOwnerForDog(dog.ID, dog.OwnerID).FirstName @FilterOwnerForDog(dog.ID, dog.OwnerID).LastName</td>
-            </tr>
-        }
-    }
+<div class="booking-history">
 
-    </tbody>
-
-</table>
-  
-<form>
-    <div class="form-row">
-        <Input value="@searchDogNameText" @oninput="HandleSearchInput" />
+    <div class="booking-history-header">
+        <div>
+            <h3>Dogs</h3>
+            <p>View all dogs and their owners.</p>
+        </div>
     </div>
-</form>
+
+    <div class="booking-history-filters">
+        <section class="booking-history-field">
+            <label for="dog-search">Search dogs</label>
+            <input id="dog-search"
+                   class="booking-history-input"
+                   placeholder="Search by name, breed or owner"
+                   value="@searchDogNameText"
+                   @oninput="HandleSearchInput" />
+        </section>
+    </div>
+
+    <div class="previous-bookings">
+        <div class="previous-bookings-header">
+            <h3>All dogs</h3>
+            @if (dogs.Count > 0 && !noResults)
+            {
+                <span class="previous-bookings-count">
+                    @dogs.Count @(dogs.Count == 1 ? "dog" : "dogs")
+                </span>
+            }
+        </div>
+
+        <div class="previous-bookings-list">
+            @if (dogs.Count == 0)
+            {
+                <div class="booking-history-empty">
+                    <p>Loading dogs...</p>
+                </div>
+            }
+            else if (noResults)
+            {
+                <div class="booking-history-empty">
+                    <p>No results found.</p>
+                </div>
+            }
+            else
+            {
+                @foreach (var dog in dogs)
+                {
+                    var owner = FilterOwnerForDog(dog.ID, dog.OwnerID);
+
+                    <article class="previous-bookings-card" @key="dog.ID">
+                        <div class="booking-history-details">
+                            <div class="previous-bookings-owner">
+                                <h4>@dog.DogName</h4>
+                                <span class="previous-bookings-dog">@dog.Breed</span>
+                            </div>
+                            <span class="previous-bookings-kennel">
+                                Owner: @owner.FirstName @owner.LastName
+                            </span>
+                        </div>
+                    </article>
+                }
+            }
+        </div>
+    </div>
+
+</div>

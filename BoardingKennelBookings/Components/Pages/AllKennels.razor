@@ -9,8 +9,6 @@
 @inject DogService DogService
 @inject BookingService BookingService
 
-<h3>All Kennels</h3>
-
 @code {
     private List<Kennel> Kennels = new();
     private List<Booking> Bookings = new();
@@ -25,45 +23,81 @@
 }
 <!--Add Callender to see what dogs are booked in when-->
 
-@if (Kennels.Count == 0)
-{
+<div class="booking-history">
 
-    <p>Loading kennels...</p>
-}
-else
-{
-    <table style="margin-bottom:10px;">
-            <thead>
-                <tr>
-                    <th>Number</th>
-                    <th>Dog</th>
-                    <th>Date booked</th>
-                 </tr>
-            </thead>
-            <tbody>
-                @foreach(var kennel in Kennels)
+    <div class="booking-history-header">
+        <div>
+            <h3>Kennels</h3>
+            <p>View all kennels and recent bookings.</p>
+        </div>
+    </div>
+
+    <div class="previous-bookings">
+        <div class="previous-bookings-header">
+            <h3>All kennels</h3>
+            @if (Kennels.Count > 0)
+            {
+                <span class="previous-bookings-count">
+                    @Kennels.Count @(Kennels.Count == 1 ? "kennel" : "kennels")
+                </span>
+            }
+        </div>
+
+        <div class="previous-bookings-list">
+            @if (Kennels.Count == 0)
+            {
+                <div class="booking-history-empty">
+                    <p>Loading kennels...</p>
+                </div>
+            }
+            else
+            {
+                @foreach (var kennel in Kennels)
                 {
-                    <tr>
-                        <td>@kennel.KennelID</td>
-                        <td>Todo Dog Name</td>
-                        <td>Todo Date booked</td>
-                    </tr>
+                    <article class="previous-bookings-card" @key="kennel.KennelID">
+                        <div class="booking-history-details">
+                            <div class="previous-bookings-owner">
+                                <h4>Kennel @kennel.KennelID</h4>
+                                <span class="previous-bookings-dog">@kennel.Status</span>
+                            </div>
+                        </div>
+                    </article>
                 }
-            </tbody>
-    </table>
-}
-<ul>
-    @if(Bookings.Count > 0)
+            }
+        </div>
+    </div>
+
+    @if (Bookings.Count > 0)
     {
-        foreach(var singleBooking in Bookings)
-        {
-            <li>
-                <p>
-                    @* @singleBooking.DogIDs *@
-                    @singleBooking.StartDate
-                    @singleBooking.EndDate
-                </p>
-            </li>
-        }
+        <div class="previous-bookings">
+            <div class="previous-bookings-header">
+                <h3>Bookings</h3>
+                <span class="previous-bookings-count">
+                    @Bookings.Count @(Bookings.Count == 1 ? "booking" : "bookings")
+                </span>
+            </div>
+
+            <div class="previous-bookings-list">
+                @foreach (var singleBooking in Bookings)
+                {
+                    <article class="previous-bookings-card" @key="singleBooking.BookingID">
+                        <div class="previous-bookings-dates">
+                            <div class="previous-bookings-date">
+                                <span class="previous-bookings-label">Check-in</span>
+                                <span>@singleBooking.StartDate.ToString("dd MMM yyyy")</span>
+                            </div>
+
+                            <span class="previous-bookings-arrow">→</span>
+
+                            <div class="previous-bookings-date">
+                                <span class="previous-bookings-label">Check-out</span>
+                                <span>@singleBooking.EndDate.ToString("dd MMM yyyy")</span>
+                            </div>
+                        </div>
+                    </article>
+                }
+            </div>
+        </div>
     }
-</ul>
+
+</div>

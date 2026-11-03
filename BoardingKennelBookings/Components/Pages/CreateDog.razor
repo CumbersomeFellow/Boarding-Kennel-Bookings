@@ -7,41 +7,52 @@
 @inject OwnerService OwnerService
 @inject DogService DogService
 
-<h3>Create Dog</h3>
-
 <EditForm Model="newDog" OnValidSubmit="HandleSubmit" FormName="CreateDogForm">
-    <div class="form-row">
-        <label>
-            Name
-        </label>
-        <InputText @bind-Value="newDog.DogName" />
-    </div>
-    <div class="form-row">
-        <label>
-            Breed
-        </label>
-        <InputText @bind-Value="newDog.Breed" />
-    </div>
-    <div class="form-row">
-        <label>
-            Owner
-        </label>
-        @if (Owners.Count == 0)
-        {
-            <p>Loading Owners...</p>
-        }
-        else
-        {
-            <InputSelect @bind-Value="selectedOwnerId">
-                @foreach (var owner in Owners)
+    <div class="booking-form">
+
+        <div class="booking-form-header">
+            <h2>Create dog</h2>
+            <p>Enter the dog's details below.</p>
+        </div>
+
+        <div class="booking-form-fields">
+            <div class="booking-form-field">
+                <label for="dogName">Name</label>
+                <InputText id="dogName" class="booking-form-input" @bind-Value="newDog.DogName" />
+            </div>
+
+            <div class="booking-form-field">
+                <label for="dogBreed">Breed</label>
+                <InputText id="dogBreed" class="booking-form-input" @bind-Value="newDog.Breed" />
+            </div>
+        </div>
+
+        <div class="booking-form-fields">
+            <div class="booking-form-field">
+                <label for="dogOwner">Owner</label>
+                @if (Owners.Count == 0)
                 {
-                    <option value="@owner.OwnerID">@owner.FirstName @owner.LastName</option>
+                    <p>Loading Owners...</p>
                 }
-            </InputSelect>
-        }
-    </div>
-    <div class="form-row">
-        <button type="submit">Create Dog</button>
+                else
+                {
+                    <InputSelect id="dogOwner" class="booking-form-input" @bind-Value="selectedOwnerId">
+                        <option value="@Guid.Empty">--Choose an owner--</option>
+                        @foreach (var owner in Owners)
+                        {
+                            <option value="@owner.OwnerID">@owner.FirstName @owner.LastName</option>
+                        }
+                    </InputSelect>
+                }
+            </div>
+        </div>
+
+        <div class="booking-form-actions final">
+            <button type="submit" class="booking-form-button booking-form-button-primary">
+                Create dog
+            </button>
+        </div>
+
     </div>
 </EditForm>
 
@@ -78,10 +89,10 @@
 }
 @if (createdDog != null)
 {
-    <div class="owner-summary">
-        <h3>Dog Created</h3>
-
-        <p><strong>Name:</strong> @createdDog.DogName</p>
-
+    <div class="booking-form-kennel-section">
+        <div class="booking-form-kennel-header">
+            <h3>Dog created</h3>
+            <p>@createdDog.DogName has been added.</p>
+        </div>
     </div>
 }

@@ -5,41 +5,43 @@
 @rendermode InteractiveServer
 @inject OwnerService OwnerService
 
-<h3>Create Owner</h3>
-
 <EditForm Model="newOwner" OnValidSubmit="HandleSubmit" FormName="CreateOwnerForm">
-    <div class="form-row">
-        <label>
-            First Name:
-        </label>
+    <div class="booking-form">
 
-        <InputText @bind-Value="newOwner.FirstName"/>
-    </div>
-    <div class="form-row">
-        <label>
-            Last Name:
-        </label>
-        <InputText @bind-Value="newOwner.LastName" />
+        <div class="booking-form-header">
+            <h2>Create owner</h2>
+            <p>Enter the owner's details below.</p>
+        </div>
 
-    </div>
-    <div class="form-row">
-        <label>
-            Email:
-        </label>
-        <InputText @bind-Value="newOwner.Email" />
+        <div class="booking-form-fields">
+            <div class="booking-form-field">
+                <label for="ownerFirstName">First name</label>
+                <InputText id="ownerFirstName" class="booking-form-input" @bind-Value="newOwner.FirstName" />
+            </div>
 
-    </div>
+            <div class="booking-form-field">
+                <label for="ownerLastName">Last name</label>
+                <InputText id="ownerLastName" class="booking-form-input" @bind-Value="newOwner.LastName" />
+            </div>
+        </div>
 
-    <div class="form-row">
-        <label>
-            Contact Number:
-        </label>
-        <InputText @bind-Value="newOwner.ContactNumber" />
+        <div class="booking-form-fields">
+            <div class="booking-form-field">
+                <label for="ownerEmail">Email</label>
+                <InputText id="ownerEmail" class="booking-form-input" @bind-Value="newOwner.Email" />
+            </div>
 
-    </div>
+            <div class="booking-form-field">
+                <label for="ownerContactNumber">Contact number</label>
+                <InputText id="ownerContactNumber" class="booking-form-input" @bind-Value="newOwner.ContactNumber" />
+            </div>
+        </div>
 
-    <div class="form-row">
-        <button type="submit">Create Owner</button>
+        <div class="booking-form-actions final">
+            <button type="submit" class="booking-form-button booking-form-button-primary">
+                Create owner
+            </button>
+        </div>
 
     </div>
 </EditForm>
@@ -56,11 +58,14 @@
 
 @if (createdOwner != null)
 {
-    <div class="owner-summary">
-        <h3>Owner Created</h3>
-
-        <p><strong>Name:</strong> @createdOwner.FirstName</p>
-        <p><strong>Email:</strong> @createdOwner.Email</p>
-        <p><strong>Phone:</strong> @createdOwner.ContactNumber</p>
+    <div class="booking-form-kennel-section">
+        <div class="booking-form-kennel-header">
+            <h3>Owner created</h3>
+            <p>@createdOwner.FirstName @createdOwner.LastName has been added.</p>
+        </div>
+        <p class="booking-form-kennel-empty">
+            Email: @createdOwner.Email<br />
+            Phone: @createdOwner.ContactNumber
+        </p>
     </div>
 }

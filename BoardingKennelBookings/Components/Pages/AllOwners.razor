@@ -7,8 +7,6 @@
 @rendermode InteractiveServer
 @inject OwnerService OwnerService
 
-<h3>All Owners</h3>
-
 @code {
     private List<Owner> Owners = new();
     private bool noResults = false;
@@ -55,26 +53,64 @@
     }
 }
 
-@if (Owners.Count == 0)
-{
-    <p>Loading owners...</p>
-}
-else if (noResults)
-{
-    <p>No Results</p>
-}
-else
-{
-    <ul>
-        @foreach (var owner in Owners)
-        {
-            <li>@owner.FirstName @owner.LastName</li>
-        }
-    </ul>
-}
+<div class="booking-history">
 
-<form>
-    <div class="form-row">
-        <Input value="@searchOwnerNameText" @oninput="HandleSearchInput" />
+    <div class="booking-history-header">
+        <div>
+            <h3>Owners</h3>
+            <p>View all owners.</p>
+        </div>
     </div>
-</form>
+
+    <div class="booking-history-filters">
+        <section class="booking-history-field">
+            <label for="owner-search">Search owners</label>
+            <input id="owner-search"
+                   class="booking-history-input"
+                   placeholder="Search by name"
+                   value="@searchOwnerNameText"
+                   @oninput="HandleSearchInput" />
+        </section>
+    </div>
+
+    <div class="previous-bookings">
+        <div class="previous-bookings-header">
+            <h3>All owners</h3>
+            @if (Owners.Count > 0 && !noResults)
+            {
+                <span class="previous-bookings-count">
+                    @Owners.Count @(Owners.Count == 1 ? "owner" : "owners")
+                </span>
+            }
+        </div>
+
+        <div class="previous-bookings-list">
+            @if (Owners.Count == 0)
+            {
+                <div class="booking-history-empty">
+                    <p>Loading owners...</p>
+                </div>
+            }
+            else if (noResults)
+            {
+                <div class="booking-history-empty">
+                    <p>No results found.</p>
+                </div>
+            }
+            else
+            {
+                @foreach (var owner in Owners)
+                {
+                    <article class="previous-bookings-card" @key="owner.OwnerID">
+                        <div class="booking-history-details">
+                            <div class="previous-bookings-owner">
+                                <h4>@owner.FirstName @owner.LastName</h4>
+                            </div>
+                        </div>
+                    </article>
+                }
+            }
+        </div>
+    </div>
+
+</div>
