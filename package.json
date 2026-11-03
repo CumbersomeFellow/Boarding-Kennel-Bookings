@@ -1,12 +1,16 @@
 {
    "name": "BoardingKennelBookings",
    "scripts": {
-      "scss": "sass --watch BoardingKennelBookings/wwwroot/scss/app.scss:BoardingKennelBookings/wwwroot/css/app.css"
+      "scss": "sass --watch BoardingKennelBookings/wwwroot/scss/app.scss:BoardingKennelBookings/wwwroot/css/app.css",
+      "tailwind": "tailwindcss -i BoardingKennelBookings/wwwroot/css/tailwind.css -o BoardingKennelBookings/wwwroot/css/output.css --watch",
+      "tailwind:build": "tailwindcss -i BoardingKennelBookings/wwwroot/css/tailwind.css -o BoardingKennelBookings/wwwroot/css/output.css"
    },
    "devDependencies": {
       "sass": "^1.103.1"
    },
    "dependencies": {
+      "@iconify-json/lucide": "^1.2.150",
+      "@iconify/tailwind4": "^1.2.3",
       "@tailwindcss/cli": "^4.3.3",
       "bootstrap-icons": "^1.13.1",
       "tailwindcss": "^4.3.3"
