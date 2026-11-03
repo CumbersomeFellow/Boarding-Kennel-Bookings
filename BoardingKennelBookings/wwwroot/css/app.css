@@ -205,6 +205,89 @@ html form, body form {
 html .form-row section, body .form-row section {
   width: 100%;
 }
+html .booking-history, body .booking-history {
+  width: 100%;
+  color: #e5e7eb;
+}
+html .booking-history-header, body .booking-history-header {
+  margin-bottom: 1rem;
+}
+html .booking-history-header h3, body .booking-history-header h3 {
+  margin: 0;
+  color: #f9fafb;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+html .booking-history-header p, body .booking-history-header p {
+  margin: 0.375rem 0 0;
+  color: #9ca3af;
+  font-size: 0.875rem;
+}
+html .booking-history-filters, body .booking-history-filters {
+  display: flex;
+  align-items: flex-end;
+  gap: 1.25rem;
+  padding: 1.25rem;
+  background: #202630;
+  border: 1px solid #3a4352;
+  border-radius: 0.75rem;
+  box-sizing: border-box;
+}
+html .booking-history-field, body .booking-history-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
+}
+html .booking-history-field label, body .booking-history-field label {
+  color: #d1d5db;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+html .booking-history-input, body .booking-history-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.625rem 0.75rem;
+  border: 1px solid #454e5e;
+  border-radius: 0.5rem;
+  background: #222834;
+  color: #f3f4f6;
+  font: inherit;
+  font-size: 0.875rem;
+  outline: none;
+  color-scheme: dark;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+html .booking-history-input:focus, body .booking-history-input:focus {
+  border-color: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+}
+html .booking-history-check, body .booking-history-check {
+  padding: 0.625rem 1.25rem;
+  border: 1px solid #10b981;
+  border-radius: 0.5rem;
+  background: #10b981;
+  color: #fff;
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+html .booking-history-check:hover, body .booking-history-check:hover {
+  background: #059669;
+  border-color: #059669;
+}
+html .booking-history-check:focus-visible, body .booking-history-check:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.35);
+}
+@media (max-width: 600px) {
+  html .booking-history-filters, body .booking-history-filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
 html .previous-bookings, body .previous-bookings {
   width: 100%;
   margin-top: 1.5rem;

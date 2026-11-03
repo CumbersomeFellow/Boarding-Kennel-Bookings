@@ -51,17 +51,21 @@
     {
         bookings = await BookingService.FindBookingsWithInDateRange(startDate, endDate);
 
+        bookingDogKennels = new List<BookingDogKennel>();
+        currentDogs = new List<Dog>();
+
         foreach (var booking in bookings)
         {
             List<BookingDogKennel> bookingBdks = await BookingService.FindBookingDogKennelsWithBookingID(booking.BookingID);
             bookingDogKennels.AddRange(bookingBdks);
         }
 
-        foreach (var bdk in bookingDogKennels)
+        foreach (var dogID in bookingDogKennels.Select(bdk => bdk.DogID).Distinct())
         {
-            if (await DogService.GetDog(bdk.DogID) != null)
+            var dog = await DogService.GetDog(dogID);
+            if (dog != null)
             {
-                currentDogs.Add(await DogService.GetDog(bdk.DogID));
+                currentDogs.Add(dog);
             }
         }
     }
@@ -74,6 +78,7 @@
         bookingBDKs = bookingDogKennels.Where(bdk => bdk.BookingID == selectedBooking.BookingID).ToList();
         selectedOwner = allOwners.FirstOrDefault(owner => owner.OwnerID == booking.OwnerID);
        
+        bookingKennels = new();
         foreach (var bdk in bookingBDKs)
         {
             bookingKennels.Add(allKennels.FirstOrDefault(curKennel => curKennel.KennelID == bdk.KennelID));
@@ -81,11 +86,9 @@
     }
 }
 
-<h3>All Bookings</h3>
-
 @if (dataLoaded)
 {
-    <div class="row wd-100">
+    @* <div class="row wd-100">
     
         <section>
             <label>
@@ -104,9 +107,9 @@
 
             <button type="button" class="btn btn-blue" @onclick="HandleCheckBookings">Check</button>
         </section>
-    </div>
+    </div> *@
 
-    <div class="row wd-100">
+  @*   <div class="row wd-100">
         <ul>
             @foreach (var booking in bookings)
             {
@@ -141,7 +144,7 @@
                 </li>
             }
         </ul>
-    </div>
+    </div> *@
 
 <div class="booking-history">
 
@@ -199,8 +202,6 @@
                                         {
                                             <h4>Unknown owner</h4>
                                         }
-
-                              
                                     </div>
                                     <span class="previous-bookings-count">
                                         @curDogs.Count @(curDogs.Count == 1 ? "dog" : "dogs")
