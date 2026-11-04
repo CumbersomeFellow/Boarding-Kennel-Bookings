@@ -529,6 +529,24 @@ html .booking-history-filters.is-compact .booking-history-check:hover, body .boo
 html .booking-history-filters.is-compact .booking-history-error, body .booking-history-filters.is-compact .booking-history-error {
   margin-top: 0;
 }
+html .booking-form-previous, body .booking-form-previous {
+  margin-top: 1.25rem;
+}
+html .booking-form-previous-header, body .booking-form-previous-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+html .booking-form-previous-header h3, body .booking-form-previous-header h3 {
+  margin: 0;
+  color: #f3f4f6;
+  font-size: 1rem;
+  font-weight: 600;
+}
+html .booking-form-previous .bk-table-wrap, body .booking-form-previous .bk-table-wrap {
+  margin-top: 0.75rem;
+}
 html .bk-table-toolbar, body .bk-table-toolbar {
   display: flex;
   align-items: center;

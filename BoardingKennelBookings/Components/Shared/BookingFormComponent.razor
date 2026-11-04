@@ -314,56 +314,42 @@
 
             @if (selectedOwnerBookings.Count > 0)
             {
-                <div class="previous-bookings">
-                    <div class="previous-bookings-header">
+                <div class="booking-form-previous">
+                    <div class="booking-form-previous-header">
                         <h3>Previous Bookings</h3>
-                        <span class="previous-bookings-count">
-                            @selectedOwnerBookings.Count bookings
+                        <span class="bk-table-count">
+                            @selectedOwnerBookings.Count @(selectedOwnerBookings.Count == 1 ? "booking" : "bookings")
                         </span>
                     </div>
 
-                    <div class="previous-bookings-list">
-                        @foreach (var curBDK in selectedOwnerBDKs)
-                        {
-                            var curBooking = selectedOwnerBookings.FirstOrDefault(booking => booking.BookingID == curBDK.BookingID);
-                            var curDog = OwnerDogs.FirstOrDefault(dog => dog.ID == curBDK.DogID);
+                    <div class="bk-table-wrap">
+                        <table class="bk-table">
+                            <thead>
+                                <tr>
+                                    <th>Kennel</th>
+                                    <th>Dog</th>
+                                    <th>Check-in</th>
+                                    <th>Check-out</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var curBDK in selectedOwnerBDKs)
+                                {
+                                    var curBooking = selectedOwnerBookings.FirstOrDefault(booking => booking.BookingID == curBDK.BookingID);
+                                    var curDog = OwnerDogs.FirstOrDefault(dog => dog.ID == curBDK.DogID);
 
-                            @if (curBooking != null && curDog != null)
-                            {
-                                <article class="previous-bookings-card">
-                                    <div class="previous-bookings-dog">
-                                        <span class="previous-bookings-dog-name">
-                                            @curDog.DogName
-                                        </span>
-                                        <span class="previous-bookings-kennel">
-                                            Kennel @curBDK.KennelID
-                                        </span>
-                                    </div>
-
-                                    <div class="previous-bookings-dates">
-                                        <div class="previous-bookings-date">
-                                            <span class="previous-bookings-label">
-                                                Check-in
-                                            </span>
-                                            <span>
-                                                @curBooking.StartDate.ToString("dd MMM yyyy")
-                                            </span>
-                                        </div>
-
-                                        <span class="previous-bookings-arrow">→</span>
-
-                                        <div class="previous-bookings-date">
-                                            <span class="previous-bookings-label">
-                                                Check-out
-                                            </span>
-                                            <span>
-                                                @curBooking.EndDate.ToString("dd MMM yyyy")
-                                            </span>
-                                        </div>
-                                    </div>
-                                </article>
-                            }
-                        }
+                                    @if (curBooking != null && curDog != null)
+                                    {
+                                        <tr>
+                                            <td class="bk-cell-kennel">K@(curBDK.KennelID.ToString("00"))</td>
+                                            <td class="bk-cell-dog">@curDog.DogName</td>
+                                            <td class="bk-cell-date">@curBooking.StartDate.ToString("dd/MM/yyyy")</td>
+                                            <td class="bk-cell-date">@curBooking.EndDate.ToString("dd/MM/yyyy")</td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             }

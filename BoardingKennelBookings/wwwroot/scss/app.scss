@@ -671,6 +671,28 @@ html, body {
         }
     }
 
+    .booking-form-previous {
+        margin-top: 1.25rem;
+
+        &-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+
+            h3 {
+                margin: 0;
+                color: #f3f4f6;
+                font-size: 1rem;
+                font-weight: 600;
+            }
+        }
+
+        .bk-table-wrap {
+            margin-top: 0.75rem;
+        }
+    }
+
     .bk-table-toolbar {
         display: flex;
         align-items: center;
