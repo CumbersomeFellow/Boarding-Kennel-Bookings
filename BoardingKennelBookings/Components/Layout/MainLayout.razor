@@ -1,4 +1,29 @@
 ﻿@inherits LayoutComponentBase
+@inject NavigationManager Navigation
+
+@code {
+    private static readonly Dictionary<string, string> PageTitles = new(StringComparer.OrdinalIgnoreCase)
+    {
+        [""] = "Kennel Board",
+        ["booking"] = "Create Booking",
+        ["allbookings"] = "All Bookings",
+        ["createowner"] = "Create Owner",
+        ["allowners"] = "All Owners",
+        ["createdog"] = "Create Dog",
+        ["alldogs"] = "All Dogs",
+        ["createkennel"] = "Create Kennel",
+        ["allkennels"] = "All Kennels",
+    };
+
+    private string PageTitle
+    {
+        get
+        {
+            var path = Navigation.ToBaseRelativePath(Navigation.Uri).Split('?', '#')[0].Trim('/');
+            return PageTitles.TryGetValue(path, out var title) ? title : "Kennel Board";
+        }
+    }
+}
 
 <div class="page">
     <div class="sidebar">
@@ -8,9 +33,7 @@
     <main class="flex-1 overflow-y-auto">
 
         <div class="top-row px-4">
-            <h1>
-                Kennel Board
-            </h1>
+            <h1>@PageTitle</h1>
             <a class="button" href="https://learn.microsoft.com/aspnet/core/" target="_blank">New Booking</a>
         </div>
 

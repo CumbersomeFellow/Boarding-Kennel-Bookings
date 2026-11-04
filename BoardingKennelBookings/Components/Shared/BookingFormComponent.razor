@@ -230,7 +230,10 @@
         <div class="booking-form">
 
             <div class="booking-form-header">
-                <h2>@(isEditingBooking ? "Edit booking" : "Create booking")</h2>
+                @if (isEditingBooking)
+                {
+                    <h2>Edit booking</h2>
+                }
                 <p>Enter the booking details below.</p>
             </div>
 
