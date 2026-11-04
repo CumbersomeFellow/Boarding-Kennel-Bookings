@@ -31,71 +31,66 @@
         </div>
     </div>
 
-    <div class="previous-bookings">
-        <div class="previous-bookings-header">
-            <h3>All kennels</h3>
-            @if (Kennels.Count > 0)
-            {
-                <span class="previous-bookings-count">
-                    @Kennels.Count @(Kennels.Count == 1 ? "kennel" : "kennels")
-                </span>
-            }
-        </div>
-
-        <div class="previous-bookings-list">
-            @if (Kennels.Count == 0)
-            {
-                <div class="booking-history-empty">
-                    <p>Loading kennels...</p>
-                </div>
-            }
-            else
-            {
-                @foreach (var kennel in Kennels)
-                {
-                    <article class="previous-bookings-card" @key="kennel.KennelID">
-                        <div class="booking-history-details">
-                            <div class="previous-bookings-owner">
-                                <h4>Kennel @kennel.KennelID</h4>
-                                <span class="previous-bookings-dog">@kennel.Status</span>
-                            </div>
-                        </div>
-                    </article>
-                }
-            }
-        </div>
+    <div class="bk-table-wrap">
+        @if (Kennels.Count == 0)
+        {
+            <div class="bk-table-empty">
+                <p>Loading kennels...</p>
+            </div>
+        }
+        else
+        {
+            <table class="bk-table">
+                <thead>
+                    <tr>
+                        <th>Kennel</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var kennel in Kennels)
+                    {
+                        <tr @key="kennel.KennelID">
+                            <td class="bk-cell-kennel">K@(kennel.KennelID.ToString("00"))</td>
+                            <td><span class="bk-badge">@kennel.Status</span></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
     </div>
+
+    @if (Kennels.Count > 0)
+    {
+        <div class="bk-table-toolbar">
+            <span class="bk-table-count">@Kennels.Count @(Kennels.Count == 1 ? "record" : "records")</span>
+        </div>
+    }
 
     @if (Bookings.Count > 0)
     {
-        <div class="previous-bookings">
-            <div class="previous-bookings-header">
-                <h3>Bookings</h3>
-                <span class="previous-bookings-count">
-                    @Bookings.Count @(Bookings.Count == 1 ? "booking" : "bookings")
-                </span>
-            </div>
+        <div class="bk-table-wrap">
+            <table class="bk-table">
+                <thead>
+                    <tr>
+                        <th>Check-in</th>
+                        <th>Check-out</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var singleBooking in Bookings)
+                    {
+                        <tr @key="singleBooking.BookingID">
+                            <td class="bk-cell-date">@singleBooking.StartDate.ToString("dd/MM/yyyy")</td>
+                            <td class="bk-cell-date">@singleBooking.EndDate.ToString("dd/MM/yyyy")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
 
-            <div class="previous-bookings-list">
-                @foreach (var singleBooking in Bookings)
-                {
-                    <article class="previous-bookings-card" @key="singleBooking.BookingID">
-                        <div class="previous-bookings-dates">
-                            <div class="previous-bookings-date">
-                                <span class="previous-bookings-label">Check-in</span>
-                                <span>@singleBooking.StartDate.ToString("dd MMM yyyy")</span>
-                            </div>
-
-                            <span class="previous-bookings-arrow">→</span>
-
-                            <div class="previous-bookings-date">
-                                <span class="previous-bookings-label">Check-out</span>
-                                <span>@singleBooking.EndDate.ToString("dd MMM yyyy")</span>
-                            </div>
-                        </div>
-                    </article>
-                }
-            </div>
+        <div class="bk-table-toolbar">
+            <span class="bk-table-count">@Bookings.Count @(Bookings.Count == 1 ? "booking" : "bookings")</span>
         </div>
     }
 

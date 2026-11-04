@@ -67,7 +67,7 @@
         </div>
     </div>
 
-    <div class="booking-history-filters">
+    <div class="booking-history-filters is-compact">
         <section class="booking-history-field">
             <label for="dog-search">Search dogs</label>
             <input id="dog-search"
@@ -78,50 +78,50 @@
         </section>
     </div>
 
-    <div class="previous-bookings">
-        <div class="previous-bookings-header">
-            <h3>All dogs</h3>
-            @if (dogs.Count > 0 && !noResults)
-            {
-                <span class="previous-bookings-count">
-                    @dogs.Count @(dogs.Count == 1 ? "dog" : "dogs")
-                </span>
-            }
-        </div>
+    <div class="bk-table-wrap">
+        @if (dogs.Count == 0)
+        {
+            <div class="bk-table-empty">
+                <p>Loading dogs...</p>
+            </div>
+        }
+        else if (noResults)
+        {
+            <div class="bk-table-empty">
+                <p>No results found.</p>
+            </div>
+        }
+        else
+        {
+            <table class="bk-table">
+                <thead>
+                    <tr>
+                        <th>Dog</th>
+                        <th>Breed</th>
+                        <th>Owner</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var dog in dogs)
+                    {
+                        var owner = FilterOwnerForDog(dog.ID, dog.OwnerID);
 
-        <div class="previous-bookings-list">
-            @if (dogs.Count == 0)
-            {
-                <div class="booking-history-empty">
-                    <p>Loading dogs...</p>
-                </div>
-            }
-            else if (noResults)
-            {
-                <div class="booking-history-empty">
-                    <p>No results found.</p>
-                </div>
-            }
-            else
-            {
-                @foreach (var dog in dogs)
-                {
-                    var owner = FilterOwnerForDog(dog.ID, dog.OwnerID);
-
-                    <article class="previous-bookings-card" @key="dog.ID">
-                        <div class="booking-history-details">
-                            <div class="previous-bookings-owner">
-                                <h4>@dog.DogName</h4>
-                                <span class="previous-bookings-dog">@dog.Breed</span>
-                            </div>
-                            <span class="previous-bookings-kennel">
-                                Owner: @owner.FirstName @owner.LastName
-                            </span>
-                        </div>
-                    </article>
-                }
-            }
-        </div>
+                        <tr @key="dog.ID">
+                            <td class="bk-cell-dog">@dog.DogName</td>
+                            <td class="bk-cell-date">@dog.Breed</td>
+                            <td class="bk-cell-owner">@owner.FirstName @owner.LastName</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
     </div>
+
+    @if (dogs.Count > 0 && !noResults)
+    {
+        <div class="bk-table-toolbar">
+            <span class="bk-table-count">@dogs.Count @(dogs.Count == 1 ? "record" : "records")</span>
+        </div>
+    }
 
 </div>

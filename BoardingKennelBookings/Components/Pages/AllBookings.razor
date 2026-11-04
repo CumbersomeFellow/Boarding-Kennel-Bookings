@@ -156,7 +156,7 @@
         </div>
     </div>
 
-    <div class="booking-history-filters">
+    <div class="booking-history-filters is-compact">
         <section class="booking-history-field">
             <label for="booking-start-date">Start date</label>
             <InputDate id="booking-start-date"
@@ -188,72 +188,63 @@
         }
     </div>
  
-    <div class="previous-bookings">
-        <div class="previous-bookings-list">
-            @if (bookings.Count > 0)
-            {
-                @foreach (var booking in bookings)
-                {
-                    var curOwner = allOwners.FirstOrDefault(owner => owner.OwnerID == booking.OwnerID);
+    <div class="bk-table-wrap">
+        @if (bookings.Count > 0)
+        {
+            <table class="bk-table">
+                <thead>
+                    <tr>
+                        <th>Kennel</th>
+                        <th>Dog</th>
+                        <th>Owner</th>
+                        <th>Check-in</th>
+                        <th>Check-out</th>
+                        <th>Drop-off</th>
+                        <th>Pick-up</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var booking in bookings)
+                    {
+                        var curOwner = allOwners.FirstOrDefault(owner => owner.OwnerID == booking.OwnerID);
 
-                    var bookingBDKs = bookingDogKennels.FindAll(bdk => bdk.BookingID == booking.BookingID);
+                        var bookingBDKs = bookingDogKennels.FindAll(bdk => bdk.BookingID == booking.BookingID);
 
-                    var curDogs = bookingBDKs.Select(bdk => currentDogs.FirstOrDefault(dog => dog.ID == bdk.DogID)).Where(dog => dog != null).ToList();
+                        @foreach (var bdk in bookingBDKs)
+                        {
+                            var curDog = currentDogs.FirstOrDefault(dog => dog.ID == bdk.DogID);
+                            var curKennel = allKennels.FirstOrDefault(kennel => kennel.KennelID == bdk.KennelID);
 
-                    <article class="previous-bookings-card" @key="booking.BookingID">
-                        <div class="booking-history-details">
-                        <div class="previous-bookings-owner">
-                                @if (curOwner != null)
-                                {
-                                    <h4>@curOwner.FirstName @curOwner.LastName</h4>
-                                }
-                                else
-                                {
-                                    <h4>Unknown owner</h4>
-                                }
-                            </div>
-                            <span class="previous-bookings-count">
-                                @curDogs.Count @(curDogs.Count == 1 ? "dog" : "dogs")
-                            </span>
-                            <div class="previous-bookings-dogs">
-                                @foreach (var dog in curDogs)
-                                {
-                                <span class="previous-bookings-dog" @key="dog.ID">
-                                        @dog.DogName
-                                    </span>
-                                }
-                            </div>
-
-                                   
-                        </div>
-                    <div class="previous-bookings-dates">
-                        <div class="previous-bookings-date">
-                            <span class="previous-bookings-label">Check-in</span>
-                            <span>@booking.StartDate.ToString("dd MMM yyyy")</span>
-                        </div>
-
-                        <span class="previous-bookings-arrow">→</span>
-
-                        <div class="previous-bookings-date">
-                            <span class="previous-bookings-label">Check-out</span>
-                            <span>@booking.EndDate.ToString("dd MMM yyyy")</span>
-                        </div>
-                    </div>
-                    <button type="button" class="previous-bookings-edit" @onclick="() => HandleBookingEdit(booking)">
-                            Edit
-                        </button>
-                    </article>
-                }
-            }
-            else
-            {
-                <div class="booking-history-empty">
-                    <p>No bookings found for the selected dates.</p>
-                </div>
-            }
-        </div>
+                            <tr @key="bdk.BookingDogKennelID">
+                                <td class="bk-cell-kennel">@(curKennel != null ? $"K{curKennel.KennelNumber:00}" : "—")</td>
+                                <td class="bk-cell-dog">@(curDog?.DogName ?? "Unknown dog")</td>
+                                <td class="bk-cell-owner">@(curOwner != null ? $"{curOwner.FirstName} {curOwner.LastName}" : "Unknown owner")</td>
+                                <td class="bk-cell-date">@booking.StartDate.ToString("dd/MM/yyyy")</td>
+                                <td class="bk-cell-date">@booking.EndDate.ToString("dd/MM/yyyy")</td>
+                                <td><span class="bk-badge">@(booking.AMDropoff ? "AM" : "PM")</span></td>
+                                <td><span class="bk-badge">@(booking.AMPickup ? "AM" : "PM")</span></td>
+                                <td class="bk-cell-actions">
+                                    <button type="button" class="bk-edit" @onclick="() => HandleBookingEdit(booking)">Edit</button>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div class="bk-table-empty">
+                <p>No bookings found for the selected dates.</p>
+            </div>
+        }
     </div>
-  
+
+    <div class="bk-table-toolbar">
+        <span class="bk-table-count">@bookingDogKennels.Count @(bookingDogKennels.Count == 1 ? "record" : "records")</span>
+    </div>
+
 </div>
 
     @if (callPopup)

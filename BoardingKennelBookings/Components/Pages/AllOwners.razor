@@ -61,7 +61,7 @@
         </div>
     </div>
 
-    <div class="booking-history-filters">
+    <div class="booking-history-filters is-compact">
         <section class="booking-history-field">
             <label for="owner-search">Search owners</label>
             <input id="owner-search"
@@ -72,44 +72,48 @@
         </section>
     </div>
 
-    <div class="previous-bookings">
-        <div class="previous-bookings-header">
-            <h3>All owners</h3>
-            @if (Owners.Count > 0 && !noResults)
-            {
-                <span class="previous-bookings-count">
-                    @Owners.Count @(Owners.Count == 1 ? "owner" : "owners")
-                </span>
-            }
-        </div>
-
-        <div class="previous-bookings-list">
-            @if (Owners.Count == 0)
-            {
-                <div class="booking-history-empty">
-                    <p>Loading owners...</p>
-                </div>
-            }
-            else if (noResults)
-            {
-                <div class="booking-history-empty">
-                    <p>No results found.</p>
-                </div>
-            }
-            else
-            {
-                @foreach (var owner in Owners)
-                {
-                    <article class="previous-bookings-card" @key="owner.OwnerID">
-                        <div class="booking-history-details">
-                            <div class="previous-bookings-owner">
-                                <h4>@owner.FirstName @owner.LastName</h4>
-                            </div>
-                        </div>
-                    </article>
-                }
-            }
-        </div>
+    <div class="bk-table-wrap">
+        @if (Owners.Count == 0)
+        {
+            <div class="bk-table-empty">
+                <p>Loading owners...</p>
+            </div>
+        }
+        else if (noResults)
+        {
+            <div class="bk-table-empty">
+                <p>No results found.</p>
+            </div>
+        }
+        else
+        {
+            <table class="bk-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Contact number</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var owner in Owners)
+                    {
+                        <tr @key="owner.OwnerID">
+                            <td class="bk-cell-dog">@owner.FirstName @owner.LastName</td>
+                            <td class="bk-cell-owner">@owner.Email</td>
+                            <td class="bk-cell-date">@owner.ContactNumber</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
     </div>
+
+    @if (Owners.Count > 0 && !noResults)
+    {
+        <div class="bk-table-toolbar">
+            <span class="bk-table-count">@Owners.Count @(Owners.Count == 1 ? "record" : "records")</span>
+        </div>
+    }
 
 </div>
