@@ -965,7 +965,7 @@ html .booking-form-date-separator, body .booking-form-date-separator {
 }
 @media (min-width: 640px) {
   html .booking-form, body .booking-form {
-    padding: 2rem;
+    padding: 1.25rem;
   }
   html .booking-form-actions, body .booking-form-actions {
     flex-direction: row;
