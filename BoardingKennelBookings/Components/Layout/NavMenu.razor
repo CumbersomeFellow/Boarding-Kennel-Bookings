@@ -1,7 +1,11 @@
 ﻿<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="">
-            <img class="navbar-logo" src="images/Boarding%20Kennel%20Bookings%20Logo.png" alt="Boarding Kennel Bookings" />
+            <img class="navbar-logo" src="images/kennel-logo.png" alt="Boarding Kennel Bookings" />
+            <span class="brand-text">
+                <span class="brand-label">Kennel CRM</span>
+                <span class="brand-name" title="@KennelName">@KennelName</span>
+            </span>
         </a>
     </div>
 </div>
@@ -65,3 +69,8 @@
         </div>
     </nav>
 </div>
+
+@code {
+    // TODO: replace with the kennel/building name entered by the user
+    private string KennelName { get; set; } = "Your Kennel Name";
+}

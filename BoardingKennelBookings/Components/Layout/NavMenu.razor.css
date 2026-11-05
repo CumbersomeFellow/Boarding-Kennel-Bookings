@@ -25,7 +25,10 @@
     /* undo the global ".top-row a { position: absolute; right: 52px }" rule meant for the New Booking button */
     position: static;
     right: auto;
-    display: block;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-width: 0;
     padding: 0;
     margin: 0;
     font-size: 1.1rem;
@@ -33,18 +36,41 @@
 
 .navbar-logo {
     display: block;
-    margin: 0 auto;
-    width: 100%;
-    max-width: 8rem;
-    height: auto;
+    flex: 0 0 auto;
+    width: auto;
+    height: 2.75rem;
     object-fit: contain;
+}
+
+.brand-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    line-height: 1.2;
+}
+
+.brand-label {
+    color: #3b82f6;
+    font-family: monospace;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.brand-name {
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 @media (max-width: 640.98px) {
     /* keep the logo small next to the menu toggle on narrow screens */
     .navbar-logo {
-        width: auto;
-        max-height: 2.5rem;
+        height: 2.25rem;
     }
 }
 

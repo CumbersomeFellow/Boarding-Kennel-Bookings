@@ -845,7 +845,7 @@ html, body {
     .booking-form {
         width: 100%;
         margin: 0;
-        padding: 1.5rem;
+        padding: 1rem;
         background: #151a26;
         border: 1px solid #252a3d;
         border-radius: 0.75rem;
@@ -855,8 +855,8 @@ html, body {
         // Available kennels section
         &-kennel-section {
             width: 100%;
-            margin-top: 1.5rem;
-            padding: 1.25rem;
+            margin-top: 1rem;
+            padding: 1rem;
             background: #181e2c;
             border: 1px solid #252a3d;
             border-radius: 0.75rem;
@@ -990,8 +990,8 @@ html, body {
         }
 
         &-header {
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
             border-bottom: 1px solid #252a3d;
 
             h2 {
@@ -1066,8 +1066,8 @@ html, body {
 
         &-fields {
             display: flex;
-            margin-bottom: 1.5rem;
-            gap: 1.25rem;
+            margin-bottom: 1rem;
+            gap: 1rem;
 
             &-validation {
                 margin-bottom: 0;
@@ -1128,8 +1128,8 @@ html, body {
             display: flex;
             flex-direction: column-reverse;
             gap: 0.75rem;
-            margin-top: 2rem;
-            padding-top: 1.25rem;
+            margin-top: 1.25rem;
+            padding-top: 1rem;
             border-top: 1px solid #252a3d;
         }
 
