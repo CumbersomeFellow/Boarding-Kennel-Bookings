@@ -5,46 +5,6 @@
 @rendermode InteractiveServer
 @inject OwnerService OwnerService
 
-<EditForm Model="newOwner" OnValidSubmit="HandleSubmit" FormName="CreateOwnerForm">
-    <div class="booking-form">
-
-        <div class="booking-form-header">
-            <p>Enter the owner's details below.</p>
-        </div>
-
-        <div class="booking-form-fields">
-            <div class="booking-form-field">
-                <label for="ownerFirstName">First name</label>
-                <InputText id="ownerFirstName" class="booking-form-input" @bind-Value="newOwner.FirstName" />
-            </div>
-
-            <div class="booking-form-field">
-                <label for="ownerLastName">Last name</label>
-                <InputText id="ownerLastName" class="booking-form-input" @bind-Value="newOwner.LastName" />
-            </div>
-        </div>
-
-        <div class="booking-form-fields">
-            <div class="booking-form-field">
-                <label for="ownerEmail">Email</label>
-                <InputText id="ownerEmail" class="booking-form-input" @bind-Value="newOwner.Email" />
-            </div>
-
-            <div class="booking-form-field">
-                <label for="ownerContactNumber">Contact number</label>
-                <InputText id="ownerContactNumber" class="booking-form-input" @bind-Value="newOwner.ContactNumber" />
-            </div>
-        </div>
-
-        <div class="booking-form-actions final">
-            <button type="submit" class="booking-form-button booking-form-button-primary">
-                Create owner
-            </button>
-        </div>
-
-    </div>
-</EditForm>
-
 @code{
     private Owner newOwner = new();
     private Owner? createdOwner;
@@ -65,6 +25,78 @@
         <p class="booking-form-kennel-empty">
             Email: @createdOwner.Email<br />
             Phone: @createdOwner.ContactNumber
+            @if (!string.IsNullOrWhiteSpace(createdOwner.AddressLine1))
+            {
+                <br />@:Address: @string.Join(", ", new[] { createdOwner.AddressLine1, createdOwner.AddressLine2, createdOwner.TownCity, createdOwner.Postcode }.Where(s => !string.IsNullOrWhiteSpace(s)))
+            }
         </p>
     </div>
+}
+else
+{
+
+    <EditForm Model="newOwner" OnValidSubmit="HandleSubmit" FormName="CreateOwnerForm">
+        <div class="booking-form">
+
+            <div class="booking-form-header">
+                <p>Enter the owner's details below.</p>
+            </div>
+
+            <div class="booking-form-fields">
+                <div class="booking-form-field">
+                    <label for="ownerFirstName">First name</label>
+                    <InputText id="ownerFirstName" class="booking-form-input" @bind-Value="newOwner.FirstName" />
+                </div>
+
+                <div class="booking-form-field">
+                    <label for="ownerLastName">Last name</label>
+                    <InputText id="ownerLastName" class="booking-form-input" @bind-Value="newOwner.LastName" />
+                </div>
+            </div>
+
+            <div class="booking-form-fields">
+                <div class="booking-form-field">
+                    <label for="ownerEmail">Email</label>
+                    <InputText id="ownerEmail" class="booking-form-input" @bind-Value="newOwner.Email" />
+                </div>
+
+                <div class="booking-form-field">
+                    <label for="ownerContactNumber">Contact number</label>
+                    <InputText id="ownerContactNumber" class="booking-form-input" @bind-Value="newOwner.ContactNumber" />
+                </div>
+            </div>
+
+            <div class="booking-form-fields">
+                <div class="booking-form-field">
+                    <label for="ownerAddressLine1">Address line 1</label>
+                    <InputText id="ownerAddressLine1" class="booking-form-input" @bind-Value="newOwner.AddressLine1" />
+                </div>
+
+                <div class="booking-form-field">
+                    <label for="ownerAddressLine2">Address line 2</label>
+                    <InputText id="ownerAddressLine2" class="booking-form-input" @bind-Value="newOwner.AddressLine2" />
+                </div>
+            </div>
+
+            <div class="booking-form-fields">
+                <div class="booking-form-field">
+                    <label for="ownerTownCity">Town / City</label>
+                    <InputText id="ownerTownCity" class="booking-form-input" @bind-Value="newOwner.TownCity" />
+                </div>
+
+                <div class="booking-form-field">
+                    <label for="ownerPostcode">Postcode</label>
+                    <InputText id="ownerPostcode" class="booking-form-input" @bind-Value="newOwner.Postcode" />
+                </div>
+            </div>
+
+            <div class="booking-form-actions final">
+                <button type="submit" class="booking-form-button booking-form-button-primary">
+                    Create owner
+                </button>
+            </div>
+
+        </div>
+    </EditForm>
+
 }
